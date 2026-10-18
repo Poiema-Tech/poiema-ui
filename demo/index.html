@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>poiema ui · design system</title>
+<meta name="description" content="Showcase of every Poiema UI component.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../dist/poiema.css">
+<script defer src="../dist/poiema.auto.js"></script>
+<style>
+  /* demo-only helpers */
+  .gem { display: block; width: 100%; height: auto; aspect-ratio: 100 / 88; }
+  .pm-marquee__group > svg { aspect-ratio: 100 / 88; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  .swatch { border-radius: var(--pm-radius-md); overflow: hidden; box-shadow: inset 0 0 0 1.5px var(--pm-line); }
+  .swatch i { display: block; height: 72px; }
+  .swatch div { padding: 10px 14px 12px; font-size: 13px; line-height: 1.35; }
+  .swatch b { display: block; font-size: 14px; color: var(--pm-ink); }
+  .swatch span { color: var(--pm-ink-2); font-variant-numeric: tabular-nums; }
+  .materials { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(8px, 3vw, 36px); max-width: 760px; margin-inline: auto; }
+  .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 3vw, 40px); align-items: end; }
+  .trio figure { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .trio figure > div { width: min(100%, 200px); }
+  .trio figcaption { font-size: clamp(22px, 3.4vw, 44px); font-weight: 800; letter-spacing: -.05em; line-height: 1; }
+  .code { margin: 0; padding: 20px 24px; border-radius: var(--pm-radius-md); background: var(--pm-surface); box-shadow: inset 0 0 0 1.5px var(--pm-line); font: 14px/1.7 var(--pm-font-mono); overflow-x: auto; white-space: pre; }
+  .type-row { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; align-items: baseline; padding-block: 14px; border-bottom: 1.5px solid var(--pm-line); }
+  .type-row:last-child { border-bottom: 0; }
+  @media (max-width: 560px) { .type-row { grid-template-columns: 1fr; gap: 4px; } .materials { gap: 6px; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="gem" viewBox="0 0 100 88">
+    <path d="M4 30 28 6h44l24 24-46 54z" fill="currentColor"/>
+    <path d="M4 30 28 6l-1 24z" fill="#fff" fill-opacity=".34"/>
+    <path d="M28 6 50 30H27z" fill="#fff" fill-opacity=".16"/>
+    <path d="M28 6h44L50 30z" fill="#fff" fill-opacity=".48"/>
+    <path d="M72 6 73 30H50z" fill="#fff" fill-opacity=".1"/>
+    <path d="M72 6 96 30H73z" fill="#000" fill-opacity=".12"/>
+    <path d="M4 30h23l23 54z" fill="#fff" fill-opacity=".12"/>
+    <path d="M27 30h23v54z" fill="#fff" fill-opacity=".28"/>
+    <path d="M50 30h23L50 84z" fill="#000" fill-opacity=".08"/>
+    <path d="M73 30h23L50 84z" fill="#000" fill-opacity=".26"/>
+    <path d="M4 30 28 6h44l24 24-46 54zM4 30h92M28 6l-1 24 23 54 23-54-1-24M27 30 50 30 28 6M50 30 72 6M50 30v54" fill="none" stroke="#fff" stroke-opacity=".42" stroke-width="1.2" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<header class="pm-topbar">
+  <a class="pm-topbar__brand" href="#top">poiema</a>
+  <div class="pm-cluster">
+    <button class="pm-btn pm-btn--ghost pm-btn--sm" id="theme" type="button">Dark</button>
+    <span class="pm-tag">Design system · v0.1</span>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="pm-hero pm-hero--pillars">
+    <p class="pm-eyebrow">Design system · 18.10.2026</p>
+    <h1 class="pm-lockup" aria-label="poiema work ui">
+      <span class="pm-lockup__top">poiema</span>
+      <span class="pm-lockup__main">
+        <span>w</span>
+        <span class="pm-lockup__object" data-pm-cycle aria-hidden="true">
+          <svg class="gem" style="color:var(--pm-clay)"><use href="#gem"/></svg>
+          <svg class="gem" style="color:var(--pm-plaster)"><use href="#gem"/></svg>
+          <svg class="gem" style="color:var(--pm-grass)"><use href="#gem"/></svg>
+          <svg class="gem" style="color:var(--pm-iron)"><use href="#gem"/></svg>
+          <svg class="gem" style="color:var(--pm-diamond)"><use href="#gem"/></svg>
+        </span>
+        <span>rk</span>
+        <span class="pm-lockup__badge">ui</span>
+      </span>
+    </h1>
+    <div class="pm-cluster pm-cluster--center">
+      <span class="pm-chip">5 materials</span>
+      <span class="pm-chip">1 typeface</span>
+      <span class="pm-chip pm-chip--solid"><b>0</b> hues in chrome</span>
+    </div>
+    <p class="pm-lead">A design system for everything we build: quiet, tactile and clear, so every product speaks with <strong>one voice</strong>.</p>
+    <a href="#start" class="pm-scroll-cue" aria-label="Go to start"></a>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="pm-marquee" aria-hidden="true">
+    <div class="pm-marquee__track">
+      <div class="pm-marquee__group">
+        <span>quiet.</span><svg style="color:var(--pm-diamond)"><use href="#gem"/></svg>
+        <span class="pm-muted">tactile.</span><svg style="color:var(--pm-clay)"><use href="#gem"/></svg>
+        <span>clear.</span><svg style="color:var(--pm-grass)"><use href="#gem"/></svg>
+        <span>quiet.</span><svg style="color:var(--pm-plaster)"><use href="#gem"/></svg>
+        <span class="pm-muted">tactile.</span><svg style="color:var(--pm-iron)"><use href="#gem"/></svg>
+        <span>clear.</span><svg style="color:var(--pm-diamond)"><use href="#gem"/></svg>
+      </div>
+      <div class="pm-marquee__group">
+        <span>quiet.</span><svg style="color:var(--pm-diamond)"><use href="#gem"/></svg>
+        <span class="pm-muted">tactile.</span><svg style="color:var(--pm-clay)"><use href="#gem"/></svg>
+        <span>clear.</span><svg style="color:var(--pm-grass)"><use href="#gem"/></svg>
+        <span>quiet.</span><svg style="color:var(--pm-plaster)"><use href="#gem"/></svg>
+        <span class="pm-muted">tactile.</span><svg style="color:var(--pm-iron)"><use href="#gem"/></svg>
+        <span>clear.</span><svg style="color:var(--pm-diamond)"><use href="#gem"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 00 START -->
+  <section id="start" class="pm-section pm-container" data-pm-reveal>
+    <header class="pm-section-head">
+      <span class="pm-ring">00</span>
+      <h2 class="pm-h1">start here.</h2>
+      <p>One stylesheet, one optional script. It works in any framework, because it's just classes.</p>
+    </header>
+    <div class="pm-split pm-split--top">
+      <pre class="code">npm i github:guilherme-toti/poiema-style-guide
+
+import 'poiema-ui/css';
+import { init } from 'poiema-ui';
+init();   // reveal, tilt, cycle, copy…
+
+npx poiema-ui init   // teach your AI</pre>
+      <div class="pm-stack">
+        <p class="pm-body">Write semantic HTML, add <strong>pm-*</strong> classes, and let the tokens do the rest. The same markup works in Next.js, SvelteKit, Vue, Astro or a static page.</p>
+        <div class="pm-callout">
+          <span class="pm-eyebrow">The message that must be clear</span>
+          <p>This isn't a component library. It's a way of speaking. The classes are just the vocabulary.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OBJECTIVE / RULED SPLIT -->
+  <section class="pm-section pm-container" data-pm-reveal>
+    <div class="pm-split pm-ruled">
+      <div>
+        <p class="pm-eyebrow">What it is for</p>
+        <p class="pm-h3" style="margin-top:18px">Every product we ship should feel like it was made by <span class="pm-muted">the same hands</span>: calm, honest and easy to follow.</p>
+      </div>
+      <div class="pm-stack">
+        <p><span class="pm-chip pm-chip--solid">This is <strong>not a template.</strong></span></p>
+        <p class="pm-body">Each team keeps the freedom to compose its screens. These are the base decisions (color, type, shape, motion and voice) that keep everything recognizably ours.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDEX + BLOCKS -->
+  <div class="pm-container pm-stack" style="--pm-gap: 20px; margin-top: 40px">
+    <nav class="pm-pillnav pm-pillnav--sticky" aria-label="Sections" style="margin-bottom:-20px">
+      <a href="#b1"><span class="pm-ring pm-ring--sm">01</span> color</a>
+      <a href="#b2"><span class="pm-ring pm-ring--sm">02</span> type</a>
+      <a href="#b3"><span class="pm-ring pm-ring--sm">03</span> motion</a>
+      <a href="#b4"><span class="pm-ring pm-ring--sm">04</span> components</a>
+      <a href="#b5"><span class="pm-ring pm-ring--sm">05</span> forms</a>
+      <a href="#b6"><span class="pm-ring pm-ring--sm">06</span> voice</a>
+      <a href="#b7"><span class="pm-ring pm-ring--sm">07</span> ticket</a>
+    </nav>
+
+    <!-- 01 COLOR -->
+    <article id="b1" class="pm-card pm-feature" data-pm-reveal>
+      <div class="pm-feature__media" data-pm-tilt>
+        <div class="pm-float" style="width:min(100%, 260px); color:var(--pm-clay); filter: drop-shadow(var(--pm-shadow-object))"><svg class="gem"><use href="#gem"/></svg></div>
+      </div>
+      <div class="pm-feature__body">
+        <span class="pm-ring">01</span>
+        <h2 class="pm-h2">gray is the room. objects carry the color.</h2>
+        <div class="pm-stack pm-stack--lg">
+          <div class="swatches">
+            <div class="swatch"><i style="background:var(--pm-canvas)"></i><div><b>canvas</b><span>#e2e2e2</span></div></div>
+            <div class="swatch"><i style="background:var(--pm-surface)"></i><div><b>surface</b><span>#f7f7f7</span></div></div>
+            <div class="swatch"><i style="background:var(--pm-ink-2)"></i><div><b>ink-2</b><span>#555555</span></div></div>
+            <div class="swatch"><i style="background:var(--pm-ink)"></i><div><b>ink</b><span>#2b2b2b</span></div></div>
+          </div>
+          <div class="swatches">
+            <div class="swatch"><i style="background:var(--pm-clay)"></i><div><b>clay</b><span>barro</span></div></div>
+            <div class="swatch"><i style="background:var(--pm-plaster)"></i><div><b>plaster</b><span>gesso</span></div></div>
+            <div class="swatch"><i style="background:var(--pm-grass)"></i><div><b>grass</b><span>grama</span></div></div>
+            <div class="swatch"><i style="background:var(--pm-iron)"></i><div><b>iron</b><span>ferro</span></div></div>
+            <div class="swatch"><i style="background:var(--pm-diamond)"></i><div><b>diamond</b><span>diamante</span></div></div>
+          </div>
+          <ul class="pm-list">
+            <li>Interface chrome is <strong>strictly grayscale</strong>: canvas, paper and ink.</li>
+            <li>The five materials tell a story of formation, from clay to diamond.</li>
+            <li>Color appears on objects, illustrations and data. It never appears on buttons or links.</li>
+          </ul>
+          <div class="pm-callout">
+            <span class="pm-eyebrow">The message that must be clear</span>
+            <p>When everything around it is quiet, one object is enough to make a page feel alive.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 02 TYPE -->
+    <article id="b2" class="pm-card pm-feature" data-theme="dark" data-pm-reveal>
+      <div class="pm-feature__media">
+        <div class="pm-stat pm-stat--stacked" style="align-items:center">
+          <span class="pm-numeral" style="font-size:clamp(150px, 22vw, 300px)">Aa</span>
+          <span class="pm-stat__label" style="text-align:center">Inter Tight<br>400 — 900</span>
+        </div>
+      </div>
+      <div class="pm-feature__body">
+        <span class="pm-ring">02</span>
+        <h2 class="pm-h2">type does the shouting.</h2>
+        <div>
+          <div class="type-row"><span class="pm-eyebrow">h1 · 800</span><span class="pm-h1" style="font-size:clamp(36px,5vw,64px)">your projects.</span></div>
+          <div class="type-row"><span class="pm-eyebrow">h3 · 700</span><span class="pm-h3" style="font-size:clamp(22px,2.6vw,30px)">A statement, <span class="pm-muted">set big.</span></span></div>
+          <div class="type-row"><span class="pm-eyebrow">lead · 400</span><span class="pm-lead">Body copy stays calm, so <strong>the one phrase</strong> in ink can be found.</span></span></div>
+          <div class="type-row"><span class="pm-eyebrow">eyebrow</span><span class="pm-eyebrow">Small · bold · uppercase · tracked</span></div>
+        </div>
+        <div class="pm-callout" style="margin-top:28px">
+          <span class="pm-eyebrow">The message that must be clear</span>
+          <p>Lowercase headlines that end with a period. They are statements, not labels.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 MOTION -->
+    <article id="b3" class="pm-card" data-pm-reveal>
+      <span class="pm-ring">03</span>
+      <h2 class="pm-h2" style="margin:20px 0 32px; max-width:20ch">motion rises, floats and settles.</h2>
+      <div class="trio pm-float-group" style="margin-bottom:40px">
+        <figure><div data-pm-tilt><div class="pm-float" style="color:var(--pm-iron); filter: drop-shadow(var(--pm-shadow-object))"><svg class="gem"><use href="#gem"/></svg></div></div><figcaption>rise.</figcaption></figure>
+        <figure><div data-pm-tilt><div class="pm-float" style="color:var(--pm-grass); filter: drop-shadow(var(--pm-shadow-object)); --pm-float-delay:-2.3s"><svg class="gem"><use href="#gem"/></svg></div></div><figcaption class="pm-muted">float.</figcaption></figure>
+        <figure><div data-pm-tilt><div class="pm-float" style="color:var(--pm-diamond); filter: drop-shadow(var(--pm-shadow-object)); --pm-float-delay:-4.6s"><svg class="gem"><use href="#gem"/></svg></div></div><figcaption>settle.</figcaption></figure>
+      </div>
+      <div class="pm-split pm-split--top">
+        <ul class="pm-list">
+          <li>Sections <strong>rise 28px</strong> and settle over 900ms on a soft curve.</li>
+          <li>Objects float on a 7s breath and lean toward your pointer.</li>
+          <li>Materials cross-fade, like the gem in the hero.</li>
+          <li>Nothing bounces. Reduced motion turns it all off.</li>
+        </ul>
+        <div class="pm-callout">
+          <span class="pm-eyebrow">The message that must be clear</span>
+          <p>Motion gives weight, not entertainment. If you notice it, it's too much.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 04 COMPONENTS -->
+    <article id="b4" class="pm-card" data-pm-reveal>
+      <span class="pm-ring">04</span>
+      <h2 class="pm-h2" style="margin:20px 0 32px">components.</h2>
+      <div class="pm-stack pm-stack--xl">
+        <div class="pm-stack">
+          <p class="pm-eyebrow">Buttons</p>
+          <div class="pm-cluster">
+            <button class="pm-btn">Create project</button>
+            <button class="pm-btn pm-btn--soft">Cancel</button>
+            <button class="pm-btn pm-btn--outline">Preview</button>
+            <button class="pm-btn pm-btn--ghost">Skip</button>
+            <button class="pm-btn pm-btn--danger">Delete</button>
+            <button class="pm-btn pm-btn--sm">Small</button>
+            <button class="pm-btn pm-btn--icon" aria-label="Add">+</button>
+            <button class="pm-btn" disabled>Disabled</button>
+          </div>
+          <div class="pm-cluster" style="--pm-gap:16px">
+            <a class="pm-btn pm-btn--rich" href="#b4">
+              <span class="pm-btn__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span>
+              <span class="pm-btn__text"><b>Download files</b><small>Folder with files for every screen</small></span>
+              <span class="pm-btn__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="pm-btn pm-btn--rich pm-btn--soft" href="#b4">
+              <span class="pm-btn__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              <span class="pm-btn__text"><b>Open the guide</b><small>Everything in one page</small></span>
+              <span class="pm-btn__arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="pm-grid--2 pm-grid" style="--pm-gap:24px">
+          <div class="pm-stack">
+            <p class="pm-eyebrow">Chips & tags</p>
+            <div class="pm-cluster">
+              <span class="pm-chip">13 · 14 · 15 nov</span>
+              <span class="pm-chip pm-chip--solid"><b>26</b> days</span>
+              <span class="pm-chip pm-chip--outline">Draft</span>
+              <span class="pm-tag">Internal · Team</span>
+            </div>
+          </div>
+          <div class="pm-stack">
+            <p class="pm-eyebrow">Tabs</p>
+            <div class="pm-pillnav" role="tablist">
+              <button role="tab" aria-selected="true">All</button>
+              <button role="tab" aria-selected="false">Drafts</button>
+              <button role="tab" aria-selected="false">Archived</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pm-grid--2 pm-grid" style="--pm-gap:16px">
+          <div class="pm-tile">
+            <span class="pm-eyebrow">Direction</span>
+            <strong class="pm-tile__title">To the work, to each other, to the world</strong>
+            <p>Three relationships that shape every decision we make.</p>
+          </div>
+          <div class="pm-tile">
+            <span class="pm-eyebrow">Current series</span>
+            <strong class="pm-tile__title">Made by hand</strong>
+            <p>Going deeper into how we build, and why it matters.</p>
+          </div>
+        </div>
+
+        <div class="pm-grid--2 pm-grid" style="--pm-gap:16px">
+          <div class="pm-alert" role="note">
+            <strong class="pm-alert__title">Attention</strong>
+            <p>Don't present this as a critique of other teams. It's a direction for us, for this season.</p>
+          </div>
+          <div class="pm-alert pm-alert--danger" role="note">
+            <strong class="pm-alert__title">Couldn't save</strong>
+            <p>The connection dropped. Your changes are kept here; try again in a moment.</p>
+          </div>
+        </div>
+
+        <div class="pm-grid--3 pm-grid" style="--pm-gap:24px">
+          <div class="pm-stat"><strong class="pm-stat__value">19</strong><span class="pm-stat__label">years<br>of work</span></div>
+          <div class="pm-stat"><strong class="pm-stat__value" data-pm-countdown="2026-11-13T00:00:00-03:00">—</strong><span class="pm-stat__label">days to<br>the conference</span></div>
+          <div class="pm-stack pm-stack--sm">
+            <progress class="pm-progress" value="64" max="100"></progress>
+            <div class="pm-cluster" style="--pm-gap:14px"><span class="pm-spinner" aria-label="Loading"></span><span class="pm-skeleton" style="width:120px; height:14px"></span></div>
+          </div>
+        </div>
+
+        <div class="pm-table-wrap">
+          <table class="pm-table">
+            <thead><tr><th>Project</th><th>Owner</th><th>Status</th><th class="pm-num">Tasks</th></tr></thead>
+            <tbody>
+              <tr><td>Welcome guide</td><td>Ana</td><td>In review</td><td class="pm-num">12</td></tr>
+              <tr><td>Screen motions</td><td>Leo</td><td>Planned</td><td class="pm-num">4</td></tr>
+              <tr><td>Sign-up flow</td><td>Bia</td><td>Done</td><td class="pm-num">27</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pm-cluster">
+          <button class="pm-btn pm-btn--outline" data-pm-open="confirm">Open dialog</button>
+          <button class="pm-btn pm-btn--soft" onclick="Poiema.toast('Project created ✓')">Show toast</button>
+          <button class="pm-btn" data-pm-copy="poiema · design system" data-pm-copied="Copied ✓">Copy details</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 05 FORMS -->
+    <article id="b5" class="pm-card pm-feature pm-feature--flip" data-pm-reveal>
+      <div class="pm-feature__media" data-pm-tilt>
+        <div class="pm-float" style="width:min(100%, 240px); color:var(--pm-plaster); filter: drop-shadow(var(--pm-shadow-object))"><svg class="gem"><use href="#gem"/></svg></div>
+      </div>
+      <div class="pm-feature__body">
+        <span class="pm-ring">05</span>
+        <h2 class="pm-h2">tell us who you are.</h2>
+        <form class="pm-stack pm-stack--lg" onsubmit="event.preventDefault(); Poiema.toast('Saved ✓')">
+          <div class="pm-grid pm-grid--2">
+            <label class="pm-field"><span class="pm-label">Name</span><input class="pm-input" placeholder="Your name" autocomplete="name"></label>
+            <label class="pm-field"><span class="pm-label">Team</span><select class="pm-select"><option>Design</option><option>Product</option><option>Ministry</option></select></label>
+          </div>
+          <label class="pm-field">
+            <span class="pm-label">Email</span>
+            <input class="pm-input" type="email" value="ana@" aria-invalid="true" aria-describedby="email-error">
+            <span class="pm-error" id="email-error">Enter a valid email.</span>
+          </label>
+          <label class="pm-field"><span class="pm-label">Message</span><textarea class="pm-textarea" placeholder="One or two sentences are enough."></textarea><span class="pm-hint">We read every message.</span></label>
+          <div class="pm-cluster" style="--pm-gap:24px">
+            <label class="pm-choice"><input class="pm-check" type="checkbox" checked> Keep me posted</label>
+            <label class="pm-choice"><input class="pm-radio" type="radio" name="f" checked> Monthly</label>
+            <label class="pm-choice"><input class="pm-radio" type="radio" name="f"> Weekly</label>
+            <label class="pm-choice"><input class="pm-switch" type="checkbox" role="switch" checked> Reminders</label>
+          </div>
+          <div class="pm-input-group"><input class="pm-input" placeholder="Search projects" aria-label="Search projects"><button class="pm-btn" type="button">Search</button></div>
+          <div><button class="pm-btn pm-btn--lg">Send</button></div>
+        </form>
+      </div>
+    </article>
+
+    <!-- 06 VOICE -->
+    <article id="b6" class="pm-card" data-theme="dark" data-pm-reveal>
+      <span class="pm-ring">06</span>
+      <h2 class="pm-h2" style="margin:20px 0 28px">how we talk.</h2>
+      <p class="pm-h1" style="max-width:13ch; margin-bottom:48px">the message is bigger than <span class="pm-muted">the messenger.</span></p>
+      <div class="pm-split pm-split--top">
+        <ul class="pm-list">
+          <li>We speak as <strong>we</strong>, to our family. We are never selling.</li>
+          <li>We say what something is not, then what it is.</li>
+          <li>Three short beats, each with a period: <strong>plan. focus. finish.</strong></li>
+          <li>Buttons start with a verb. Feedback ends with a ✓.</li>
+        </ul>
+        <div class="pm-stack">
+          <div class="pm-callout">
+            <span class="pm-eyebrow">The message that must be clear</span>
+            <p>Every section closes with the one thing a reader must take away.</p>
+            <p class="pm-callout__big">Not more words. Clearer ones.</p>
+          </div>
+          <div class="pm-alert">
+            <strong class="pm-alert__title">Important</strong>
+            <p>Freedom in how you say it should never change what it means.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- KEEP / FREE -->
+    <div class="pm-grid pm-grid--2" data-pm-stagger>
+      <div class="pm-card pm-card--compact">
+        <p class="pm-eyebrow" style="margin-bottom:22px">What every screen must keep</p>
+        <ul class="pm-list pm-list--check">
+          <li>The gray room and the ink actions.</li>
+          <li>Lowercase headlines that end with a period.</li>
+          <li>One clear message per section.</li>
+          <li>Soft shapes: 40px cards, pills, rings.</li>
+        </ul>
+      </div>
+      <div class="pm-card pm-card--compact pm-card--outline">
+        <p class="pm-eyebrow" style="margin-bottom:22px">What is up to each team</p>
+        <ul class="pm-list pm-list--open">
+          <li>The layout and order of sections.</li>
+          <li>Which object tells your story.</li>
+          <li>The language and examples you use.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 TICKET -->
+  <section id="b7" class="pm-section pm-container" data-pm-reveal>
+    <header class="pm-section-head">
+      <span class="pm-ring">07</span>
+      <h2 class="pm-h1">practical details.</h2>
+      <p>For events, plans and summaries: the facts people need, set as a ticket.</p>
+    </header>
+    <div class="pm-ticket">
+      <div class="pm-ticket__main">
+        <p class="pm-eyebrow">poiema · design week</p>
+        <div class="pm-ticket__dates"><span>13</span><span>14</span><span>15</span></div>
+        <p class="pm-ticket__month">november · 2026</p>
+      </div>
+      <div class="pm-ticket__side">
+        <div class="pm-ticket__row"><span>Venue</span><strong>The Studio</strong></div>
+        <div class="pm-ticket__row"><span>City</span><strong>Taubaté, São Paulo</strong></div>
+        <div class="pm-ticket__row"><span>Seats</span><strong>Last batch available</strong></div>
+        <div class="pm-ticket__row" style="justify-content:center"><div class="pm-stat"><strong class="pm-stat__value" data-pm-countdown="2026-11-13T00:00:00-03:00">—</strong><span class="pm-stat__label">days to go</span></div></div>
+      </div>
+    </div>
+    <div class="pm-cluster pm-cluster--between" style="margin-top:22px">
+      <p class="pm-body"><strong>Note:</strong> encourage people to save their seat early.</p>
+      <button class="pm-btn" data-pm-copy-target="#b7 .pm-ticket">Copy details</button>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="pm-band pm-center" style="margin-top: var(--pm-section)">
+    <div class="pm-container pm-stack pm-stack--xl" data-pm-reveal>
+      <p class="pm-eyebrow">Our central message</p>
+      <p class="pm-h3 pm-measure" style="max-width:24em; margin-inline:auto">We build things that are quiet enough to be trusted and clear enough to be followed, and made with care from the first sketch to the last pixel.</p>
+      <div class="materials pm-float-group" aria-hidden="true">
+        <div class="pm-float" style="color:var(--pm-clay); filter: drop-shadow(0 16px 18px rgba(0,0,0,.16))"><svg class="gem"><use href="#gem"/></svg></div>
+        <div class="pm-float" style="color:var(--pm-plaster); filter: drop-shadow(0 16px 18px rgba(0,0,0,.16))"><svg class="gem"><use href="#gem"/></svg></div>
+        <div class="pm-float" style="color:var(--pm-grass); filter: drop-shadow(0 16px 18px rgba(0,0,0,.16))"><svg class="gem"><use href="#gem"/></svg></div>
+        <div class="pm-float" style="color:var(--pm-iron); filter: drop-shadow(0 16px 18px rgba(0,0,0,.16))"><svg class="gem"><use href="#gem"/></svg></div>
+        <div class="pm-float" style="color:var(--pm-diamond); filter: drop-shadow(0 16px 18px rgba(0,0,0,.16))"><svg class="gem"><use href="#gem"/></svg></div>
+      </div>
+      <p class="pm-display">quiet. <span class="pm-muted">tactile.</span> clear.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pm-footer" data-theme="dark">
+  <strong class="pm-topbar__brand">poiema</strong>
+  <p>poiema-ui · Design system · Internal use</p>
+</footer>
+
+<dialog class="pm-dialog" id="confirm">
+  <div class="pm-stack pm-stack--lg">
+    <span class="pm-ring">!</span>
+    <h2 class="pm-h2">delete project?</h2>
+    <p class="pm-body">This removes the project and its 12 tasks. It can't be undone.</p>
+    <div class="pm-cluster">
+      <button class="pm-btn pm-btn--danger" data-pm-close onclick="Poiema.toast('Project deleted ✓')">Delete</button>
+      <button class="pm-btn pm-btn--soft" data-pm-close>Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const t = document.getElementById('theme');
+  t.addEventListener('click', () => {
+    const dark = document.documentElement.dataset.theme !== 'dark';
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    t.textContent = dark ? 'Light' : 'Dark';
+  });
+</script>
+</body>
+</html>

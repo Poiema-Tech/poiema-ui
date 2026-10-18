@@ -1,0 +1,46 @@
+/* ==========================================================================
+   base — gentle reset + document defaults. Lowest layer: anything you write wins.
+   ========================================================================== */
+@layer poiema.base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--pm-canvas);
+    color: var(--pm-ink);
+    font-family: var(--pm-font);
+    font-size: var(--pm-text-base);
+    line-height: var(--pm-leading-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) { margin: 0; }
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-title);
+    line-height: var(--pm-leading-title);
+    text-wrap: balance;
+  }
+  :where(p, li) { text-wrap: pretty; }
+  :where(ul, ol)[class] { list-style: none; margin: 0; padding: 0; }
+  :where(img, picture, video, canvas) { display: block; max-width: 100%; }
+  :where(svg) { max-width: 100%; }
+  :where(input, button, textarea, select) { font: inherit; color: inherit; }
+  :where(a) { color: inherit; text-underline-offset: .18em; text-decoration-thickness: 1.5px; }
+  :where(strong, b) { font-weight: var(--pm-weight-bold); }
+  :where([hidden]) { display: none !important; }
+
+  ::selection { background: var(--pm-ink); color: var(--pm-on-ink); }
+
+  :focus-visible { outline: 2px solid var(--pm-ink); outline-offset: 3px; }
+
+  /* Any element can switch theme for its subtree: <section data-theme="dark"> */
+  [data-theme] { background-color: var(--pm-canvas); color: var(--pm-ink); }
+}

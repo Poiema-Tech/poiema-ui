@@ -1,0 +1,12 @@
+{
+  "name": "poiema",
+  "owner": { "name": "Guilherme Toti" },
+  "description": "Poiema design system for Claude Code.",
+  "plugins": [
+    {
+      "name": "poiema",
+      "source": "./",
+      "description": "Skills to build, write and review UI in the Poiema design system."
+    }
+  ]
+}

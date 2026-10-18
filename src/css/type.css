@@ -1,0 +1,217 @@
+/* ==========================================================================
+   type — one family (Inter Tight); hierarchy comes from weight, size and
+   negative tracking. Display text is lowercase and ends with a period.
+   ========================================================================== */
+@layer poiema.components {
+  .pm-eyebrow {
+    display: block;
+    font-size: var(--pm-text-xs);
+    font-weight: var(--pm-weight-bold);
+    letter-spacing: var(--pm-tracking-eyebrow);
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--pm-label);
+  }
+
+  .pm-display,
+  .pm-h1,
+  .pm-h2,
+  .pm-h3,
+  .pm-h4 { color: var(--pm-ink); text-wrap: balance; margin: 0; }
+
+  .pm-display {
+    font-size: var(--pm-text-display);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-display);
+    line-height: var(--pm-leading-display);
+  }
+  .pm-h1 {
+    font-size: var(--pm-text-h1);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-heading);
+    line-height: var(--pm-leading-display);
+  }
+  .pm-h2 {
+    font-size: var(--pm-text-h2);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-heading);
+    line-height: var(--pm-leading-heading);
+  }
+  /* h3 is the "statement": a full sentence set big and bold */
+  .pm-h3 {
+    font-size: var(--pm-text-h3);
+    font-weight: var(--pm-weight-bold);
+    letter-spacing: var(--pm-tracking-title);
+    line-height: var(--pm-leading-statement);
+  }
+  .pm-h4 {
+    font-size: var(--pm-text-h4);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-title);
+    line-height: var(--pm-leading-title);
+  }
+
+  .pm-lead {
+    font-size: var(--pm-text-lead);
+    line-height: var(--pm-leading-body);
+    color: var(--pm-ink-2);
+    max-width: 38em;
+  }
+  .pm-lead strong { color: var(--pm-ink); }
+
+  .pm-body { font-size: var(--pm-text-base); line-height: var(--pm-leading-body); color: var(--pm-ink-2); }
+  .pm-small { font-size: var(--pm-text-sm); line-height: var(--pm-leading-snug); color: var(--pm-ink-2); }
+  .pm-fine { font-size: 13px; line-height: var(--pm-leading-snug); color: var(--pm-label); }
+
+  .pm-numeral {
+    font-size: var(--pm-text-numeral);
+    font-weight: var(--pm-weight-black);
+    letter-spacing: var(--pm-tracking-numeral);
+    line-height: var(--pm-leading-numeral);
+  }
+
+  /* --- ring: the circled number. Same drawing as the "26" of the logo ------ */
+  .pm-ring {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 3.5px solid currentColor;
+    font-size: 19px;
+    font-weight: var(--pm-weight-bold);
+    font-style: normal;
+    letter-spacing: -.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .pm-ring--sm { width: 26px; height: 26px; border-width: 2px; font-size: 11px; font-weight: var(--pm-weight-heavy); }
+  .pm-ring--lg { width: 72px; height: 72px; border-width: 4.5px; font-size: 26px; }
+
+  @media (max-width: 560px) {
+    .pm-ring:not(.pm-ring--sm, .pm-ring--lg) { width: 44px; height: 44px; border-width: 3px; font-size: 16px; }
+  }
+
+  /* --- lockup: small word stacked over a huge word, an object standing in for a
+         letter, and a ringed badge. Hero only. ------------------------------ */
+  .pm-lockup {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0;
+    font-size: var(--pm-text-hero);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-display);
+    line-height: .8;
+    color: var(--pm-ink);
+    text-align: left;
+  }
+  .pm-lockup__top {
+    font-size: .42em;
+    font-weight: var(--pm-weight-bold);
+    letter-spacing: -.045em;
+    margin: 0 0 .06em .03em;
+  }
+  .pm-lockup__main { display: flex; align-items: flex-end; }
+  .pm-lockup__object {
+    position: relative;
+    display: inline-grid;
+    width: .94em;
+    height: .8em;
+    margin: 0 -.06em -.11em -.03em;
+  }
+  .pm-lockup__object > * {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 .06em .05em rgba(0, 0, 0, .18));
+  }
+  .pm-lockup__badge {
+    display: grid;
+    place-items: center;
+    align-self: center;
+    width: 1.95em;
+    height: 1.95em;
+    margin: .32em 0 0 .06em;
+    border: .16em solid currentColor;
+    border-radius: 50%;
+    font-size: .2em;
+    font-weight: var(--pm-weight-semibold);
+    letter-spacing: -.02em;
+    line-height: 1;
+  }
+
+  /* --- prose: style raw HTML from markdown/CMS ----------------------------- */
+  .pm-prose { color: var(--pm-ink-2); max-width: 68ch; }
+  .pm-prose > * + * { margin-top: 1em; }
+  .pm-prose :is(h1, h2, h3, h4) { color: var(--pm-ink); text-wrap: balance; }
+  .pm-prose > :is(h1, h2, h3, h4) + * { margin-top: .6em; }
+  .pm-prose h1 { font-size: var(--pm-text-h1); font-weight: 800; letter-spacing: var(--pm-tracking-heading); line-height: var(--pm-leading-display); }
+  .pm-prose h2 { font-size: var(--pm-text-h2); font-weight: 800; letter-spacing: var(--pm-tracking-heading); line-height: var(--pm-leading-heading); margin-top: 1.4em; }
+  .pm-prose h3 { font-size: var(--pm-text-h4); font-weight: 800; letter-spacing: var(--pm-tracking-title); line-height: var(--pm-leading-title); margin-top: 1.6em; }
+  .pm-prose h4 { font-size: var(--pm-text-xs); font-weight: 700; letter-spacing: var(--pm-tracking-eyebrow); text-transform: uppercase; color: var(--pm-label); margin-top: 2em; }
+  .pm-prose strong { color: var(--pm-ink); }
+  .pm-prose a { color: var(--pm-ink); font-weight: var(--pm-weight-semibold); }
+  .pm-prose :is(ul, ol) { padding: 0; list-style: none; }
+  .pm-prose li { position: relative; padding-left: 28px; }
+  .pm-prose li + li { margin-top: 10px; }
+  .pm-prose ul > li::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: .62em;
+    width: 9px;
+    height: 9px;
+    border-radius: 1px;
+    background: var(--pm-ink);
+    transform: rotate(45deg);
+  }
+  .pm-prose ol { counter-reset: pm-ol; }
+  .pm-prose ol > li { counter-increment: pm-ol; padding-left: 36px; }
+  .pm-prose ol > li::before {
+    content: counter(pm-ol);
+    position: absolute;
+    left: 0;
+    top: .15em;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--pm-ink);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--pm-ink);
+  }
+  .pm-prose blockquote {
+    margin-block: 1.6em;
+    font-size: var(--pm-text-h4);
+    font-weight: var(--pm-weight-bold);
+    letter-spacing: var(--pm-tracking-title);
+    line-height: 1.2;
+    color: var(--pm-ink);
+  }
+  .pm-prose code {
+    font-family: var(--pm-font-mono);
+    font-size: .88em;
+    padding: .12em .42em;
+    border-radius: 6px;
+    background: var(--pm-line);
+    color: var(--pm-ink);
+  }
+  .pm-prose pre {
+    padding: 20px 24px;
+    border-radius: var(--pm-radius-md);
+    background: var(--pm-inverse-bg);
+    color: var(--pm-inverse-fg);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  .pm-prose pre code { padding: 0; background: none; color: inherit; font-size: inherit; }
+  .pm-prose hr { border: 0; border-top: 1.5px solid var(--pm-line); margin-block: 2.2em; }
+  .pm-prose img { border-radius: var(--pm-radius-md); }
+}

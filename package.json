@@ -1,0 +1,71 @@
+{
+  "name": "poiema-ui",
+  "version": "0.1.0",
+  "description": "Poiema design system: monochrome, tactile, editorial. Framework-agnostic CSS tokens + pm-* component classes, tiny optional JS behaviors, Tailwind v4 theme, and agent context (AGENTS.md, skills) so AI builds in the same voice.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guilherme-toti/poiema-style-guide.git"
+  },
+  "keywords": [
+    "design-system",
+    "css",
+    "design-tokens",
+    "tailwind",
+    "framework-agnostic",
+    "agents",
+    "claude-skills"
+  ],
+  "main": "./dist/poiema.js",
+  "module": "./dist/poiema.js",
+  "types": "./dist/poiema.d.ts",
+  "style": "./dist/poiema.css",
+  "unpkg": "./dist/poiema.auto.js",
+  "jsdelivr": "./dist/poiema.auto.js",
+  "exports": {
+    ".": {
+      "types": "./dist/poiema.d.ts",
+      "default": "./dist/poiema.js"
+    },
+    "./css": "./dist/poiema.css",
+    "./poiema.css": "./dist/poiema.css",
+    "./poiema.min.css": "./dist/poiema.min.css",
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind.css": "./dist/tailwind.css",
+    "./fonts.css": "./dist/fonts.css",
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "default": "./dist/tokens.js"
+    },
+    "./tokens.json": "./dist/tokens.json",
+    "./auto": "./dist/poiema.auto.js",
+    "./assets/*": "./dist/assets/*",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "*.css",
+    "./dist/poiema.auto.js"
+  ],
+  "bin": {
+    "poiema-ui": "./bin/poiema-ui.mjs"
+  },
+  "files": [
+    "dist",
+    "src",
+    "docs",
+    "skills",
+    "bin",
+    "AGENTS.md",
+    "llms.txt",
+    "llms-full.txt"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/build.mjs && node --test test/package.test.mjs",
+    "demo": "node scripts/build.mjs && npx --yes serve -l 4173 ."
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

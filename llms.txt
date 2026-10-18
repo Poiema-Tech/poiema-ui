@@ -1,0 +1,27 @@
+# poiema-ui
+
+> Poiema design system. A monochrome gray gallery with huge lowercase Inter Tight headlines, 40px cards, pill buttons, ringed numbers and ink callouts. Color appears only in tactile material objects (clay, plaster, grass, iron, diamond). The voice is sincere and communal, and motion settles slowly. Framework-agnostic CSS (`pm-*` classes, `--pm-*` tokens), optional tiny JS behaviors, a Tailwind v4 theme, and Claude skills.
+
+Start with AGENTS.md (rules + cheat-sheet). Everything in one file: llms-full.txt.
+
+## Core
+- [AGENTS.md](AGENTS.md): rules for coding agents, class cheat-sheet, checklist
+- [Principles](docs/principles.md): tone, mood, do/don't
+- [Voice](docs/voice.md): conversation style, microcopy kit (pt-BR + en)
+
+## Foundations
+- [Color](docs/color.md): grayscale room, material palette, themes, contrast table
+- [Typography](docs/typography.md): Inter Tight scale and rules
+- [Layout](docs/layout.md): grid, rhythm, radii, elevation, page anatomy
+- [Motion](docs/motion.md): curve, durations, motion catalogue
+- [Imagery](docs/imagery.md): objects and materials, prompt recipe
+- [Tokens](docs/tokens.md): every token value (generated)
+
+## Building
+- [Components](docs/components.md): every pm-* class with HTML
+- [Frameworks](docs/frameworks.md): HTML/CDN, Next.js, SvelteKit, Vue, Astro, Tailwind v4, tokens in JS
+
+## Skills
+- [poiema-design](skills/poiema-design/SKILL.md): build UI
+- [poiema-voice](skills/poiema-voice/SKILL.md): write copy
+- [poiema-review](skills/poiema-review/SKILL.md): audit UI

@@ -1,0 +1,8 @@
+{
+  "name": "poiema",
+  "version": "0.1.0",
+  "description": "Poiema design system skills: build UI (poiema-design), write copy (poiema-voice) and audit screens (poiema-review) in the Poiema style.",
+  "author": { "name": "Guilherme Toti" },
+  "repository": "https://github.com/guilherme-toti/poiema-style-guide",
+  "keywords": ["design-system", "ui", "copywriting", "poiema"]
+}

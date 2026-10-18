@@ -1,0 +1,102 @@
+/* ==========================================================================
+   motion — slow, weighty, settling. Things rise into place, objects float,
+   materials cross-fade. Nothing bounces, nothing spins for fun.
+   Behaviors marked [JS] need poiema.js (init() or the per-element actions).
+   ========================================================================== */
+@layer poiema.components {
+  /* [JS] reveal on scroll: rise 28px + fade, once. Hidden only when scripting is
+     on; if init() never runs, a failsafe shows everything after 2.5s. */
+  [data-pm-reveal],
+  [data-pm-stagger] > * {
+    transition:
+      opacity var(--pm-dur-reveal) ease,
+      transform var(--pm-dur-reveal) var(--pm-ease);
+  }
+  [data-pm-stagger] > * { transition-delay: calc(var(--pm-i, 0) * var(--pm-stagger-step)); }
+
+  @media (scripting: enabled) {
+    [data-pm-reveal]:not([data-pm-in]),
+    [data-pm-stagger]:not([data-pm-in]) > * {
+      opacity: 0;
+      transform: translateY(var(--pm-reveal-distance));
+    }
+    [data-pm-reveal="fade"]:not([data-pm-in]) { transform: none; }
+    [data-pm-reveal="scale"]:not([data-pm-in]) { transform: scale(.96); }
+    :root:not([data-pm-ready]) :is([data-pm-reveal], [data-pm-stagger] > *) {
+      animation: pm-failsafe 0s 2.5s forwards;
+    }
+  }
+
+  /* Float: objects drift 10px on a 7s breath. Uses `translate`, so it composes
+     with tilt (which uses `transform`). Stagger siblings with .pm-float-group. */
+  .pm-float { animation: pm-float var(--pm-float-duration) var(--pm-ease-float) infinite; animation-delay: var(--pm-float-delay, 0s); }
+  .pm-float-group > :nth-child(2) { --pm-float-delay: -1.2s; }
+  .pm-float-group > :nth-child(3) { --pm-float-delay: -2.4s; }
+  .pm-float-group > :nth-child(4) { --pm-float-delay: -3.6s; }
+  .pm-float-group > :nth-child(5) { --pm-float-delay: -4.8s; }
+  .pm-float-group > :nth-child(6) { --pm-float-delay: -6s; }
+
+  /* [JS] Tilt: the first child leans toward the pointer (hover devices only). */
+  [data-pm-tilt] > :first-child {
+    transform:
+      perspective(700px)
+      rotateY(var(--pm-tilt-y, 0deg))
+      rotateX(var(--pm-tilt-x, 0deg))
+      scale(var(--pm-tilt-s, 1));
+    transition: transform .25s ease-out;
+  }
+
+  /* [JS] Cycle: stacked children cross-fade one at a time ("material swap"). */
+  [data-pm-cycle] { display: grid; }
+  [data-pm-cycle] > * {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: scale(.9) rotate(-8deg);
+    transition:
+      opacity var(--pm-dur-slow) ease,
+      transform var(--pm-dur-swap) var(--pm-ease);
+  }
+  [data-pm-cycle] > [data-pm-active],
+  [data-pm-cycle]:not(:has(> [data-pm-active])) > :first-child { opacity: 1; transform: none; }
+
+  /* [JS] Copy feedback: the label is swapped for data-pm-feedback for ~2s. */
+  [data-pm-copy] { position: relative; }
+  [data-pm-copy][data-pm-feedback] { color: transparent; }
+  [data-pm-copy][data-pm-feedback] > * { visibility: hidden; }
+  [data-pm-copy][data-pm-feedback]::after {
+    content: attr(data-pm-feedback);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--pm-btn-fg, var(--pm-ink));
+  }
+
+  /* Hover lift for anything clickable that isn't a .pm-btn. */
+  .pm-lift { transition: transform var(--pm-dur-fast) var(--pm-ease); }
+  .pm-lift:hover { transform: translateY(var(--pm-lift)); }
+
+  @keyframes pm-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 var(--pm-float-distance); } }
+  @keyframes pm-marquee { to { transform: translateX(-50%); } }
+  @keyframes pm-cue { 0% { opacity: 0; transform: translateY(-3px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(12px); } }
+  @keyframes pm-rise { from { opacity: 0; transform: translateY(var(--pm-reveal-distance)); } }
+  @keyframes pm-fade { from { opacity: 0; } }
+  @keyframes pm-spin { to { transform: rotate(1turn); } }
+  @keyframes pm-breathe { 50% { opacity: .45; } }
+  @keyframes pm-failsafe { to { opacity: 1; transform: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    [data-pm-reveal],
+    [data-pm-stagger] > * { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .pm-float,
+    .pm-marquee__track,
+    .pm-scroll-cue::after,
+    .pm-skeleton { animation: none !important; }
+    .pm-spinner { animation-duration: 2.4s; }
+    [data-pm-tilt] > :first-child { transform: none !important; }
+    [data-pm-cycle] > * { transition: opacity 1ms; transform: none; }
+    .pm-btn:hover, .pm-lift:hover, a.pm-card:hover { transform: none; }
+    .pm-dialog[open], .pm-dialog[open]::backdrop { animation: none; }
+  }
+}

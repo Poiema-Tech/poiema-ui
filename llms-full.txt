@@ -1,0 +1,1198 @@
+# poiema-ui — full context
+
+Poiema design system: monochrome, tactile, editorial. Framework-agnostic CSS tokens + pm-* component classes, tiny optional JS behaviors, Tailwind v4 theme, and agent context (AGENTS.md, skills) so AI builds in the same voice.
+
+
+---
+
+# Poiema UI — instructions for coding agents
+
+You are building UI with the **Poiema design system** (`poiema-ui`). Follow these rules whenever you create or change anything users see: markup, styles, copy or motion. Details live in `docs/` next to this file (in an app: `node_modules/poiema-ui/docs/`).
+
+## The essence
+A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Soft 40px cards and pills. **No hue in the interface**: color lives only in tactile objects (clay, plaster, grass, iron, diamond). The voice is **sincere and communal** ("we", "our family"), and every section ends with **the one message that must be clear**. Motion **rises and settles**; objects float.
+
+## Setup (once per app)
+- CSS: `import 'poiema-ui/css'` (or the CDN `dist/poiema.min.css`). Tailwind v4: see `docs/frameworks.md`.
+- Font: Inter Tight 400–900 (`poiema-ui/fonts.css`, `next/font` with `variable: '--pm-font-sans'`, or `@fontsource-variable/inter-tight`).
+- Behaviors (optional): call `init()` from `poiema-ui` once on the client at the app root, or load `poiema-ui/auto`.
+
+## Hard rules
+1. **Use the `pm-*` classes and `--pm-*` tokens.** Don't invent colors, radii, shadows or fonts. If something is missing, compose it from tokens.
+2. **Grayscale chrome only.** Backgrounds: `--pm-canvas` (page), `.pm-card`, `--pm-surface` (paper). Text: `--pm-ink`, `--pm-ink-2`, `--pm-label`, `--pm-muted`. Material colors (`--pm-clay`, `--pm-grass`…) are for objects, illustrations and data only, never buttons, links or backgrounds. Errors use `--pm-danger`, confirmations `--pm-success`.
+3. **Never use pure white pages.** The page is `#e2e2e2`; cards are paper.
+4. **Display headlines are lowercase and end with a period** (questions end with `?`): `<h2 class="pm-h1">your projects.</h2>`. Eyebrows, tags and alert titles are small, bold, UPPERCASE via CSS.
+5. **One echo per display line:** wrap one phrase in `.pm-muted` (the gray middle beat): `plan. <span class="pm-muted">focus.</span> finish.`
+6. **Soft geometry:** cards 40px (`.pm-card`), callouts 28px, alerts and tiles 24px, buttons/chips/inputs pill. Numbers in rings (`.pm-ring`), bullets are diamonds (`.pm-list`).
+7. **End each section with a `.pm-callout`** holding the key message (label: "The message that must be clear" / "Mensagem que precisa ficar clara").
+8. **Rhythm by inversion:** alternate `.pm-card` and `.pm-card[data-theme="dark"]`; use ink callouts and the marquee band for punctuation, not color.
+9. **Motion:** `data-pm-reveal` on sections/cards, `.pm-float` + `data-pm-tilt` on objects only, curve `--pm-ease`. No bounce, no spin, no parallax. Reduced motion is handled; keep it that way.
+10. **Copy:** verb-first buttons (`Create project`), past-participle feedback (`Saved ✓`), calm alerts (`Attention` / `Important` + why), "we/our", no hype words, no emoji, at most one `!` (the closing line). Full guide: `docs/voice.md`.
+11. **Accessibility:** keep semantic HTML, labels on fields, `aria-invalid` for errors, `aria-current`/`aria-selected` for active pills, alt text on objects (`alt=""` if decorative), visible focus (already styled).
+
+## Cheat-sheet
+
+```
+page        body (canvas) > .pm-topbar + main > .pm-section > .pm-container
+hero        .pm-hero(.pm-hero--pillars) > .pm-eyebrow + .pm-lockup|.pm-display + .pm-cluster(.pm-chip…) + .pm-lead + .pm-scroll-cue
+title       .pm-section-head > .pm-ring + .pm-h1 + p
+card        .pm-card | [data-theme=dark] | --outline | --compact      tile: .pm-tile
+feature     .pm-card.pm-feature(--flip) > .pm-feature__media[data-pm-tilt] > img.pm-object.pm-float + .pm-feature__body
+callout     .pm-callout > .pm-eyebrow + p (+ p.pm-callout__big)
+alert       .pm-alert(--danger|--success) > strong.pm-alert__title + p
+lists       .pm-list (◆) | --check (✓ must keep) | --open (○ your call) | --numbered
+buttons     .pm-btn | --soft | --outline | --ghost | --danger | --sm | --lg | --icon | --block | --rich(__icon __text __arrow)
+chips       .pm-chip | --solid | --outline     .pm-tag (outlined uppercase)
+nav         .pm-pillnav(--sticky) > a|button (+ .pm-ring--sm), active = aria-current / aria-selected
+data        .pm-stat(__value __label) .pm-numeral .pm-ticket(__main __dates __month __side __row) .pm-table .pm-progress
+forms       .pm-field > .pm-label + .pm-input|.pm-select|.pm-textarea + .pm-hint|.pm-error ; .pm-choice > .pm-check|.pm-radio|.pm-switch
+overlay     dialog.pm-dialog (+ data-pm-open="id", data-pm-close) ; toast('Saved ✓')
+layout      .pm-container .pm-section .pm-band .pm-stack(--sm|--lg|--xl) .pm-cluster .pm-grid(--2|--3) .pm-split .pm-ruled
+type        .pm-eyebrow .pm-display .pm-h1 .pm-h2 .pm-h3 .pm-h4 .pm-lead .pm-body .pm-small .pm-numeral .pm-prose
+utility     .pm-muted .pm-ink-2 .pm-nums .pm-center .pm-measure .pm-lower .pm-sr-only .pm-inverse .pm-lift
+themes      data-theme="light|dark|auto" on any element
+motion [JS] data-pm-reveal(="fade"|"scale") data-pm-stagger data-pm-tilt data-pm-cycle data-pm-copy data-pm-countdown
+```
+
+Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label --pm-muted --pm-line --pm-danger --pm-success --pm-font --pm-text-h1 --pm-radius-xl --pm-gutter --pm-section --pm-ease --pm-shadow-float`. Full list: `docs/tokens.md`.
+
+## Before you finish a UI task, check
+- [ ] No hex colors or hues outside tokens; no Tailwind default palette; no pure white page.
+- [ ] Every display headline is lowercase and ends with `.`/`?`; one `.pm-muted` echo at most per line.
+- [ ] Sections that explain something end with a `.pm-callout`.
+- [ ] Radii are 40/28/24/pill; numbers in rings; bullets are diamonds.
+- [ ] Motion only via the catalogue in `docs/motion.md`.
+- [ ] Copy follows `docs/voice.md` (verb-first buttons, ✓ feedback, no emoji).
+
+## Docs map
+`docs/principles.md` tone & mood · `docs/voice.md` conversation style · `docs/color.md` · `docs/typography.md` · `docs/layout.md` · `docs/motion.md` · `docs/components.md` (every class with HTML) · `docs/imagery.md` · `docs/frameworks.md` (Next, Svelte, Vue, Astro, Tailwind, CDN) · `docs/tokens.md` (generated). Skills: `skills/poiema-design`, `skills/poiema-voice`, `skills/poiema-review`.
+
+---
+
+## Working on this repository (not on an app)
+- `src/tokens.json` is the single source for tokens. `src/css/*.css` holds components (each file declares its `@layer`). `src/js/poiema.js` holds behaviors (keep every export a top-level `export function`/`export const`; the auto build strips `export`).
+- `npm run build` regenerates `dist/`, `docs/tokens.md`, the contrast table in `docs/color.md`, `skills/*/references/` and `llms-full.txt`. **Never edit generated files by hand.** Commit `dist/` (GitHub installs and the jsDelivr CDN use it).
+- `npm test` builds and runs `test/`. The build fails if a contrast pair in `src/tokens.json` drops below its threshold.
+- New component: add CSS in the right file, document it in `docs/components.md` (HTML snippet), add it to the cheat-sheet above and to `demo/index.html`.
+- Zero runtime dependencies. Keep it that way.
+
+
+---
+
+# Principles — tone & mood
+
+> **Poiema** (ποίημα): *workmanship, something made*. The system grew out of the direction page for Poiema Conf 26. Its central image is material being formed: **clay → plaster → grass → iron → diamond**. The interface is the quiet studio, and the objects carry the transformation.
+
+## The mood in one line
+
+**A quiet gray gallery, huge confident lowercase type, and a few tactile objects floating in soft light. It is sincere and communal, and it never shouts in color.**
+
+| It feels | It never feels |
+|---|---|
+| quiet, weighty, calm | loud, busy, "growth-hacky" |
+| tactile and physical (objects, shadows, paper) | flat, glossy, neon, gradient-heavy |
+| editorial and poster-like | dashboard-like, template-like |
+| sincere and pastoral ("we", "our family") | salesy, ironic, jokey |
+| clear and decisive | vague, hedging |
+| contemporary and reverent | churchy-clichéd, or cold-corporate |
+
+## The eight principles
+
+### 1. Gray is the room; objects carry the color
+Interface chrome is strictly **grayscale**: canvas `#e2e2e2`, paper `#f7f7f7`, ink `#2b2b2b`. Hue appears only inside **material objects** such as 3D renders, photos and the gem, and in the rare semantic state (danger = clay, success = grass). Never paint buttons, links or backgrounds with a hue.
+
+### 2. Type does the shouting
+Hierarchy comes from **scale, weight and tight tracking** in one family (Inter Tight). Headlines are huge, heavy (800), tightly tracked (-0.05em), **lowercase, and end with a period**: `watch first.` Everything around them is small and calm: 12px tracked uppercase eyebrows, 17px body.
+
+### 3. Soft geometry
+Every container is soft: **40px cards, pill buttons and chips, circular rings**. The only sharp shape is the small rotated-square **diamond** bullet, which echoes the gem. No 4px or 8px "app" corners on large surfaces.
+
+### 4. One thing must be clear
+Each section ends with the single message that must survive: an **inverted ink callout** with the label *"the message that must be clear"*. Write for skimmers. The callout alone should carry the meaning.
+
+### 5. Rhythm by inversion
+Light cards and dark cards alternate. Ink boxes punctuate paper. A dark marquee band breaks the page. Contrast, not color, creates emphasis and pacing.
+
+### 6. Numbers are structure
+Content is a numbered journey: `00 watch first.` → `01` … `07`. Numbers sit in **rings**, the same drawing as the "26" badge of the logo. Dates are typographic: `13 · 14 · 15 nov`, `18.10.2026`.
+
+### 7. Motion settles
+Things **rise 28px and settle** (900ms, `cubic-bezier(.2,.8,.2,1)`). Objects **float** on a slow 7s breath and tilt toward the pointer. Materials **cross-fade**. Nothing bounces, flashes or spins for fun, and everything respects reduced motion.
+
+### 8. Freedom with clear boundaries
+The voice separates **what must be kept** (✓ checks) from **what is up to you** (○ open circles). It explains the *why* behind every rule and trusts the reader.
+
+## Do / don't
+
+| Do | Don't |
+|---|---|
+| Use `--pm-canvas` gray as the page, paper cards on top | Use pure white `#fff` pages or colored backgrounds |
+| One huge lowercase headline per section, ending in `.` | Title Case Headlines Or ALL CAPS HEADLINES |
+| Make one phrase gray (`.pm-muted`) to create an echo: `from christ. <span class="pm-muted">in us.</span> to the world.` | Use color or underline for emphasis in display type |
+| End sections with a `.pm-callout` key message | Bury the main point in the middle of a paragraph |
+| Pills for actions, rings for numbers, diamonds for bullets | Square buttons, emoji bullets, icon-font clutter |
+| Real objects with soft drop shadows, floating | Flat stock illustrations, glossy 3D blobs, gradients as decoration |
+| Calm outlined alerts ("Attention", "Important") | Red/yellow alert banners and exclamation icons |
+| Slow reveal on scroll and gentle float | Bouncy springs, parallax overload, auto-playing noise |
+
+## When building something that isn't a church page
+The system is not tied to its source. A dashboard, a store or a tool gets the same treatment: gray room, paper cards, ink actions, one big lowercase title per view, numbered steps in rings, a callout for the one thing that matters, and a single object (product shot, gem, photo) as the only color on screen.
+
+
+---
+
+# Voice — conversation style
+
+The voice is a **pastor-editor**: warm, communal, sure of itself and brief. It speaks as **"we"** to **"our family"**, explains the *why*, draws clear boundaries and leaves room for freedom. Examples come in Portuguese (the brand's native language) and English. Apply the same rules in either.
+
+## The ten patterns
+
+### 1. Lowercase display headlines that end with a period
+Headlines are statements, so they get a period. Questions keep their `?`.
+
+| pt-BR | en |
+|---|---|
+| `assista primeiro.` | `watch first.` |
+| `orientações gerais às lideranças.` | `general guidance for leaders.` |
+| `por que não vamos divulgar o lineup?` | `why we won't announce the lineup?` |
+| `suas tarefas de hoje.` | `your tasks for today.` |
+
+Body text uses normal sentence case. Proper nouns stay capitalized in body copy and are lowercased only in display headlines (`o que é a poiema conference?`).
+
+### 2. Triads with periods
+Three short beats, each closed by a period. In display type the **middle beat goes gray** (`.pm-muted`), which creates the "echo."
+- `de cristo. em nós. para o mundo.` / `from christ. in us. to the world.`
+- In running text, use a comma triad: `com unidade, clareza e alinhamento` / `with unity, clarity and alignment`.
+- App example: `plan. focus. finish.`
+
+### 3. Reframe: "not X — Y"
+Say what something is *not* before saying what it is. This is the signature rhetorical move.
+- `Não é apenas uma programação de três dias. É um tempo de…` / `It isn't just a three-day schedule. It's a time of…`
+- `Este material não é um roteiro de fala.` / `This isn't a script.`
+- `Mais do que um evento, …` / `More than an event, …`
+- `não apenas …, mas também …` / `not only …, but also …`
+
+### 4. The message that must be clear
+Close every section with one or two sentences in a `.pm-callout` labeled **"Mensagem que precisa ficar clara"** / **"The message that must be clear"**. A reader who skips everything else should still get the point from the callout.
+
+### 5. Communal "we", warm and direct
+Use `nós / nossa família / queremos / cremos` and `we / our family / we want / we believe`. Address the reader as a partner and never as a customer. No hype words ("incrível", "revolutionary", "🚀").
+
+### 6. Freedom with boundaries
+Split guidance explicitly into what must be kept (`.pm-list--check`) and what is up to the reader (`.pm-list--open`), then add one calm `.pm-alert` that guards the meaning:
+> **Important.** Freedom in how you say it should not change what it means.
+
+### 7. Calm alerts that explain
+Alerts are titled with one uppercase word, **Atenção / Attention** or **Importante / Important**. They say what *not* to do and *why*, without blame and without exclamation marks.
+
+### 8. Short verb-first actions, past-tense feedback
+- Buttons: verb + object. `Baixar motions`, `Copiar informações`, `Assistir 2:43` / `Download files`, `Copy details`, `Watch 2:43`.
+- Feedback: past participle + ✓. `Copiado ✓` / `Copied ✓`, `Salvo ✓` / `Saved ✓`.
+- Failure: plain and blameless. `Não foi possível copiar` / `Couldn't copy`.
+- Rich CTA subtitle: one line of *what you get*. `Pasta com os arquivos para cada telão` / `Folder with files for every screen`.
+
+### 9. Typographic data
+- Separate metadata with a middle dot and spaces: `Material interno · Poiemas`, `Tangaroa Hall · Taubaté`.
+- Dates: `13 · 14 · 15 nov`, `18.10.2026`, `novembro · 2026`.
+- Numbers are heroes: `19` (years), `26 dias` (countdown). Let one number be huge.
+- Index steps with two digits in rings: `00`, `01` … `07`. `00` means "before everything".
+
+### 10. Close with a couplet
+End a page with an antithesis or anaphora pair, the one line people repeat:
+- `Não venha por um nome. Venha por Jesus!` / `Don't come for a name. Come for Jesus!`
+- App example: `Not more features. Fewer, better ones.`
+The closing line is the only place an exclamation mark may appear.
+
+## Microcopy kit (app contexts)
+
+| Situation | pt-BR | en |
+|---|---|---|
+| Page title | `seus projetos.` | `your projects.` |
+| Empty state title | `nada por aqui ainda.` | `nothing here yet.` |
+| Empty state body | `Quando você criar o primeiro projeto, ele aparece aqui.` | `When you create your first project, it shows up here.` |
+| Primary action | `Criar projeto` | `Create project` |
+| Destructive confirm | `Excluir projeto?` + `Isso não pode ser desfeito.` | `Delete project?` + `This can't be undone.` |
+| Success toast | `Projeto criado ✓` | `Project created ✓` |
+| Error (form) | `Informe um e-mail válido.` | `Enter a valid email.` |
+| Error (system) | `Algo não funcionou. Tente de novo em instantes.` | `Something didn't work. Try again in a moment.` |
+| Loading | `Carregando…` | `Loading…` |
+| Section eyebrow | `Passo 02 · Detalhes` | `Step 02 · Details` |
+| Key-message callout label | `Mensagem que precisa ficar clara` | `The one thing to remember` |
+| Onboarding step | `00 · comece por aqui.` | `00 · start here.` |
+
+## Punctuation & casing rules
+- Display headlines: lowercase, period at the end (or `?`).
+- Eyebrows, tags and alert titles: UPPERCASE in CSS (`text-transform`), so write them in sentence case in the source.
+- Buttons: Sentence case, no period.
+- Body: sentence case, periods, `—` for asides, `…` for ellipsis.
+- One `<strong>` per paragraph at most. It marks the phrase that must not be missed.
+- No emoji. The only symbols are `·`, `✓`, `○`, `↗` and `—`.
+
+## Self-check before shipping copy
+1. Does every display headline end with `.` or `?` and stay lowercase?
+2. Is there a callout with the one message that must be clear?
+3. Did you use "we/our" instead of "the company/users"?
+4. Is any rhetorical "not X — Y" or triad doing real work, or is it decoration? Use them where they mean something, at most once or twice per page.
+5. Are buttons verb-first, and does feedback use a past participle + ✓?
+6. Zero hype words, zero emoji, at most one exclamation mark (the closing line).
+
+
+---
+
+# Color
+
+**The interface is grayscale. Color lives in objects.** The grays are the exact values of the reference page. The five **materials** were sampled from its 3D gem renders: barro, gesso, grama, ferro, diamante.
+
+## Neutrals — the room
+
+| Role | Token | Light | Dark |
+|---|---|---|---|
+| Page | `--pm-canvas` | `#e2e2e2` cool mid-gray | `#161616` |
+| Paper (chips, inputs, bands) | `--pm-surface` | `#f7f7f7` | `#262626` |
+| Panel / card base | `--pm-surface-2` | `#ececec` | `#1f1f1f` |
+| Card fill | `--pm-card` | `linear-gradient(160deg, #fafafa, #ececec)` | `#1f1f1f` |
+| Text, icons, solid buttons | `--pm-ink` | `#2b2b2b` | `#f7f7f7` |
+| Body copy | `--pm-ink-2` | `#555555` | `#b9b9b9` |
+| Small labels | `--pm-label` | `#646464` | `#9a9a9a` |
+| Echo gray (large text only) | `--pm-muted` | `#7d7d7d` | `#8d8d8d` |
+| Hairlines | `--pm-line` | `rgba(43,43,43,.14)` | `rgba(255,255,255,.12)` |
+
+Pure white `#fff` appears only as the 1px top highlight on cards (`--pm-card-edge`). Pages are never white.
+
+## Materials — the objects
+
+| Material | pt-BR | Token | Light | Base | Deep |
+|---|---|---|---|---|---|
+| Clay | barro | `--pm-clay` | `#d47b4d` | `#b8562a` | `#903b14` |
+| Plaster | gesso | `--pm-plaster` | `#edebe9` | `#cfcbc6` | `#a9a49d` |
+| Grass | grama | `--pm-grass` | `#8aa83a` | `#4b650a` | `#2f4305` |
+| Iron | ferro | `--pm-iron` | `#777164` | `#534d40` | `#2b261c` |
+| Diamond | diamante | `--pm-diamond` | `#eef1f2` | `#c3c8ca` | `#8f989c` |
+
+The order matters. It tells a story of **formation** (clay → diamond), so when you show all five, keep that sequence.
+
+**Use materials for:** the gem and other illustrations, object renders, data-viz series, avatars and placeholders, a category dot.
+**Never use materials for:** buttons, links, backgrounds, focus rings or borders of interactive UI.
+
+### Semantic states
+- `--pm-danger` (clay): errors and destructive actions. It's a warm earth tone, never alarm red. Pair it with text such as "Couldn't save", never color alone.
+- `--pm-success` (grass): confirmations.
+- No "warning" or "info" hue. Use a neutral `.pm-alert` with an uppercase title.
+
+## Themes & inversion
+
+- `data-theme="light" | "dark" | "auto"` on **any** element re-maps every semantic token for that subtree and paints it with `--pm-canvas`. Use it on `<html>` for the whole app, or on a single card for the dark-card rhythm. (`.pm-card` keeps its own card fill, `#1f1f1f` in dark.)
+- `.pm-inverse` (built into `.pm-callout`, `.pm-marquee` and `.pm-ticket__main`) flips the foreground tokens and fills with ink: a **dark box on light pages and a paper box on dark cards**, automatically.
+- Solid buttons use `--pm-ink` / `--pm-on-ink`, so they flip with the theme on their own.
+
+## Accessibility
+
+The build checks these pairs in both themes and fails if one regresses. `muted` is reserved for large display text, which needs 3:1. For small gray text, use `label` or `ink-2`. Small labels (`--pm-label`) are a little darker than the reference page's `#8a8a8a` so 12px uppercase text passes AA. Design tweak: the echo gray moved from `#8a8a8a` to `#7d7d7d` to pass 3:1 on the canvas.
+
+<!-- contrast:start -->
+| Foreground | Background | Light | Dark | Needs |
+|---|---|---|---|---|
+| `ink` | `canvas` | 10.93 | 16.89 | 4.5 (AA) |
+| `ink` | `surface` | 13.22 | 14.13 | 4.5 (AA) |
+| `ink` | `surface-2` | 11.99 | 15.39 | 4.5 (AA) |
+| `ink-2` | `canvas` | 5.75 | 9.22 | 4.5 (AA) |
+| `ink-2` | `surface` | 6.96 | 7.71 | 4.5 (AA) |
+| `ink-2` | `surface-2` | 6.31 | 8.40 | 4.5 (AA) |
+| `label` | `canvas` | 4.57 | 6.43 | 4.5 (AA) |
+| `label` | `surface` | 5.52 | 5.38 | 4.5 (AA) |
+| `label` | `surface-2` | 5.01 | 5.86 | 4.5 (AA) |
+| `muted` | `canvas` | 3.18 | 5.45 | 3 (large text) |
+| `muted` | `surface` | 3.84 | 4.56 | 3 (large text) |
+| `muted` | `surface-2` | 3.48 | 4.97 | 3 (large text) |
+| `on-ink` | `ink` | 13.22 | 13.22 | 4.5 (AA) |
+| `on-ink-2` | `ink` | 7.22 | 6.96 | 4.5 (AA) |
+| `on-ink-label` | `ink` | 5.03 | 5.52 | 4.5 (AA) |
+| `on-ink-muted` | `ink` | 4.27 | 3.84 | 3 (large text) |
+| `danger` | `canvas` | 5.75 | 5.81 | 4.5 (AA) |
+| `danger` | `surface` | 6.95 | 4.86 | 4.5 (AA) |
+| `success` | `canvas` | 6.05 | 6.67 | 4.5 (AA) |
+| `success` | `surface` | 7.32 | 5.58 | 4.5 (AA) |
+<!-- contrast:end -->
+
+
+---
+
+# Typography
+
+**One family: [Inter Tight](https://fonts.google.com/specimen/Inter+Tight)** (400–900). It's a narrow grotesk, and the tightness is the point. Weight, size and negative tracking carry all hierarchy. Fallback: `"Helvetica Neue", Helvetica, Arial, sans-serif`.
+
+## Loading the font
+Pick one:
+- **Google Fonts**: `@import "poiema-ui/fonts.css";` or `<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">`
+- **Self-hosted**: `npm i @fontsource-variable/inter-tight` then `import "@fontsource-variable/inter-tight"` (family `"Inter Tight Variable"` is already in the stack).
+- **Next.js**: `next/font/google` → `Inter_Tight({ subsets: ['latin'], variable: '--pm-font-sans' })` and put the class on `<html>`.
+
+## Scale
+
+| Class | Size | Weight | Tracking | Leading | Use |
+|---|---|---|---|---|---|
+| `.pm-lockup` | 92→290px | 800 | -0.055em | .8 | Hero wordmark only |
+| `.pm-display` | 56→160px | 800 | -0.055em | .92 | Closing motto, one huge word |
+| `.pm-numeral` | 76→168px | 900 | -0.07em | .8 | Dates, years, counts |
+| `.pm-h1` | 40→88px | 800 | -0.05em | .92 | Section titles |
+| `.pm-h2` | 34→58px | 800 | -0.05em | .95 | Card titles |
+| `.pm-h3` | 26→44px | 700 | -0.035em | 1.14 | **Statements**: a full sentence set big |
+| `.pm-h4` | 20→26px | 800 | -0.035em | 1.1 | Tile titles, ticket values |
+| `.pm-lead` | 16→19px | 400 | 0 | 1.6 | Intro paragraph (ink-2, strong = ink) |
+| body | 17px (16 mobile) | 400 | 0 | 1.6 | Everything else |
+| `.pm-eyebrow` | 12px | 700 | +0.14em | 1.4 | UPPERCASE labels above titles |
+| `.pm-tag` | 11px | 700 | +0.10em | 1.2 | Outlined pill label |
+
+## Rules
+1. **Display text is lowercase and ends with a period.** Write it lowercase in the source, or use `.pm-lower` for CMS content.
+2. **The echo:** wrap one phrase of a display line in `.pm-muted`, usually the middle beat of a triad or the last words of a quote: `a mensagem sempre foi maior do que <span class="pm-muted">o mensageiro.</span>`
+3. **Negative tracking grows with size.** Body is 0, titles -0.035em, headlines -0.05em, numerals -0.07em. Never track body text.
+4. **Uppercase only for small labels**, always tracked +0.10 to +0.14em, always bold.
+5. **Weights:** 400 body · 600 nav/chips · 700 labels, strong, statements · 800 headlines · 900 numerals. Avoid 300 and lighter.
+6. **`<strong>` is ink, the surrounding body is ink-2.** That contrast is how emphasis reads. Use one per paragraph.
+7. **Balance headlines** (`text-wrap: balance`, applied automatically) and cap them with `max-width: 14ch` in narrow columns.
+8. **Tabular numbers** for times, counters and tables (`.pm-nums`).
+
+
+---
+
+# Layout, surfaces & spacing
+
+## Grid & rhythm
+- **Container:** `.pm-container`, 1180px max with a fluid gutter of `clamp(16px, 4vw, 48px)`.
+- **Sections:** `.pm-section` adds half of `clamp(64px, 9vw, 120px)` above and below, so sections stack with one full gap.
+- **Cards** pad `clamp(28px, 5.5vw, 72px)`, which is generous. Content never touches a card's edge.
+- **Gaps between cards** are small (16–20px). Cards read as a stack of plates, not a grid of tiles.
+- **Breakpoints:** 900px (columns collapse) and 560px (type and padding shrink).
+
+## Space scale
+4 · 8 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 · 72 · 96 · 120 (`--pm-space-1` … `--pm-space-30`). Typical values: 8 between chips, 12–16 between list items and tiles, 28 between a title and its body, 36 under a section head.
+
+## Radii
+
+| Token | px | Where |
+|---|---|---|
+| `--pm-radius-xl` | 40 | **Signature.** Cards, frames, tickets, dialogs, dark sections |
+| `--pm-radius-lg` | 28 | Callouts |
+| `--pm-radius-md` | 24 | Alerts, tiles, textareas, mobile frames |
+| `--pm-radius-sm` | 14 | Inner screens, skeletons |
+| `--pm-radius-xs` | 7 | Checkboxes |
+| `--pm-radius-pill` | 999 | Buttons, chips, tags, inputs, nav pills |
+
+## Elevation
+Depth comes from **light, not borders**:
+1. Canvas (gray), then card (lighter paper gradient with a 1px white top highlight), then chip or input (paper).
+2. Objects get a **drop-shadow** (`filter: drop-shadow(var(--pm-shadow-object))`) because they are cut-outs, not boxes.
+3. Frames and tickets get one big soft shadow (`--pm-shadow-float`: `0 40px 90px -40px`).
+4. Hairline outlines (`--pm-line`) mark "soft" or optional areas: outlined cards, tiles, inputs.
+
+## Page anatomy (the reference page, generalized)
+
+```
+topbar        brand ············································ [TAG · CONTEXT]
+hero          EYEBROW · DATE
+              lockup / display headline
+              (chip) (chip) (solid chip)
+              lead paragraph with one strong phrase
+              scroll cue
+marquee       short phrase · object · short phrase · object …   (ink band)
+section 00    (00) huge lowercase title.  + lead
+              media frame / primary content
+section       dark card: text + rich CTA  |  visual
+section       ruled split: big statement  |  "not a script" stamp + body
+pill nav      (01) a  (02) b  (03) c …                           (sticky)
+features      card: object | (01) title + diamonds + callout
+              dark card: huge numeral | (02) title + list + paper callout
+              card (full): trio of objects with captions + split list | callout
+              …
+section 07    (07) title. → ticket (dark stub | paper rows) → hint + copy button
+section       (—) title. → card: ✓ must keep  | outlined card: ○ your call + alert
+band          EYEBROW · centered statement · five materials floating · motto
+footer        dark, centered, small
+```
+
+Use what you need. An app screen is usually: topbar → `.pm-section-head` (ring + lowercase title + lead) → cards → callout.
+
+
+---
+
+# Motion
+
+**Things arrive and settle. Objects breathe. Materials transform.** Motion is slow, physical and sparse. Use it to reveal and to give weight, never to entertain.
+
+## The house curve
+`--pm-ease: cubic-bezier(.2, .8, .2, 1)` ("settle"): a fast start and a long, soft landing. Use it for every movement except the float (`ease-in-out`) and the marquee (`linear`).
+
+## Durations
+
+| Token | ms | For |
+|---|---|---|
+| `--pm-dur-fast` | 200 | hover lift, color/background changes |
+| `--pm-dur-base` | 300 | controls appearing, dialogs, toasts, rich-button hover |
+| `--pm-dur-slow` | 700 | cross-fade opacity |
+| `--pm-dur-reveal` | 900 | scroll reveal |
+| `--pm-dur-swap` | 1000 | material swap transform |
+
+## The catalogue
+
+| Motion | How | Values |
+|---|---|---|
+| **Reveal** | `data-pm-reveal` (JS) | opacity 0→1, translateY 28px→0, 900ms settle, once, at 10% visible |
+| **Stagger** | `data-pm-stagger` on a parent (JS) | children reveal 80ms apart |
+| **Float** | `.pm-float` (+ `.pm-float-group`) | translate 0 → -10px → 0 over 7s, ease-in-out, siblings offset -1.2s |
+| **Tilt** | `data-pm-tilt` on a wrapper (JS) | first child: perspective 700px, ±9° on X/Y following the pointer, scale 1.04, 250ms ease-out. Hover devices only. |
+| **Material swap** | `data-pm-cycle` (JS) | stacked children; outgoing → opacity 0, scale .9, rotate -8°; incoming → none. Every 1.8s. |
+| **Marquee** | `.pm-marquee` | track moves -50% in 40s linear, content rendered twice, pauses on hover |
+| **Lift** | `.pm-btn`, `.pm-lift` | translateY -2px (rich CTA -3px plus a stronger shadow), 200ms settle |
+| **Nudge** | `.pm-btn__arrow`, `.pm-btn__icon svg` | ↗ moves (3px, -3px); download icon moves down 2px |
+| **Scroll cue** | `.pm-scroll-cue` | a dot drops inside a mouse outline, 1.8s loop |
+| **Copy feedback** | `data-pm-copy` (JS) | label swaps to "Copied ✓" for 2.2s |
+| **Dialog / toast** | `.pm-dialog`, `toast()` | rise 28px + fade, 300ms settle |
+| **Sticky glass** | `.pm-topbar` | `backdrop-filter: blur(14px)` over 80% canvas |
+
+## Rules
+1. **Reveal containers, not atoms.** Put `data-pm-reveal` on sections and cards, not on every paragraph or button.
+2. **Float only objects** (cut-out images, the gem), never text or cards.
+3. **One looping thing per viewport.** A floating object or a marquee is enough. Don't stack loops.
+4. **No bounce, no overshoot, no spin** (except the loading spinner).
+5. **Respect `prefers-reduced-motion`.** Already handled: reveals show instantly, loops stop, tilt is disabled. If you write new motion, add it to the reduced-motion block.
+6. Hover effects only on `(hover: hover)` devices when they rely on the pointer (tilt).
+
+## Without JS
+All CSS motion (float, marquee, lift, nudge, scroll cue, dialog/toast transitions) works without JavaScript. JS-driven content (`data-pm-reveal`) is hidden only when scripting is enabled, and a CSS failsafe reveals it after 2.5s if `init()` never runs.
+
+
+---
+
+# Components
+
+Plain HTML + `pm-*` classes. They work in any framework: rename `class` → `className` in JSX. Behaviors marked **[JS]** need `init()` from `poiema-ui` (or the auto script). Everything else is CSS only.
+
+## Contents
+Typography · Ring · Lockup · Chips & tags · Buttons · Cards · Feature · Section head · Callout · Alert · Lists · Pill nav · Topbar · Hero · Marquee · Object & frame · Stat · Ticket · Table · Forms · Dialog · Toast · Progress, spinner, skeleton · Footer · Layout helpers · Utilities
+
+---
+
+## Typography
+```html
+<p class="pm-eyebrow">Step 02 · Details</p>
+<h1 class="pm-h1">your projects.</h1>
+<h2 class="pm-h2">what is a project?</h2>
+<p class="pm-h3">A project is <span class="pm-muted">a place</span> for everything one goal needs.</p>
+<h4 class="pm-h4">Weekly review</h4>
+<p class="pm-lead">A guide so every team ships with <strong>unity, clarity and alignment</strong>.</p>
+<p class="pm-display">plan. <span class="pm-muted">focus.</span> finish.</p>
+<span class="pm-numeral">19</span>
+```
+`.pm-prose` styles raw markdown/CMS HTML (h1–h4, p, ul with diamonds, ol with rings, blockquote, code, pre, hr).
+
+## Ring
+The circled number. Use it for steps, section indexes and badges. Sizes: `--sm` 26px, default 52px (44px on mobile), `--lg` 72px.
+```html
+<span class="pm-ring">01</span>
+<span class="pm-ring pm-ring--sm">03</span>
+<span class="pm-ring">—</span>   <!-- unnumbered section -->
+```
+
+## Lockup (hero wordmark)
+Small word on top, huge word below, an object replacing one letter, and a ringed badge. For one hero per product.
+```html
+<h1 class="pm-lockup" aria-label="poiema conf 26">
+  <span class="pm-lockup__top">poiema</span>
+  <span class="pm-lockup__main">
+    <span>c</span>
+    <span class="pm-lockup__object" data-pm-cycle aria-hidden="true">   <!-- [JS] material swap -->
+      <svg style="color:var(--pm-clay)">…gem…</svg>
+      <svg style="color:var(--pm-diamond)">…gem…</svg>
+    </span>
+    <span>nf</span>
+    <span class="pm-lockup__badge">26</span>
+  </span>
+</h1>
+```
+
+## Chips & tags
+```html
+<span class="pm-chip">13 · 14 · 15 nov</span>
+<span class="pm-chip pm-chip--solid"><b>26</b> days</span>
+<span class="pm-chip pm-chip--outline">Draft</span>
+<span class="pm-tag">Internal · Team</span>
+```
+
+## Buttons
+Solid buttons use ink, so they are dark on light surfaces and paper on dark cards automatically.
+```html
+<button class="pm-btn">Create project</button>
+<button class="pm-btn pm-btn--soft">Cancel</button>
+<button class="pm-btn pm-btn--outline">Preview</button>
+<button class="pm-btn pm-btn--ghost">Skip</button>
+<button class="pm-btn pm-btn--danger">Delete</button>
+<button class="pm-btn pm-btn--sm">Small</button>
+<button class="pm-btn pm-btn--lg pm-btn--block">Large, full width</button>
+<button class="pm-btn pm-btn--icon" aria-label="Close">✕</button>
+
+<!-- Rich CTA: one per screen, for the main download / next step -->
+<a class="pm-btn pm-btn--rich" href="…">
+  <span class="pm-btn__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span>
+  <span class="pm-btn__text"><b>Download files</b><small>Folder with files for every screen</small></span>
+  <span class="pm-btn__arrow" aria-hidden="true">↗</span>
+</a>
+<!-- add pm-btn--soft for a paper rich CTA on a light page -->
+
+<!-- [JS] copy with feedback -->
+<button class="pm-btn" data-pm-copy="Text to copy" data-pm-copied="Copied ✓">Copy details</button>
+<button class="pm-btn" data-pm-copy-target="#details">Copy details</button>
+```
+`.pm-play` is a round paper play button (for media covers).
+
+## Cards
+```html
+<article class="pm-card">…</article>                         <!-- paper gradient, 40px radius -->
+<article class="pm-card" data-theme="dark">…</article>       <!-- deep ink card: alternate for rhythm -->
+<article class="pm-card pm-card--outline">…</article>        <!-- transparent, hairline: "optional/soft" -->
+<article class="pm-card pm-card--compact">…</article>        <!-- smaller padding -->
+<a class="pm-card" href="…">…</a>                            <!-- clickable: lifts on hover -->
+
+<div class="pm-tile">                                         <!-- small outlined box -->
+  <span class="pm-eyebrow">Current series</span>
+  <strong class="pm-tile__title">Acts 29</strong>
+  <p>Understanding the identity and mission of the church.</p>
+</div>
+```
+
+## Feature (object + content card)
+```html
+<article class="pm-card pm-feature" data-pm-reveal>
+  <div class="pm-feature__media" data-pm-tilt>                  <!-- [JS] tilt -->
+    <img class="pm-object pm-float" src="object.png" alt="…">
+  </div>
+  <div class="pm-feature__body">
+    <span class="pm-ring">01</span>
+    <h2 class="pm-h2">what is a project?</h2>
+    <ul class="pm-list">…</ul>
+    <div class="pm-callout">…</div>
+  </div>
+</article>
+```
+`.pm-feature--flip` puts the media on the right (alternate every other card). Columns collapse under 900px.
+
+## Section head
+```html
+<header class="pm-section-head">
+  <span class="pm-ring">00</span>
+  <h2 class="pm-h1">watch first.</h2>
+  <p>Understand why we're doing this and how to use the steps below.</p>
+</header>
+```
+Without a ring it becomes a single column.
+
+## Callout: "the message that must be clear"
+Inverted ink box. It is dark on light cards and paper on dark cards, automatically.
+```html
+<div class="pm-callout">
+  <span class="pm-eyebrow">The message that must be clear</span>
+  <p>It isn't just a three-day schedule. It's a time to gather, grow and get direction.</p>
+  <p class="pm-callout__big">Don't come for a name. Come for Jesus!</p>  <!-- optional closer -->
+</div>
+```
+`.pm-inverse` gives any element the same flip.
+
+## Alert
+Calm and outlined. The title is one word.
+```html
+<div class="pm-alert" role="note">
+  <strong class="pm-alert__title">Attention</strong>
+  <p>Don't present this as a critique of other teams. It's a direction for us, this year.</p>
+</div>
+<div class="pm-alert pm-alert--danger" role="alert">…</div>
+<div class="pm-alert pm-alert--success" role="status">…</div>
+```
+
+## Lists
+```html
+<ul class="pm-list">…</ul>                 <!-- ◆ diamonds (default) -->
+<ul class="pm-list pm-list--check">…</ul>  <!-- ✓ what must be kept -->
+<ul class="pm-list pm-list--open">…</ul>   <!-- ○ what is up to you -->
+<ol class="pm-list pm-list--numbered">…</ol> <!-- 01 02 03 in small rings -->
+```
+Items are ink-2; `<strong>` inside them is ink.
+
+## Pill nav (index, tabs, filters)
+```html
+<nav class="pm-pillnav pm-pillnav--sticky" aria-label="Sections">
+  <a href="#b1"><span class="pm-ring pm-ring--sm">01</span> overview</a>
+  <a href="#b2" aria-current="true"><span class="pm-ring pm-ring--sm">02</span> details</a>
+</nav>
+<div class="pm-pillnav" role="tablist">
+  <button role="tab" aria-selected="true">All</button>
+  <button role="tab" aria-selected="false">Drafts</button>
+</div>
+```
+Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill).
+
+## Topbar
+```html
+<header class="pm-topbar">
+  <a class="pm-topbar__brand" href="/">poiema</a>
+  <nav class="pm-topbar__nav"><a href="/projects" aria-current="page">projects</a><a href="/team">team</a></nav>
+  <span class="pm-tag">Internal · Team</span>
+</header>
+```
+Sticky, 80% canvas glass with a 14px blur. Its height is `--pm-sticky-top` (58px), and sticky children offset by it.
+
+## Hero
+```html
+<section class="pm-hero pm-hero--pillars">
+  <p class="pm-eyebrow">Communication guide · 18.10.2026</p>
+  <h1 class="pm-lockup">…</h1>                      <!-- or .pm-display -->
+  <div class="pm-cluster pm-cluster--center">
+    <span class="pm-chip">13 · 14 · 15 nov</span>
+    <span class="pm-chip pm-chip--solid"><b>26</b> days</span>
+  </div>
+  <p class="pm-lead">A guide so every team speaks with <strong>unity, clarity and alignment</strong>.</p>
+  <a class="pm-scroll-cue" href="#next" aria-label="Scroll"></a>
+</section>
+```
+`--pillars` adds the two glowing light capsules on the sides.
+
+## Marquee
+Render the group **twice**; the second copy is `aria-hidden`. Loops in 40s and pauses on hover.
+```html
+<div class="pm-marquee" aria-hidden="true">
+  <div class="pm-marquee__track">
+    <div class="pm-marquee__group"><span>from christ.</span><img src="gem.svg" alt=""><span class="pm-muted">in us.</span><img …><span>to the world.</span><img …></div>
+    <div class="pm-marquee__group"><!-- exact same content --></div>
+  </div>
+</div>
+```
+
+## Object & frame
+```html
+<img class="pm-object pm-float" src="medal.png" alt="…">     <!-- cut-out + soft shadow + float -->
+<div class="pm-float-group">…objects…</div>                   <!-- staggered floating -->
+<div class="pm-frame">
+  <video …></video>
+  <button class="pm-frame__cover"><span class="pm-play"></span><span class="pm-eyebrow">Watch 2:43</span></button>
+</div>
+```
+Assets: `poiema-ui/assets/gem.svg` (uses `currentColor`; inline it and set `color: var(--pm-clay)` etc.).
+
+## Stat
+```html
+<div class="pm-stat"><strong class="pm-stat__value">26</strong><span class="pm-stat__label">days to go</span></div>
+<div class="pm-stat pm-stat--stacked"><span class="pm-numeral">19</span><span class="pm-stat__label">years<br>15.11.2026</span></div>
+```
+
+## Ticket
+For events, plans, receipts or summaries. The dark stub flips to paper in dark mode.
+```html
+<div class="pm-ticket">
+  <div class="pm-ticket__main">
+    <p class="pm-eyebrow">poiema conference</p>
+    <div class="pm-ticket__dates"><span>13</span><span>14</span><span>15</span></div>  <!-- middle one is muted -->
+    <p class="pm-ticket__month">november · 2026</p>
+  </div>
+  <div class="pm-ticket__side">
+    <div class="pm-ticket__row"><span>Venue</span><strong>Tangaroa Hall</strong></div>
+    <div class="pm-ticket__row"><span>City</span><strong>Taubaté, SP</strong></div>
+    <div class="pm-ticket__row"><div class="pm-stat"><strong class="pm-stat__value" data-pm-countdown="2026-11-13T00:00:00-03:00">—</strong><span class="pm-stat__label">days to go</span></div></div>
+  </div>
+</div>
+```
+The notches use `--pm-notch` (default `--pm-canvas`). Set it to the ticket's real background if different.
+
+## Table
+```html
+<div class="pm-table-wrap"><table class="pm-table">
+  <thead><tr><th>Name</th><th>Status</th><th class="pm-num">Total</th></tr></thead>
+  <tbody><tr><td>Lisbon trip</td><td>Planned</td><td class="pm-num">1,240</td></tr></tbody>
+</table></div>
+```
+
+## Forms
+```html
+<label class="pm-field">
+  <span class="pm-label">Email</span>
+  <input class="pm-input" type="email" placeholder="you@example.com">
+  <span class="pm-hint">We only use it for the confirmation.</span>
+</label>
+<label class="pm-field">
+  <span class="pm-label">Team</span>
+  <select class="pm-select"><option>Design</option></select>
+</label>
+<label class="pm-field">
+  <span class="pm-label">Message</span>
+  <textarea class="pm-textarea" aria-invalid="true"></textarea>
+  <span class="pm-error">Write at least one sentence.</span>
+</label>
+<div class="pm-input-group"><input class="pm-input" placeholder="Search"><button class="pm-btn">Search</button></div>
+
+<label class="pm-choice"><input class="pm-check" type="checkbox" checked> Keep me posted</label>
+<label class="pm-choice"><input class="pm-radio" type="radio" name="r" checked> Monthly</label>
+<label class="pm-choice"><input class="pm-switch" type="checkbox" role="switch"> Dark mode</label>
+```
+Invalid state: `aria-invalid="true"` (clay border). Focus: 2px ink ring. The checked radio is the brand ring.
+
+## Dialog
+Native `<dialog>`. [JS] `data-pm-open="id"` opens it, a backdrop click closes it, and `[data-pm-close]` or `<form method="dialog">` closes it.
+```html
+<button class="pm-btn" data-pm-open="confirm">Delete</button>
+<dialog class="pm-dialog" id="confirm">
+  <div class="pm-stack pm-stack--lg">
+    <h2 class="pm-h2">delete project?</h2>
+    <p class="pm-body">This can't be undone.</p>
+    <div class="pm-cluster"><button class="pm-btn pm-btn--danger" data-pm-close>Delete</button><button class="pm-btn pm-btn--soft" data-pm-close>Cancel</button></div>
+  </div>
+</dialog>
+```
+
+## Toast
+```js
+import { toast } from 'poiema-ui';
+toast('Project created ✓');
+```
+
+## Progress, spinner, skeleton
+```html
+<progress class="pm-progress" value="40" max="100"></progress>
+<span class="pm-spinner" aria-label="Loading"></span>
+<span class="pm-skeleton" style="width: 60%; height: 18px"></span>
+```
+
+## Footer
+```html
+<footer class="pm-footer" data-theme="dark">
+  <strong class="pm-topbar__brand">poiema</strong>
+  <p>Poiema · Internal use</p>
+</footer>
+```
+
+## Layout helpers
+| Class | Does |
+|---|---|
+| `.pm-container` (`--narrow`) | 1180px (820px) centered with fluid gutter |
+| `.pm-section` | vertical rhythm block |
+| `.pm-band` | full-width paper band (add `data-theme="dark"` for ink) |
+| `.pm-stack` (`--xs --sm --lg --xl`) | vertical flex with gap 8/12/16/28/48 |
+| `.pm-cluster` (`--between --center`) | wrapping row |
+| `.pm-grid` (`--2 --3`) | auto-fit grid (min `--pm-min`, 280px) / fixed columns |
+| `.pm-split` (`--even --top --center`) | 1.35fr / 1fr asymmetric columns |
+| `.pm-ruled`, `.pm-rule` | 2px ink top rule opening a block |
+
+Override any gap with `style="--pm-gap: 24px"`.
+
+## Utilities
+`.pm-ink .pm-ink-2 .pm-muted .pm-danger .pm-success .pm-lower .pm-upper .pm-nums .pm-balance .pm-center .pm-measure .pm-sr-only .pm-lift .pm-inverse`
+
+## Behaviors [JS]
+
+| Attribute | Behavior | Action function |
+|---|---|---|
+| `data-pm-reveal` (`="fade"`, `="scale"`) | rise and fade on scroll, once | `reveal(el, opts)` |
+| `data-pm-stagger` | children reveal 80ms apart | `stagger(el, opts)` |
+| `data-pm-tilt` | first child tilts toward the pointer | `tilt(el, {max, scale})` |
+| `data-pm-cycle="1800"` | children cross-fade in turn | `cycle(el, {interval})` |
+| `data-pm-copy="text"` / `data-pm-copy-target="#id"` | copy + "Copied ✓" | `copy(el, opts)` |
+| `data-pm-countdown="ISO date"` | writes days left | `countdown(el)` / `daysUntil(date)` |
+| `data-pm-open="dialogId"` | opens a `<dialog>` | `opener(el)` |
+| `dialog.pm-dialog` | backdrop click + `[data-pm-close]` | `dialog(el)` |
+
+
+---
+
+# Imagery
+
+The interface is gray, and **imagery is where the material and the color live**. The reference page uses two families of objects. Both are physical, studio-lit and cut out on transparent backgrounds.
+
+1. **Materials:** one gem shape rendered in five materials: clay (barro), plaster (gesso), grass (grama), iron (ferro), diamond (diamante). Together they tell a story of formation.
+2. **Medals and plaques:** aged-silver coins and tags, embossed with a simple symbol and a reference line (like `EPHESIANS 2:10`). They read as tokens of meaning.
+
+## Rules
+- **Cut-out objects, not scenes.** Use transparent PNG/WebP or SVG with no background or frame, centered, with breathing room.
+- **Soft studio light from the top left** and a long soft shadow below. In CSS: `.pm-object` (drop-shadow `0 30px 34px rgba(0,0,0,.22)`).
+- **Real materials:** matte, tactile, slightly imperfect (clay grain, plaster dust, grass blades, rusted iron, clear crystal). No plastic gloss, chrome reflections or neon.
+- **Muted, earthy color.** Objects may carry color; the UI never does.
+- **One object per idea.** A card gets one object. A trio gets three, and the closing band gets the five materials in order.
+- **Animate gently:** `.pm-float`, `data-pm-tilt`, and `data-pm-cycle` to swap materials.
+- **Photos** sit inside `.pm-frame` (40px radius, big soft shadow) with warm, natural light and real people. Avoid stock poses.
+
+## The gem asset
+`poiema-ui/assets/gem.svg` is a flat, faceted diamond that uses `currentColor`, an original stand-in for the 3D renders. Inline it and color it with a material token:
+```html
+<span style="color: var(--pm-grass)"><!-- paste gem.svg markup --></span>
+```
+
+## Prompt recipe (image generators)
+> A single [OBJECT] made of [MATERIAL: weathered terracotta clay | raw white plaster | dense living moss and grass | rusted cast iron | clear faceted crystal], isolated on a transparent background, soft diffused studio light from top left, long soft shadow beneath, matte tactile surface with fine natural imperfections, centered, three-quarter view, photorealistic 3D render, muted natural color, no text, no background, no reflections of a room.
+
+For medals:
+> An aged silver medal/plaque with an embossed minimal symbol of [SYMBOL] and the small engraved caption "[REFERENCE]", irregular hand-cast edges, oxidized recesses, isolated on transparent background, soft top-left studio light, photorealistic 3D render.
+
+
+---
+
+# Using it in any stack
+
+The system is **CSS-first**. Every framework just imports a stylesheet and writes `pm-*` classes. The optional JS is a set of tiny element behaviors with the shape `behavior(el, opts) → { destroy() }`.
+
+## Install
+
+```bash
+# straight from GitHub (works today)
+npm i github:guilherme-toti/poiema-style-guide
+# or, once published to npm
+npm i poiema-ui
+```
+No build step. `dist/` is committed.
+
+Then, optionally, give your coding agent the context:
+```bash
+npx poiema-ui init      # copies skills to .claude/skills and adds a Poiema section to AGENTS.md / CLAUDE.md
+```
+
+## Plain HTML / any server-rendered app (Rails, Django, Laravel, Go, PHP…)
+```html
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.min.css">
+<script defer src="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.auto.js"></script>
+```
+The auto script calls `init()` on load, watches the DOM, and exposes `window.Poiema` (`Poiema.toast('Saved ✓')`). Pin a tag instead of `@main` for production.
+
+## Next.js (App Router) / React
+```tsx
+// app/layout.tsx
+import 'poiema-ui/css';
+import { Inter_Tight } from 'next/font/google';
+import { PoiemaBehaviors } from './poiema-behaviors';
+
+const font = Inter_Tight({ subsets: ['latin'], variable: '--pm-font-sans' });
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={font.variable}>
+      <body>{children}<PoiemaBehaviors /></body>
+    </html>
+  );
+}
+```
+```tsx
+// app/poiema-behaviors.tsx
+'use client';
+import { useEffect } from 'react';
+import { init } from 'poiema-ui';
+export function PoiemaBehaviors() {
+  useEffect(() => init(), []);   // watches the DOM, so client navigation is covered
+  return null;
+}
+```
+Per element instead: `useEffect(() => { const h = tilt(ref.current!); return h.destroy; }, [])`.
+Use `daysUntil()` in render rather than `data-pm-countdown` (React owns the text node). Toasts: `import { toast } from 'poiema-ui'`.
+
+## SvelteKit / Svelte
+```svelte
+<!-- +layout.svelte -->
+<script>
+  import 'poiema-ui/css';
+  import { onMount } from 'svelte';
+  import { init } from 'poiema-ui';
+  onMount(() => init());
+</script>
+<slot />
+```
+Or use the behaviors as **actions**, since they have the exact action signature:
+```svelte
+<script> import { reveal, tilt, cycle } from 'poiema-ui'; </script>
+<article class="pm-card" data-pm-reveal use:reveal>…</article>
+<div class="pm-feature__media" use:tilt={{ max: 6 }}>…</div>
+```
+Keep the `data-pm-reveal` attribute in the markup so SSR'd content starts hidden.
+
+## Vue / Nuxt
+```js
+// main.js / a Nuxt client plugin
+import 'poiema-ui/css';
+import { init, reveal } from 'poiema-ui';
+app.mount('#app');
+init();
+// or as a directive:
+app.directive('reveal', { mounted: (el) => (el._pm = reveal(el)), unmounted: (el) => el._pm?.destroy() });
+```
+
+## Astro
+```astro
+---
+import 'poiema-ui/css';
+---
+<script> import { init } from 'poiema-ui'; init(); </script>
+```
+
+## Tailwind CSS v4
+```css
+/* app.css */
+@layer theme, base, poiema, components, utilities;
+@import "tailwindcss";
+@import "poiema-ui/tailwind.css";   /* tokens → theme: bg-canvas text-ink-2 rounded-card text-h1 tracking-display shadow-float animate-float ease-settle … */
+@import "poiema-ui/poiema.css";     /* optional: the pm-* components */
+```
+- The first line places Poiema **below** Tailwind utilities, so `class="pm-btn px-10"` works as expected.
+- Tailwind's default palette is **removed** on purpose. Only brand colors exist: `canvas surface surface-2 ink ink-strong ink-2 label muted line line-strong on-ink danger success`, the `gray-*` scale and the materials `clay plaster grass iron diamond` (+ `-light`/`-deep`).
+- Type utilities bundle size, line-height, tracking and weight: `text-h1`, `text-h2`, `text-h3`, `text-h4`, `text-display`, `text-numeral`, `text-lead`, `text-eyebrow` (add `uppercase`).
+
+## Tokens in JS (charts, canvas, emails)
+```js
+import { tokens, cssVar } from 'poiema-ui/tokens';
+tokens.color.light.ink       // "#2b2b2b"
+tokens.primitives.clay       // "#b8562a"
+cssVar('ink')                // "var(--pm-ink)"
+```
+`poiema-ui/tokens.json` holds the same data for non-JS tools (Figma plugins, Style Dictionary, native apps).
+
+## Theming
+```html
+<html data-theme="light">  <!-- default; "dark" or "auto" (follows OS) -->
+<article class="pm-card" data-theme="dark">  <!-- any subtree -->
+```
+To rebrand, override semantic tokens after the import (unlayered CSS always wins):
+```css
+:root { --pm-canvas: #e6e4e1; --pm-radius-xl: 32px; }
+```
+
+## Imports cheat-sheet
+| Import | What |
+|---|---|
+| `poiema-ui/css` (`/poiema.css`, `/poiema.min.css`) | everything: tokens + base + components + motion |
+| `poiema-ui/tokens.css` | only the custom properties |
+| `poiema-ui/tailwind.css` | Tailwind v4 theme (includes tokens) |
+| `poiema-ui/fonts.css` | Inter Tight from Google Fonts |
+| `poiema-ui` | JS behaviors (ESM, typed) |
+| `poiema-ui/auto` | classic script: auto-init + `window.Poiema` |
+| `poiema-ui/tokens`, `/tokens.json` | tokens as data |
+| `poiema-ui/assets/gem.svg` | the gem |
+
+
+---
+
+# Token reference
+
+> Generated from `src/tokens.json` by `npm run build`. Do not edit by hand.
+
+Every token is a CSS custom property. Use semantic colors (`--pm-ink`, `--pm-canvas`…), never primitives, in components.
+
+## Semantic colors
+
+| Variable | Light | Dark | Use |
+|---|---|---|---|
+| `--pm-canvas` | `#e2e2e2` | `#161616` | Page background. Cool, quiet mid-gray — never pure white. |
+| `--pm-surface` | `#f7f7f7` | `#262626` | Raised small things: chips, pills, inputs, nav pills, soft buttons, bands. |
+| `--pm-surface-2` | `#ececec` | `#1f1f1f` | Panels and the solid base of cards. |
+| `--pm-card` | `linear-gradient(160deg, #fafafa, #ececec)` | `#1f1f1f` | Card fill. Light: soft paper gradient. Dark: solid deep ink. |
+| `--pm-card-edge` | `inset 0 1px 0 #ffffff` | `inset 0 1px 0 rgba(255, 255, 255, .04)` | 1px top highlight that makes cards feel lit from above. |
+| `--pm-ink` | `#2b2b2b` | `#f7f7f7` | Primary text, icons, solid buttons, strong rules. |
+| `--pm-ink-strong` | `#1f1f1f` | `#ffffff` | Rare extra-strong text. |
+| `--pm-ink-2` | `#555555` | `#b9b9b9` | Body copy, list items, descriptions. |
+| `--pm-label` | `#646464` | `#9a9a9a` | Small uppercase eyebrows and field labels (AA at 12px). |
+| `--pm-muted` | `#7d7d7d` | `#8d8d8d` | The 'echo' gray inside display text (em nós.). Large text only. |
+| `--pm-line` | `rgba(43, 43, 43, .14)` | `rgba(255, 255, 255, .12)` | Hairlines, outlined cards, input borders. |
+| `--pm-line-strong` | `#2b2b2b` | `#555555` | Outlined alerts, tags, checkbox borders. |
+| `--pm-perforation` | `#bdbdbd` | `#4a4a4a` | Dashed ticket perforation. |
+| `--pm-on-ink` | `#f7f7f7` | `#2b2b2b` | Text on an ink fill (solid buttons, callouts). |
+| `--pm-on-ink-2` | `#b9b9b9` | `#555555` | Secondary text on an ink fill. |
+| `--pm-on-ink-label` | `#9a9a9a` | `#646464` | Labels on an ink fill. |
+| `--pm-on-ink-muted` | `#8d8d8d` | `#7d7d7d` | Echo gray on an ink fill (large text). |
+| `--pm-on-ink-line` | `rgba(255, 255, 255, .16)` | `rgba(43, 43, 43, .14)` | Hairlines on an ink fill. |
+| `--pm-inverse-bg` | `#2b2b2b` | `#f7f7f7` | Fill of .pm-inverse regions (= ink, but safe to read inside the region). |
+| `--pm-inverse-fg` | `#f7f7f7` | `#2b2b2b` | Text of .pm-inverse regions. |
+| `--pm-glass` | `rgba(226, 226, 226, .8)` | `rgba(22, 22, 22, .78)` | Blurred sticky bars. |
+| `--pm-scrim` | `rgba(20, 20, 20, .38)` | `rgba(0, 0, 0, .6)` | Dialog backdrop. |
+| `--pm-pillar` | `.92` | `.07` | Strength (alpha) of the white light-pillars on the hero sides. |
+| `--pm-danger` | `#903b14` | `#d47b4d` | Errors and destructive actions. Clay — warm, never alarm-red. |
+| `--pm-success` | `#3f5a08` | `#8aa83a` | Confirmations. Grass. |
+| `--pm-icon-check` | *(svg)* | *(svg)* | Checkbox tick (on-ink colored). |
+| `--pm-icon-chevron` | *(svg)* | *(svg)* | Select chevron (ink colored). |
+
+## Primitives
+
+Raw palette. Never use these directly in components; use the semantic colors below. The grays are the exact values of the reference page; the materials were sampled from its five 3D gem renders (barro, gesso, grama, ferro, diamante).
+
+| Variable | Value |
+|---|---|
+| `--pm-gray-0` | `#ffffff` |
+| `--pm-gray-50` | `#fafafa` |
+| `--pm-gray-100` | `#f7f7f7` |
+| `--pm-gray-150` | `#ececec` |
+| `--pm-gray-200` | `#e2e2e2` |
+| `--pm-gray-300` | `#bdbdbd` |
+| `--pm-gray-350` | `#b9b9b9` |
+| `--pm-gray-400` | `#9a9a9a` |
+| `--pm-gray-450` | `#8d8d8d` |
+| `--pm-gray-500` | `#7d7d7d` |
+| `--pm-gray-550` | `#646464` |
+| `--pm-gray-600` | `#555555` |
+| `--pm-gray-700` | `#4a4a4a` |
+| `--pm-gray-750` | `#2f2f2f` |
+| `--pm-gray-800` | `#2b2b2b` |
+| `--pm-gray-850` | `#262626` |
+| `--pm-gray-900` | `#1f1f1f` |
+| `--pm-gray-950` | `#161616` |
+| `--pm-gray-1000` | `#111111` |
+| `--pm-clay` | `#b8562a` |
+| `--pm-clay-light` | `#d47b4d` |
+| `--pm-clay-deep` | `#903b14` |
+| `--pm-plaster` | `#cfcbc6` |
+| `--pm-plaster-light` | `#edebe9` |
+| `--pm-plaster-deep` | `#a9a49d` |
+| `--pm-grass` | `#4b650a` |
+| `--pm-grass-light` | `#8aa83a` |
+| `--pm-grass-deep` | `#2f4305` |
+| `--pm-iron` | `#534d40` |
+| `--pm-iron-light` | `#777164` |
+| `--pm-iron-deep` | `#2b261c` |
+| `--pm-diamond` | `#c3c8ca` |
+| `--pm-diamond-light` | `#eef1f2` |
+| `--pm-diamond-deep` | `#8f989c` |
+
+## Font
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-font-sans` | `"Inter Tight", "Inter Tight Variable", "Helvetica Neue", Helvetica, Arial, sans-serif` | The only typeface. Tight grotesk; weight does all the hierarchy work. |
+| `--pm-font-mono` | `ui-monospace, "SF Mono", Menlo, Consolas, monospace` |  |
+
+## Text
+
+Font sizes. Display sizes are fluid clamps.
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-text-2xs` | `11px` |  |
+| `--pm-text-xs` | `12px` |  |
+| `--pm-text-sm` | `14px` |  |
+| `--pm-text-md` | `16px` |  |
+| `--pm-text-base` | `17px` | Body size (16px under 560px). |
+| `--pm-text-lead` | `clamp(16px, 1.8vw, 19px)` |  |
+| `--pm-text-xl` | `22px` |  |
+| `--pm-text-h4` | `clamp(20px, 2.2vw, 26px)` |  |
+| `--pm-text-h3` | `clamp(26px, 3.6vw, 44px)` |  |
+| `--pm-text-h2` | `clamp(34px, 4.6vw, 58px)` |  |
+| `--pm-text-h1` | `clamp(40px, 7vw, 88px)` |  |
+| `--pm-text-display` | `clamp(56px, 12vw, 160px)` |  |
+| `--pm-text-numeral` | `clamp(76px, 13vw, 168px)` |  |
+| `--pm-text-hero` | `clamp(92px, 22vw, 290px)` | Only for the stacked hero lockup. |
+
+## Weight
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-weight-regular` | `400` |  |
+| `--pm-weight-medium` | `500` |  |
+| `--pm-weight-semibold` | `600` |  |
+| `--pm-weight-bold` | `700` |  |
+| `--pm-weight-heavy` | `800` |  |
+| `--pm-weight-black` | `900` |  |
+
+## Tracking
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-tracking-eyebrow` | `.14em` |  |
+| `--pm-tracking-tag` | `.1em` |  |
+| `--pm-tracking-tight` | `-.01em` |  |
+| `--pm-tracking-snug` | `-.02em` |  |
+| `--pm-tracking-title` | `-.035em` |  |
+| `--pm-tracking-heading` | `-.05em` |  |
+| `--pm-tracking-display` | `-.055em` |  |
+| `--pm-tracking-numeral` | `-.07em` |  |
+
+## Leading
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-leading-numeral` | `.8` |  |
+| `--pm-leading-display` | `.92` |  |
+| `--pm-leading-heading` | `.95` |  |
+| `--pm-leading-title` | `1.1` |  |
+| `--pm-leading-statement` | `1.14` |  |
+| `--pm-leading-snug` | `1.5` |  |
+| `--pm-leading-body` | `1.6` |  |
+
+## Radius
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-radius-xs` | `7px` |  |
+| `--pm-radius-sm` | `14px` |  |
+| `--pm-radius-md` | `24px` |  |
+| `--pm-radius-lg` | `28px` |  |
+| `--pm-radius-xl` | `40px` | The signature radius: every card, section, frame and ticket. |
+| `--pm-radius-pill` | `999px` |  |
+
+## Space
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-space-1` | `4px` |  |
+| `--pm-space-2` | `8px` |  |
+| `--pm-space-3` | `12px` |  |
+| `--pm-space-4` | `16px` |  |
+| `--pm-space-5` | `20px` |  |
+| `--pm-space-6` | `24px` |  |
+| `--pm-space-7` | `28px` |  |
+| `--pm-space-8` | `32px` |  |
+| `--pm-space-10` | `40px` |  |
+| `--pm-space-12` | `48px` |  |
+| `--pm-space-14` | `56px` |  |
+| `--pm-space-16` | `64px` |  |
+| `--pm-space-18` | `72px` |  |
+| `--pm-space-24` | `96px` |  |
+| `--pm-space-30` | `120px` |  |
+
+## Layout
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-container` | `1180px` | Max content width. |
+| `--pm-gutter` | `clamp(16px, 4vw, 48px)` |  |
+| `--pm-section` | `clamp(64px, 9vw, 120px)` | Vertical rhythm between sections. |
+| `--pm-card-pad` | `clamp(28px, 5.5vw, 72px)` |  |
+| `--pm-card-pad-sm` | `clamp(24px, 4vw, 48px)` |  |
+| `--pm-sticky-top` | `58px` | Height of .pm-topbar; offset for sticky elements below it. |
+
+## Shadow
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-shadow-xs` | `0 1px 2px rgba(0, 0, 0, .05)` |  |
+| `--pm-shadow-lift` | `0 18px 40px -16px rgba(0, 0, 0, .35)` |  |
+| `--pm-shadow-lift-hover` | `0 24px 50px -16px rgba(0, 0, 0, .45)` |  |
+| `--pm-shadow-float` | `0 40px 90px -40px rgba(0, 0, 0, .5)` | Big soft shadow under frames and tickets. |
+| `--pm-shadow-object` | `0 30px 34px rgba(0, 0, 0, .22)` | Use inside filter: drop-shadow() for cut-out objects. |
+
+## Motion
+
+| Variable | Value | Note |
+|---|---|---|
+| `--pm-ease` | `cubic-bezier(.2, .8, .2, 1)` | 'Settle' — fast start, long soft landing. The house curve. |
+| `--pm-ease-float` | `ease-in-out` |  |
+| `--pm-dur-fast` | `200ms` |  |
+| `--pm-dur-base` | `300ms` |  |
+| `--pm-dur-slow` | `700ms` |  |
+| `--pm-dur-reveal` | `900ms` |  |
+| `--pm-dur-swap` | `1000ms` |  |
+| `--pm-reveal-distance` | `28px` |  |
+| `--pm-stagger-step` | `80ms` |  |
+| `--pm-lift` | `-2px` |  |
+| `--pm-lift-lg` | `-3px` |  |
+| `--pm-float-distance` | `-10px` |  |
+| `--pm-float-duration` | `7s` |  |
+| `--pm-marquee-duration` | `40s` |  |
+| `--pm-cycle-interval` | `1800ms` | Read by the JS cycle behavior. |
+| `--pm-blur` | `14px` |  |
+
+## Breakpoints
+
+Documentation only — CSS custom properties cannot be used in media queries.
+
+| Name | Value |
+|---|---|
+| md | `max-width: 900px` |
+| sm | `max-width: 560px` |

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 88" fill="currentColor" role="img" aria-label="gem">
+  <!-- Poiema gem: a plain faceted diamond. Base color = currentColor, so
+       style="color: var(--pm-clay)" (or any material token) recolors it. -->
+  <path d="M4 30 28 6h44l24 24-46 54z"/>
+  <path d="M4 30 28 6l-1 24z" fill="#fff" fill-opacity=".34"/>
+  <path d="M28 6 50 30H27z" fill="#fff" fill-opacity=".16"/>
+  <path d="M28 6h44L50 30z" fill="#fff" fill-opacity=".48"/>
+  <path d="M72 6 73 30H50z" fill="#fff" fill-opacity=".1"/>
+  <path d="M72 6 96 30H73z" fill="#000" fill-opacity=".12"/>
+  <path d="M4 30h23l23 54z" fill="#fff" fill-opacity=".12"/>
+  <path d="M27 30h23v54z" fill="#fff" fill-opacity=".28"/>
+  <path d="M50 30h23L50 84z" fill="#000" fill-opacity=".08"/>
+  <path d="M73 30h23L50 84z" fill="#000" fill-opacity=".26"/>
+  <path d="M4 30 28 6h44l24 24-46 54zM4 30h92M28 6l-1 24 23 54 23-54-1-24M27 30 50 30 28 6M50 30 72 6M50 30v54" fill="none" stroke="#fff" stroke-opacity=".42" stroke-width="1.2" stroke-linejoin="round"/>
+</svg>
