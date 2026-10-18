@@ -74,6 +74,7 @@ Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label -
 - `npm run build` regenerates `dist/`, `docs/tokens.md`, the contrast table in `docs/color.md`, `skills/*/references/` and `llms-full.txt`. **Never edit generated files by hand.** Commit `dist/` (GitHub installs and the jsDelivr CDN use it).
 - `npm test` builds and runs `test/`. The build fails if a contrast pair in `src/tokens.json` drops below its threshold.
 - New component: add CSS in the right file, document it in `docs/components.md` (HTML snippet), add it to the cheat-sheet above and to `demo/index.html`.
+- After visual changes, refresh the README images with `npm run screenshots` (needs Playwright: `npm i --no-save playwright`). `screenshots/` is not shipped in the package.
 - Zero runtime dependencies. Keep it that way.
 
 

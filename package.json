@@ -63,7 +63,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node scripts/build.mjs && node --test test/package.test.mjs",
-    "demo": "node scripts/build.mjs && npx --yes serve -l 4173 ."
+    "demo": "node scripts/build.mjs && npx --yes serve -l 4173 .",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "engines": {
     "node": ">=18"

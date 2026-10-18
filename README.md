@@ -4,6 +4,8 @@
 
 > **Proprietary.** For use by Poiema and the people working on its behalf only. See [LICENSE](LICENSE).
 
+![The showcase hero: the stacked "poiema / w◆rk" lockup with a clay gem, chips and lead on the gray canvas](screenshots/hero-light.png)
+
 - **Framework-agnostic.** It's plain CSS (`pm-*` classes + `--pm-*` tokens), so it works with Next.js, SvelteKit, Vue, Astro, Rails, Django or a static page.
 - **Small JS, optional.** Behaviors for scroll reveal, tilt, material swap, copy feedback, dialogs and toasts. They are SSR-safe and typed, with zero dependencies.
 - **Tailwind v4 ready.** One import maps the tokens to `bg-canvas text-ink-2 rounded-card text-h1 animate-float`…
@@ -80,13 +82,46 @@ Other tools can read [`llms.txt`](llms.txt) (index) or [`llms-full.txt`](llms-fu
 
 ## Showcase
 
-Open `demo/index.html` (e.g. `npm run demo`, then visit http://localhost:4173/demo/). It's a kitchen-sink page of every component in light and dark.
+Every image below is a screenshot of [`demo/index.html`](demo/index.html), a kitchen-sink page built only from this package. Open it locally with `npm run demo`, then visit http://localhost:4173/demo/. The live page adds the motion: scroll reveals, floating gems, tilt and the material swap.
+
+**Dark theme.** One attribute, `data-theme="dark"`, flips every token. Solid buttons and callouts invert on their own.
+
+![The same hero in the dark theme](screenshots/hero-dark.png)
+
+**Feature card.** A floating object, a ringed number, a lowercase title, diamond bullets and the closing callout.
+
+![Feature card showing the grayscale palette and the five material colors](screenshots/feature.png)
+
+**Rhythm by inversion.** A dark card, the gray "echo" in display type, and a callout that turns to paper on dark.
+
+![Dark voice card: "the message is bigger than the messenger."](screenshots/voice.png)
+
+**Components.** Buttons, the rich call to action, chips, tags, tabs, tiles and calm alerts.
+
+![Buttons, chips, tabs, tiles and alerts](screenshots/components.png)
+
+**Forms.** Pill fields, an ink focus ring, a clay error state, and the ring-shaped radio.
+
+![Form card with inputs, select, error state, checkbox, radios and switch](screenshots/forms.png)
+
+**Ticket.** Facts set as a stub, for events, plans and summaries.
+
+![Ticket with 13 · 14 · 15 november and venue details](screenshots/ticket.png)
+
+**Mobile.** Everything collapses to one column at 390px with no horizontal scroll.
+
+<p>
+  <img src="screenshots/mobile-hero.png" alt="Mobile hero" width="32%">
+  <img src="screenshots/mobile-card.png" alt="Mobile dark type card" width="32%">
+  <img src="screenshots/mobile-ticket.png" alt="Mobile ticket" width="32%">
+</p>
 
 ## Develop
 
 ```bash
 npm run build   # dist/, docs/tokens.md, contrast table, skill references, llms-full.txt
 npm test        # build + unit tests (fails if a contrast pair regresses)
+npm run screenshots   # regenerate screenshots/ from the demo (needs: npm i --no-save playwright)
 ```
 `src/tokens.json` is the single source of truth. See the bottom of [AGENTS.md](AGENTS.md) for repo conventions.
 
