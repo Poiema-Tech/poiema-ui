@@ -5,12 +5,9 @@ The system is **CSS-first**. Every framework just imports a stylesheet and write
 ## Install
 
 ```bash
-# straight from GitHub (works today)
 npm i github:guilherme-toti/poiema-style-guide
-# or, once published to npm
-npm i poiema-ui
 ```
-No build step. `dist/` is committed.
+No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
 
 Then, optionally, give your coding agent the context:
 ```bash
@@ -18,12 +15,13 @@ npx poiema-ui init      # copies skills to .claude/skills and adds a Poiema sect
 ```
 
 ## Plain HTML / any server-rendered app (Rails, Django, Laravel, Go, PHP…)
+Copy `dist/poiema.min.css` and `dist/poiema.auto.js` (from the repo or `node_modules/poiema-ui/dist/`) into the app's static folder:
 ```html
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.min.css">
-<script defer src="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.auto.js"></script>
+<link rel="stylesheet" href="/vendor/poiema/poiema.min.css">
+<script defer src="/vendor/poiema/poiema.auto.js"></script>
 ```
-The auto script calls `init()` on load, watches the DOM, and exposes `window.Poiema` (`Poiema.toast('Saved ✓')`). Pin a tag instead of `@main` for production.
+The auto script calls `init()` on load, watches the DOM, and exposes `window.Poiema` (`Poiema.toast('Saved ✓')`). There is no public CDN, on purpose.
 
 ## Next.js (App Router) / React
 ```tsx

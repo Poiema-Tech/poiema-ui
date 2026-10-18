@@ -11,6 +11,13 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(root, p), 'utf8');
 const pkg = JSON.parse(read('package.json'));
 
+test('package stays private and proprietary', () => {
+  assert.equal(pkg.private, true, 'package.json must keep "private": true so it can never be published');
+  assert.equal(pkg.license, 'SEE LICENSE IN LICENSE');
+  assert.ok(existsSync(join(root, 'LICENSE')));
+  assert.match(read('dist/poiema.css'), /^\/\*![^\n]*proprietary/);
+});
+
 test('every package export points to a built file', () => {
   for (const [key, target] of Object.entries(pkg.exports)) {
     const targets = typeof target === 'string' ? [target] : Object.values(target);

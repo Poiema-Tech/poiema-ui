@@ -1,19 +1,19 @@
 # poiema-ui — full context
 
-Poiema design system: monochrome, tactile, editorial. Framework-agnostic CSS tokens + pm-* component classes, tiny optional JS behaviors, Tailwind v4 theme, and agent context (AGENTS.md, skills) so AI builds in the same voice.
+Poiema design system (proprietary, Poiema use only): monochrome, tactile, editorial. Framework-agnostic CSS tokens + pm-* component classes, tiny optional JS behaviors, Tailwind v4 theme, and agent context (AGENTS.md, skills) so AI builds in the same voice.
 
 
 ---
 
 # Poiema UI — instructions for coding agents
 
-You are building UI with the **Poiema design system** (`poiema-ui`). Follow these rules whenever you create or change anything users see: markup, styles, copy or motion. Details live in `docs/` next to this file (in an app: `node_modules/poiema-ui/docs/`).
+You are building UI with the **Poiema design system** (`poiema-ui`). It is **proprietary to Poiema** (see `LICENSE`): use it only in Poiema's own projects. Never publish it to npm or a public CDN, and never copy it into projects for anyone else. Follow these rules whenever you create or change anything users see: markup, styles, copy or motion. Details live in `docs/` next to this file (in an app: `node_modules/poiema-ui/docs/`).
 
 ## The essence
 A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Soft 40px cards and pills. **No hue in the interface**: color lives only in tactile objects (clay, plaster, grass, iron, diamond). The voice is **sincere and communal** ("we", "our family"), and every section ends with **the one message that must be clear**. Motion **rises and settles**; objects float.
 
 ## Setup (once per app)
-- CSS: `import 'poiema-ui/css'` (or the CDN `dist/poiema.min.css`). Tailwind v4: see `docs/frameworks.md`.
+- CSS: `import 'poiema-ui/css'` (or a self-hosted copy of `dist/poiema.min.css`). Tailwind v4: see `docs/frameworks.md`.
 - Font: Inter Tight 400–900 (`poiema-ui/fonts.css`, `next/font` with `variable: '--pm-font-sans'`, or `@fontsource-variable/inter-tight`).
 - Behaviors (optional): call `init()` from `poiema-ui` once on the client at the app root, or load `poiema-ui/auto`.
 
@@ -838,12 +838,9 @@ The system is **CSS-first**. Every framework just imports a stylesheet and write
 ## Install
 
 ```bash
-# straight from GitHub (works today)
 npm i github:guilherme-toti/poiema-style-guide
-# or, once published to npm
-npm i poiema-ui
 ```
-No build step. `dist/` is committed.
+No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
 
 Then, optionally, give your coding agent the context:
 ```bash
@@ -851,12 +848,13 @@ npx poiema-ui init      # copies skills to .claude/skills and adds a Poiema sect
 ```
 
 ## Plain HTML / any server-rendered app (Rails, Django, Laravel, Go, PHP…)
+Copy `dist/poiema.min.css` and `dist/poiema.auto.js` (from the repo or `node_modules/poiema-ui/dist/`) into the app's static folder:
 ```html
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.min.css">
-<script defer src="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.auto.js"></script>
+<link rel="stylesheet" href="/vendor/poiema/poiema.min.css">
+<script defer src="/vendor/poiema/poiema.auto.js"></script>
 ```
-The auto script calls `init()` on load, watches the DOM, and exposes `window.Poiema` (`Poiema.toast('Saved ✓')`). Pin a tag instead of `@main` for production.
+The auto script calls `init()` on load, watches the DOM, and exposes `window.Poiema` (`Poiema.toast('Saved ✓')`). There is no public CDN, on purpose.
 
 ## Next.js (App Router) / React
 ```tsx

@@ -1,12 +1,12 @@
 # Poiema UI — instructions for coding agents
 
-You are building UI with the **Poiema design system** (`poiema-ui`). Follow these rules whenever you create or change anything users see: markup, styles, copy or motion. Details live in `docs/` next to this file (in an app: `node_modules/poiema-ui/docs/`).
+You are building UI with the **Poiema design system** (`poiema-ui`). It is **proprietary to Poiema** (see `LICENSE`): use it only in Poiema's own projects. Never publish it to npm or a public CDN, and never copy it into projects for anyone else. Follow these rules whenever you create or change anything users see: markup, styles, copy or motion. Details live in `docs/` next to this file (in an app: `node_modules/poiema-ui/docs/`).
 
 ## The essence
 A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Soft 40px cards and pills. **No hue in the interface**: color lives only in tactile objects (clay, plaster, grass, iron, diamond). The voice is **sincere and communal** ("we", "our family"), and every section ends with **the one message that must be clear**. Motion **rises and settles**; objects float.
 
 ## Setup (once per app)
-- CSS: `import 'poiema-ui/css'` (or the CDN `dist/poiema.min.css`). Tailwind v4: see `docs/frameworks.md`.
+- CSS: `import 'poiema-ui/css'` (or a self-hosted copy of `dist/poiema.min.css`). Tailwind v4: see `docs/frameworks.md`.
 - Font: Inter Tight 400–900 (`poiema-ui/fonts.css`, `next/font` with `variable: '--pm-font-sans'`, or `@fontsource-variable/inter-tight`).
 - Behaviors (optional): call `init()` from `poiema-ui` once on the client at the app root, or load `poiema-ui/auto`.
 

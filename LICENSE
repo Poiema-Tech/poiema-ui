@@ -1,0 +1,70 @@
+Poiema UI (poiema-ui) — Licença de uso restrito / Restricted-use license
+
+Copyright © 2026 Poiema. Todos os direitos reservados. All rights reserved.
+
+
+PORTUGUÊS
+
+1. Este repositório e tudo o que ele contém (código-fonte, arquivos compilados
+   em dist/, tokens, documentação, skills, diretrizes de voz e de marca, imagens
+   e demais materiais, doravante "o Material") são propriedade exclusiva da
+   Poiema.
+
+2. O uso do Material é permitido somente à Poiema e às pessoas autorizadas por
+   ela (equipe, voluntários, prestadores de serviço e ferramentas de
+   inteligência artificial operadas em seu nome), e exclusivamente para criar
+   e manter projetos da própria Poiema.
+
+3. Sem autorização prévia e por escrito da Poiema, é proibido:
+   a) copiar, distribuir, publicar (inclusive em registros públicos de pacotes,
+      como o npm, ou em CDNs públicas), sublicenciar, vender ou de qualquer
+      forma disponibilizar o Material a terceiros;
+   b) usar o Material, no todo ou em parte, em projetos de outras igrejas,
+      organizações ou pessoas;
+   c) criar obras derivadas do Material para uso fora da Poiema.
+
+4. A autorização de uso termina automaticamente quando a pessoa deixa de atuar
+   em nome da Poiema. Nesse caso, as cópias do Material em sua posse devem ser
+   excluídas.
+
+5. Este documento não concede nenhum direito sobre os nomes, marcas, logotipos
+   e a identidade visual da Poiema.
+
+6. O Material é fornecido "no estado em que se encontra", sem garantias de
+   qualquer tipo.
+
+Componentes de terceiros mantêm suas próprias licenças. A fonte Inter Tight
+(SIL Open Font License 1.1) não é distribuída neste repositório; ela é
+carregada a partir do Google Fonts ou instalada separadamente.
+
+
+ENGLISH (translation — the Portuguese text prevails)
+
+1. This repository and everything in it (source code, compiled files in dist/,
+   tokens, documentation, skills, voice and brand guidelines, images and other
+   materials, "the Material") are the exclusive property of Poiema.
+
+2. Use of the Material is permitted only to Poiema and to the people it
+   authorizes (staff, volunteers, contractors, and AI tools operated on its
+   behalf), and solely to build and maintain Poiema's own projects.
+
+3. Without Poiema's prior written permission, you may not:
+   a) copy, distribute, publish (including to public package registries such
+      as npm, or to public CDNs), sublicense, sell or otherwise make the
+      Material available to third parties;
+   b) use the Material, in whole or in part, in projects of other churches,
+      organizations or individuals;
+   c) create derivative works of the Material for use outside Poiema.
+
+4. Permission to use ends automatically when a person stops acting on behalf
+   of Poiema. Any copies of the Material in their possession must then be
+   deleted.
+
+5. This document grants no rights to Poiema's names, trademarks, logos or
+   visual identity.
+
+6. The Material is provided "as is", without warranty of any kind.
+
+Third-party components keep their own licenses. The Inter Tight typeface
+(SIL Open Font License 1.1) is not distributed in this repository; it is
+loaded from Google Fonts or installed separately.

@@ -1,6 +1,8 @@
 # poiema-ui
 
-**The Poiema design system:** a quiet gray gallery, huge lowercase type, soft 40px cards, ringed numbers, tactile objects that carry the only color, and a sincere, communal voice. Extracted from the [Poiema Conf 26 direction page](https://poiema-conference-direcionamento.pages.dev/) and generalized for any web app.
+**The Poiema design system:** a quiet gray gallery, huge lowercase type, soft 40px cards, ringed numbers, tactile objects that carry the only color, and a sincere, communal voice. Extracted from the [Poiema Conf 26 direction page](https://poiema-conference-direcionamento.pages.dev/) and generalized for any web app Poiema builds.
+
+> **Proprietary.** For use by Poiema and the people working on its behalf only. See [LICENSE](LICENSE).
 
 - **Framework-agnostic.** It's plain CSS (`pm-*` classes + `--pm-*` tokens), so it works with Next.js, SvelteKit, Vue, Astro, Rails, Django or a static page.
 - **Small JS, optional.** Behaviors for scroll reveal, tilt, material swap, copy feedback, dialogs and toasts. They are SSR-safe and typed, with zero dependencies.
@@ -27,20 +29,20 @@
 ## Install
 
 ```bash
-npm i github:guilherme-toti/poiema-style-guide   # today, straight from GitHub
-# npm i poiema-ui                                 # once published to npm
+npm i github:guilherme-toti/poiema-style-guide
 ```
+The repository is private, so the machine running the install needs GitHub access to it (an SSH key or `gh auth login`). Deploy and CI environments need a read-only deploy key or token. The package is never published to npm (`"private": true`).
 
 ```js
 import 'poiema-ui/css';            // tokens + components (once, at the app root)
 import { init } from 'poiema-ui';  // optional behaviors: call init() once on the client
 ```
 
-No bundler? Use the CDN:
+No bundler? Copy `dist/poiema.min.css` and `dist/poiema.auto.js` into the site's own static files and link them (there is no public CDN, on purpose):
 ```html
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.min.css">
-<script defer src="https://cdn.jsdelivr.net/gh/guilherme-toti/poiema-style-guide@main/dist/poiema.auto.js"></script>
+<link rel="stylesheet" href="/vendor/poiema/poiema.min.css">
+<script defer src="/vendor/poiema/poiema.auto.js"></script>
 ```
 
 Framework recipes (Next.js, SvelteKit actions, Vue directives, Astro, Tailwind v4, tokens in JS) are in **[docs/frameworks.md](docs/frameworks.md)**.
@@ -52,7 +54,7 @@ npx poiema-ui init
 ```
 This copies the three skills into `.claude/skills/` and adds a short Poiema section to your `AGENTS.md` (and to `CLAUDE.md` if you have one, importing the full rules). Codex, Cursor, Copilot and other agents that read `AGENTS.md` pick it up. Claude Code picks up the skills too.
 
-Or install the skills globally as a Claude Code plugin:
+Or install the skills globally as a Claude Code plugin (needs GitHub access to this private repo):
 ```
 /plugin marketplace add guilherme-toti/poiema-style-guide
 /plugin install poiema@poiema
@@ -87,3 +89,7 @@ npm run build   # dist/, docs/tokens.md, contrast table, skill references, llms-
 npm test        # build + unit tests (fails if a contrast pair regresses)
 ```
 `src/tokens.json` is the single source of truth. See the bottom of [AGENTS.md](AGENTS.md) for repo conventions.
+
+## License
+
+Proprietary. © Poiema, all rights reserved. Only Poiema and the people it authorizes (staff, volunteers, contractors, and AI tools working on its behalf) may use this material, and only for Poiema's own projects. Don't publish it to npm or any public CDN, and don't copy it into projects outside Poiema. Full terms (Portuguese, with an English translation): [LICENSE](LICENSE).
