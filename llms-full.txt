@@ -65,13 +65,13 @@ Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label -
 - [ ] Copy follows `docs/voice.md` (verb-first buttons, ✓ feedback, no emoji).
 
 ## Docs map
-`docs/principles.md` tone & mood · `docs/voice.md` conversation style · `docs/color.md` · `docs/typography.md` · `docs/layout.md` · `docs/motion.md` · `docs/components.md` (every class with HTML) · `docs/imagery.md` · `docs/frameworks.md` (Next, Svelte, Vue, Astro, Tailwind, CDN) · `docs/tokens.md` (generated). Skills: `skills/poiema-design`, `skills/poiema-voice`, `skills/poiema-review`.
+`docs/principles.md` tone & mood · `docs/voice.md` conversation style · `docs/color.md` · `docs/typography.md` · `docs/layout.md` · `docs/motion.md` · `docs/components.md` (every class with HTML) · `docs/imagery.md` · `docs/frameworks.md` (Next, Svelte, Vue, Astro, Tailwind, plain HTML) · `docs/tokens.md` (generated). Skills: `skills/poiema-design`, `skills/poiema-voice`, `skills/poiema-review`.
 
 ---
 
 ## Working on this repository (not on an app)
 - `src/tokens.json` is the single source for tokens. `src/css/*.css` holds components (each file declares its `@layer`). `src/js/poiema.js` holds behaviors (keep every export a top-level `export function`/`export const`; the auto build strips `export`).
-- `npm run build` regenerates `dist/`, `docs/tokens.md`, the contrast table in `docs/color.md`, `skills/*/references/` and `llms-full.txt`. **Never edit generated files by hand.** Commit `dist/` (GitHub installs and the jsDelivr CDN use it).
+- `npm run build` regenerates `dist/`, `docs/tokens.md`, the contrast table in `docs/color.md`, `skills/*/references/` and `llms-full.txt`. **Never edit generated files by hand.** Commit `dist/` (GitHub installs use it; there is no public CDN).
 - `npm test` builds and runs `test/`. The build fails if a contrast pair in `src/tokens.json` drops below its threshold.
 - New component: add CSS in the right file, document it in `docs/components.md` (HTML snippet), add it to the cheat-sheet above and to `demo/index.html`.
 - After visual changes, refresh the README images with `npm run screenshots` (needs Playwright: `npm i --no-save playwright`). `screenshots/` is not shipped in the package.
