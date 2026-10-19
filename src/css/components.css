@@ -392,10 +392,14 @@
     transition: background-color var(--pm-dur-fast), color var(--pm-dur-fast);
   }
   .pm-pillnav > :is(a, button):has(> .pm-ring) { padding-left: 6px; }
-  .pm-pillnav > :is(a, button):hover,
-  .pm-pillnav > [aria-current]:not([aria-current="false"]),
-  .pm-pillnav > [aria-selected="true"],
-  .pm-pillnav > [aria-pressed="true"] { background: var(--pm-ink); color: var(--pm-on-ink); }
+  /* Hover stays a quiet tint so an inactive pill never looks selected. */
+  .pm-pillnav > :is(a, button):hover { background: var(--pm-line); }
+  /* One :is() gives every active state (0,3,0), above the hover's (0,2,1),
+     so the active pill keeps its ink fill under the pointer. */
+  .pm-pillnav > :is([aria-current]:not([aria-current="false"]), [aria-selected="true"], [aria-pressed="true"]) {
+    background: var(--pm-ink);
+    color: var(--pm-on-ink);
+  }
   .pm-pillnav--sticky {
     position: sticky;
     top: var(--pm-sticky-top);
@@ -407,6 +411,7 @@
   /* --- hero ------------------------------------------------------------------- */
   .pm-hero {
     position: relative;
+    isolation: isolate;
     overflow: hidden;
     min-height: calc(100svh - var(--pm-sticky-top));
     display: flex;
@@ -418,11 +423,14 @@
     text-align: center;
   }
   .pm-hero > * { position: relative; }
-  /* Light pillars: soft white capsules glowing in from both edges. */
+  /* Light pillars: soft white capsules glowing in from both edges.
+     z-index -1 inside the hero's isolated stacking context keeps them behind
+     every child; without it ::after paints over a headline that reaches the edge. */
   .pm-hero--pillars::before,
   .pm-hero--pillars::after {
     content: "";
     position: absolute;
+    z-index: -1;
     top: 3%;
     bottom: 3%;
     width: 13vw;
