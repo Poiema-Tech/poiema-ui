@@ -2,6 +2,12 @@
 
 Every release lists its commits. Written by `scripts/release.mjs`; never edit it by hand.
 
+## v0.2.2 · 2026-10-19
+
+- fix(css): full-width toasts on phones and visible pills on cards ([d37a6ea](https://github.com/Poiema-Tech/poiema-ui/commit/d37a6ea))
+
+Full diff: https://github.com/Poiema-Tech/poiema-ui/compare/v0.2.1...v0.2.2
+
 ## v0.2.1 · 2026-10-19
 
 - fix(css): keep hero pillars behind content and quiet the pill hover ([9e80d2d](https://github.com/Poiema-Tech/poiema-ui/commit/9e80d2d))
