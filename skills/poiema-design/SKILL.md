@@ -8,7 +8,7 @@ description: Build or restyle web UI in the Poiema design system (poiema-ui) —
 You build interfaces that feel like the Poiema Conf 26 direction page: **a quiet gray room, type that shouts, tactile objects that carry all the color, and copy that gets to the point.**
 
 ## Workflow
-1. **Find the system.** Look for `node_modules/poiema-ui/` (or this repo's `dist/`). If it's missing, install it: `npm i github:Poiema-Tech/poiema-ui` (a private, proprietary repo; only for Poiema projects), then import `poiema-ui/css` once and load Inter Tight (see `references/frameworks.md`).
+1. **Find the system.** Look for `node_modules/poiema-ui/` (or this repo's `dist/`). If it's missing, install it: `npm i github:Poiema-Tech/poiema-ui#semver:^0.2.0` (a private, proprietary repo; only for Poiema projects), then import `poiema-ui/css` once and load Inter Tight (see `references/frameworks.md`).
 2. **Read before building:** `references/components.md` for the exact class names and HTML, and `references/principles.md` for the mood. Use `references/tokens.md` when you need a value.
 3. **Plan the page as a numbered journey:** hero → `00` first step → sections `01…n` (each with a ring and a lowercase title) → closing band with a motto. A single app screen is a section head plus cards.
 4. **Write the copy in the Poiema voice** (lowercase display + period, triads, "not X — Y", verb-first buttons, ✓ feedback). Use the `poiema-voice` skill if it's available.

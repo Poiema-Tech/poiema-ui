@@ -5,7 +5,7 @@ The system is **CSS-first**. Every framework just imports a stylesheet and write
 ## Install
 
 ```bash
-npm i github:Poiema-Tech/poiema-ui
+npm i github:Poiema-Tech/poiema-ui#semver:^0.2.0
 ```
 The `#semver:` range takes the newest release it allows; `npm update poiema-ui` moves within it, and `CHANGELOG.md` (in an app: `node_modules/poiema-ui/CHANGELOG.md`) says what each release changed. No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
 

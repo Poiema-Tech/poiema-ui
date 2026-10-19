@@ -27,7 +27,7 @@
 ## Install
 
 ```bash
-npm i github:Poiema-Tech/poiema-ui
+npm i github:Poiema-Tech/poiema-ui#semver:^0.2.0
 ```
 The repository is private, so the machine running the install needs GitHub access to it (an SSH key or `gh auth login`). Deploy and CI environments need a read-only deploy key or token. The package is never published to npm (`"private": true`).
 
@@ -71,7 +71,7 @@ Other tools can read [`llms.txt`](llms.txt) (index) or [`llms-full.txt`](llms-fu
 Every release is a git tag (`v0.2.0`) with a GitHub release that lists its commits. The same list goes into [CHANGELOG.md](CHANGELOG.md), which ships in the package. Apps install a version range, not `main`:
 
 ```bash
-npm i github:Poiema-Tech/poiema-ui
+npm i github:Poiema-Tech/poiema-ui#semver:^0.2.0
 ```
 
 - **Take fixes and additions:** `npm update poiema-ui` (or `pnpm update poiema-ui`) moves to the newest release in the range.
