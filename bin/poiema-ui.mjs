@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // npx poiema-ui init   — give this project's coding agents the Poiema context.
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -31,8 +31,15 @@ function upsertBlock(file, body) {
   return before ? (after === before ? 'unchanged' : 'updated') : 'created';
 }
 
+function agentPath() {
+  // pnpm symlinks node_modules/<pkg> into a store path that changes with every update; point at the stable link.
+  const linked = join(cwd, 'node_modules', pkg.name);
+  if (existsSync(linked) && realpathSync(linked) === realpathSync(pkgRoot)) return `node_modules/${pkg.name}`;
+  return relative(cwd, pkgRoot).split('\\').join('/') || '.';
+}
+
 function init() {
-  const rel = relative(cwd, pkgRoot).split('\\').join('/') || '.';
+  const rel = agentPath();
   const intro = `## Design system: Poiema (${pkg.name})
 
 All UI and user-facing copy in this project follows the Poiema design system.

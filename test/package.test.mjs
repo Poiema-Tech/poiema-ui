@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
@@ -124,6 +124,20 @@ test('npx poiema-ui init installs skills and is idempotent', () => {
     const out = run();
     assert.match(out, /AGENTS\.md unchanged/);
     assert.equal(readFileSync(join(dir, 'AGENTS.md'), 'utf8'), first);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('init points agents at node_modules/poiema-ui when the package is symlinked (pnpm)', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'poiema-init-pnpm-'));
+  try {
+    mkdirSync(join(dir, 'node_modules'));
+    symlinkSync(root, join(dir, 'node_modules', pkg.name), 'dir');
+    writeFileSync(join(dir, 'CLAUDE.md'), '# App\n');
+    execFileSync(process.execPath, [join(dir, 'node_modules', pkg.name, 'bin/poiema-ui.mjs'), 'init'], { cwd: dir, encoding: 'utf8' });
+    assert.match(readFileSync(join(dir, 'AGENTS.md'), 'utf8'), /`node_modules\/poiema-ui\/AGENTS\.md`/);
+    assert.match(readFileSync(join(dir, 'CLAUDE.md'), 'utf8'), /^@node_modules\/poiema-ui\/AGENTS\.md$/m);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
