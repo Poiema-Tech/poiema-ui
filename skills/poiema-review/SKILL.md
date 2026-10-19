@@ -17,7 +17,7 @@ Audit UI against the Poiema system and report **specific, located fixes**. Read 
    - headings with Title Case or no final period
    - animations or transitions not built on `--pm-ease`/catalogue durations
 3. **Walk the checklist** below and record each miss with file:line (or screen region), what's wrong, and the exact fix (class or token to use).
-4. **Prioritize:** 🔴 breaks the system (hue in chrome, wrong font, white page, missing focus/labels) → 🟡 off-voice or off-rhythm (title case, no callout, square buttons, bouncy motion) → ⚪ polish.
+4. **Prioritize:** 🔴 breaks the system (hue in chrome, wrong font, white page, missing focus/labels) → 🟡 off-voice or off-rhythm (title case, square buttons, bouncy motion) → ⚪ polish.
 5. If the user asked for fixes, apply them using `pm-*` classes and tokens only, then re-run the scan.
 
 ## Checklist
@@ -41,7 +41,7 @@ Audit UI against the Poiema system and report **specific, located fixes**. Read 
 - [ ] Light and dark cards alternate for rhythm when there are 3+ cards.
 
 **Content structure**
-- [ ] Each explanatory section ends with a `.pm-callout` key message.
+- [ ] Each section's main point is in its headline or first line, not buried mid-paragraph. A key-message `.pm-callout` is optional and only on request; never flag its absence.
 - [ ] Steps or sections are numbered `00…` in rings.
 - [ ] At most one rich CTA per screen.
 
@@ -70,5 +70,5 @@ score: 7/10 · 2 🔴 · 4 🟡 · 3 ⚪
 🟡 src/app/page.tsx:18 — "Your Projects" → "your projects." (.pm-h1)
 ⚪ …
 
-the message that must be clear: <one sentence on the biggest gap>
+biggest gap: <one sentence>
 ```

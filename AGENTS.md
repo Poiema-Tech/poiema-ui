@@ -3,7 +3,7 @@
 You are building UI with the **Poiema design system** (`poiema-ui`). It is **proprietary to Poiema** (see `LICENSE`): use it only in Poiema's own projects. Never publish it to npm or a public CDN, and never copy it into projects for anyone else. Follow these rules whenever you create or change anything users see: markup, styles, copy or motion. Details live in `docs/` next to this file (in an app: `node_modules/poiema-ui/docs/`).
 
 ## The essence
-A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Soft 40px cards and pills. **No hue in the interface**: color lives only in tactile objects (clay, plaster, grass, iron, diamond). The voice is **sincere and communal** ("we", "our family"), and every section ends with **the one message that must be clear**. Motion **rises and settles**; objects float.
+A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Soft 40px cards and pills. **No hue in the interface**: color lives only in tactile objects (clay, plaster, grass, iron, diamond). The voice is **sincere and communal** ("we", "our family"), and it gets to the point. Motion **rises and settles**; objects float.
 
 ## Setup (once per app)
 - CSS: `import 'poiema-ui/css'` (or a self-hosted copy of `dist/poiema.min.css`). Tailwind v4: see `docs/frameworks.md`.
@@ -17,8 +17,8 @@ A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Sof
 4. **Display headlines are lowercase and end with a period** (questions end with `?`): `<h2 class="pm-h1">your projects.</h2>`. Eyebrows, tags and alert titles are small, bold, UPPERCASE via CSS.
 5. **One echo per display line:** wrap one phrase in `.pm-muted` (the gray middle beat): `plan. <span class="pm-muted">focus.</span> finish.`
 6. **Soft geometry:** cards 40px (`.pm-card`), callouts 28px, alerts and tiles 24px, buttons/chips/inputs pill. Numbers in rings (`.pm-ring`), bullets are diamonds (`.pm-list`).
-7. **End each section with a `.pm-callout`** holding the key message (label: "The message that must be clear" / "Mensagem que precisa ficar clara").
-8. **Rhythm by inversion:** alternate `.pm-card` and `.pm-card[data-theme="dark"]`; use ink callouts and the marquee band for punctuation, not color.
+7. **Key-message callouts only on request.** The reference page briefed leaders, so every section closed with a `.pm-callout` labeled "The message that must be clear" / "Mensagem que precisa ficar clara". Poiema products mostly speak to consumers: don't add that callout unless the user asks for it.
+8. **Rhythm by inversion:** alternate `.pm-card` and `.pm-card[data-theme="dark"]`; use ink boxes (`.pm-inverse`) and the marquee band for punctuation, not color.
 9. **Motion:** `data-pm-reveal` on sections/cards, `.pm-float` + `data-pm-tilt` on objects only, curve `--pm-ease`. No bounce, no spin, no parallax. Reduced motion is handled; keep it that way.
 10. **Copy:** verb-first buttons (`Create project`), past-participle feedback (`Saved ✓`), calm alerts (`Attention` / `Important` + why), "we/our", no hype words, no emoji, at most one `!` (the closing line). Full guide: `docs/voice.md`.
 11. **Accessibility:** keep semantic HTML, labels on fields, `aria-invalid` for errors, `aria-current`/`aria-selected` for active pills, alt text on objects (`alt=""` if decorative), visible focus (already styled).
@@ -52,7 +52,7 @@ Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label -
 ## Before you finish a UI task, check
 - [ ] No hex colors or hues outside tokens; no Tailwind default palette; no pure white page.
 - [ ] Every display headline is lowercase and ends with `.`/`?`; one `.pm-muted` echo at most per line.
-- [ ] Sections that explain something end with a `.pm-callout`.
+- [ ] No key-message `.pm-callout` unless the user asked for one.
 - [ ] Radii are 40/28/24/pill; numbers in rings; bullets are diamonds.
 - [ ] Motion only via the catalogue in `docs/motion.md`.
 - [ ] Copy follows `docs/voice.md` (verb-first buttons, ✓ feedback, no emoji).

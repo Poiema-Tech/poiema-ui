@@ -28,8 +28,8 @@ Hierarchy comes from **scale, weight and tight tracking** in one family (Inter T
 ### 3. Soft geometry
 Every container is soft: **40px cards, pill buttons and chips, circular rings**. The only sharp shape is the small rotated-square **diamond** bullet, which echoes the gem. No 4px or 8px "app" corners on large surfaces.
 
-### 4. One thing must be clear
-Each section ends with the single message that must survive: an **inverted ink callout** with the label *"the message that must be clear"*. Write for skimmers. The callout alone should carry the meaning.
+### 4. One point per section
+Each section makes one point, and its headline and first line carry it. Write for skimmers. The reference page, a briefing for leaders, repeated that point in an ink callout labeled *"the message that must be clear"*; Poiema products mostly speak to consumers, so add that callout only when someone asks for it.
 
 ### 5. Rhythm by inversion
 Light cards and dark cards alternate. Ink boxes punctuate paper. A dark marquee band breaks the page. Contrast, not color, creates emphasis and pacing.
@@ -50,11 +50,11 @@ The voice separates **what must be kept** (✓ checks) from **what is up to you*
 | Use `--pm-canvas` gray as the page, paper cards on top | Use pure white `#fff` pages or colored backgrounds |
 | One huge lowercase headline per section, ending in `.` | Title Case Headlines Or ALL CAPS HEADLINES |
 | Make one phrase gray (`.pm-muted`) to create an echo: `from christ. <span class="pm-muted">in us.</span> to the world.` | Use color or underline for emphasis in display type |
-| End sections with a `.pm-callout` key message | Bury the main point in the middle of a paragraph |
+| Put the main point in the headline and first line | Bury it mid-paragraph, or repeat it in a callout nobody asked for |
 | Pills for actions, rings for numbers, diamonds for bullets | Square buttons, emoji bullets, icon-font clutter |
 | Real objects with soft drop shadows, floating | Flat stock illustrations, glossy 3D blobs, gradients as decoration |
 | Calm outlined alerts ("Attention", "Important") | Red/yellow alert banners and exclamation icons |
 | Slow reveal on scroll and gentle float | Bouncy springs, parallax overload, auto-playing noise |
 
 ## When building something that isn't a church page
-The system is not tied to its source. A dashboard, a store or a tool gets the same treatment: gray room, paper cards, ink actions, one big lowercase title per view, numbered steps in rings, a callout for the one thing that matters, and a single object (product shot, gem, photo) as the only color on screen.
+The system is not tied to its source. A dashboard, a store or a tool gets the same treatment: gray room, paper cards, ink actions, one big lowercase title per view, numbered steps in rings, and a single object (product shot, gem, photo) as the only color on screen.

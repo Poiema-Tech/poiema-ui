@@ -53,4 +53,4 @@ band          EYEBROW · centered statement · five materials floating · motto
 footer        dark, centered, small
 ```
 
-Use what you need. An app screen is usually: topbar → `.pm-section-head` (ring + lowercase title + lead) → cards → callout.
+Use what you need. An app screen is usually: topbar → `.pm-section-head` (ring + lowercase title + lead) → cards.

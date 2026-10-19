@@ -31,8 +31,8 @@ Say what something is *not* before saying what it is. This is the signature rhet
 - `Mais do que um evento, …` / `More than an event, …`
 - `não apenas …, mas também …` / `not only …, but also …`
 
-### 4. The message that must be clear
-Close every section with one or two sentences in a `.pm-callout` labeled **"Mensagem que precisa ficar clara"** / **"The message that must be clear"**. A reader who skips everything else should still get the point from the callout.
+### 4. The message that must be clear (only on request)
+The reference page briefed leaders, so each section closed with one or two sentences in a `.pm-callout` labeled **"Mensagem que precisa ficar clara"** / **"The message that must be clear"**. Poiema products mostly speak to consumers, so don't add it by default. When someone asks for it, keep it to one or two sentences that carry the point on their own.
 
 ### 5. Communal "we", warm and direct
 Use `nós / nossa família / queremos / cremos` and `we / our family / we want / we believe`. Address the reader as a partner and never as a customer. No hype words ("incrível", "revolutionary", "🚀").
@@ -76,7 +76,7 @@ The closing line is the only place an exclamation mark may appear.
 | Error (system) | `Algo não funcionou. Tente de novo em instantes.` | `Something didn't work. Try again in a moment.` |
 | Loading | `Carregando…` | `Loading…` |
 | Section eyebrow | `Passo 02 · Detalhes` | `Step 02 · Details` |
-| Key-message callout label | `Mensagem que precisa ficar clara` | `The one thing to remember` |
+| Key-message callout label (on request) | `Mensagem que precisa ficar clara` | `The one thing to remember` |
 | Onboarding step | `00 · comece por aqui.` | `00 · start here.` |
 
 ## Punctuation & casing rules
@@ -89,7 +89,7 @@ The closing line is the only place an exclamation mark may appear.
 
 ## Self-check before shipping copy
 1. Does every display headline end with `.` or `?` and stay lowercase?
-2. Is there a callout with the one message that must be clear?
+2. Does each section's headline and first line carry its one point? (No key-message callout unless asked.)
 3. Did you use "we/our" instead of "the company/users"?
 4. Is any rhetorical "not X — Y" or triad doing real work, or is it decoration? Use them where they mean something, at most once or twice per page.
 5. Are buttons verb-first, and does feedback use a past participle + ✓?

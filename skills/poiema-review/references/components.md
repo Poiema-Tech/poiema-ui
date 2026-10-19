@@ -106,7 +106,6 @@ Solid buttons use ink, so they are dark on light surfaces and paper on dark card
     <span class="pm-ring">01</span>
     <h2 class="pm-h2">what is a project?</h2>
     <ul class="pm-list">…</ul>
-    <div class="pm-callout">…</div>
   </div>
 </article>
 ```
@@ -123,7 +122,7 @@ Solid buttons use ink, so they are dark on light surfaces and paper on dark card
 Without a ring it becomes a single column.
 
 ## Callout: "the message that must be clear"
-Inverted ink box. It is dark on light cards and paper on dark cards, automatically.
+Inverted ink box. It is dark on light cards and paper on dark cards, automatically. Use it only when someone asks for a key message: it comes from a leaders' briefing, and consumer screens don't close sections with it.
 ```html
 <div class="pm-callout">
   <span class="pm-eyebrow">The message that must be clear</span>

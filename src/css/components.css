@@ -1,7 +1,7 @@
 /* ==========================================================================
    components — generalized from the Poiema Conf 26 direction page.
    Rules of the house: pills and 40px cards, ink-on-gray, no hue in chrome,
-   inverted "ink" boxes for the one thing that must be clear.
+   inverted "ink" boxes for emphasis.
    ========================================================================== */
 @layer poiema.components {
 
@@ -273,7 +273,7 @@
     .pm-section-head > p { grid-column: 1 / -1; }
   }
 
-  /* --- callout: "the message that must be clear" ------------------------------ */
+  /* --- callout: a key message in an ink box, only when asked for -------------- */
   .pm-callout {
     padding: 26px 30px;
     border-radius: var(--pm-radius-lg);

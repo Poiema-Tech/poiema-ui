@@ -20,10 +20,6 @@
   </header>
   <article class="pm-card" data-pm-reveal>
     <ul class="pm-list"><li>One owner, one outcome.</li><li>Every task has <strong>a date</strong>.</li></ul>
-    <div class="pm-callout">
-      <span class="pm-eyebrow">The message that must be clear</span>
-      <p>A project isn't a folder. It's a commitment to a result.</p>
-    </div>
   </article>
 </section>
 ```
@@ -74,7 +70,7 @@ Other tools can read [`llms.txt`](llms.txt) (index) or [`llms-full.txt`](llms-fu
 
 | | |
 |---|---|
-| **Conversation style** | lowercase headlines ending in a period · triads (`from christ. in us. to the world.`) · "not X — Y" reframes · a closing "message that must be clear" · freedom vs. boundaries (✓ / ○) · calm alerts · verb-first buttons, "Copied ✓" → [docs/voice.md](docs/voice.md) |
+| **Conversation style** | lowercase headlines ending in a period · triads (`from christ. in us. to the world.`) · "not X — Y" reframes · a "message that must be clear" callout, on request · freedom vs. boundaries (✓ / ○) · calm alerts · verb-first buttons, "Copied ✓" → [docs/voice.md](docs/voice.md) |
 | **Tone & mood** | quiet gray gallery, sincere and communal, editorial poster type, tactile objects, reverent but contemporary → [docs/principles.md](docs/principles.md) |
 | **Colors** | grayscale chrome (`#e2e2e2` canvas, `#f7f7f7` paper, `#2b2b2b` ink) + five sampled materials: clay, plaster, grass, iron, diamond → [docs/color.md](docs/color.md) |
 | **Animations** | rise-and-settle reveal (900ms, `cubic-bezier(.2,.8,.2,1)`), 7s float, pointer tilt, material cross-fade, 40s marquee, -2px lift → [docs/motion.md](docs/motion.md) |
