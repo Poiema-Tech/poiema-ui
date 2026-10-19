@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
@@ -126,6 +126,37 @@ test('npx poiema-ui init installs skills and is idempotent', () => {
     assert.equal(readFileSync(join(dir, 'AGENTS.md'), 'utf8'), first);
   } finally {
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('release bumps every manifest and lists only the commits since the last tag', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'poiema-release-'));
+  const notesFile = `${dir}-notes.md`;
+  try {
+    cpSync(root, dir, { recursive: true, filter: (src) => !/[/\\](\.git|node_modules|screenshots)$/.test(src) });
+    const git = (...args) => execFileSync('git', ['-c', 'user.name=test', '-c', 'user.email=test@example.com', ...args], { cwd: dir, encoding: 'utf8' });
+    git('init', '--quiet');
+    git('add', '-A');
+    git('commit', '--quiet', '-m', 'chore: before the last release');
+    git('tag', 'v0.0.1');
+    git('commit', '--quiet', '--allow-empty', '-m', 'feat: add a thing');
+    git('commit', '--quiet', '--allow-empty', '-m', 'fix: mend a thing');
+    execFileSync(process.execPath, [join(dir, 'scripts/release.mjs'), 'minor', notesFile], { cwd: dir, encoding: 'utf8' });
+
+    const [major, minor] = pkg.version.split('.').map(Number);
+    const next = `${major}.${minor + 1}.0`;
+    const at = (p) => readFileSync(join(dir, p), 'utf8');
+    assert.equal(JSON.parse(at('package.json')).version, next);
+    assert.equal(JSON.parse(at('.claude-plugin/plugin.json')).version, next);
+    assert.ok(at('dist/poiema.css').startsWith(`/*! poiema-ui v${next} `), 'dist rebuilt with the new version');
+    assert.ok(at('README.md').includes(`poiema-ui#semver:^${next}`), 'install snippets pin the new range');
+
+    const notes = readFileSync(notesFile, 'utf8');
+    assert.deepEqual(notes.match(/^- .+? \(/gm), ['- fix: mend a thing (', '- feat: add a thing (']);
+    assert.ok(at('CHANGELOG.md').includes(`## v${next} · `) && at('CHANGELOG.md').includes(notes.split('\n')[0]));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+    rmSync(notesFile, { force: true });
   }
 });
 

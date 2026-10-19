@@ -9,12 +9,13 @@ The system is **CSS-first**. Every framework just imports a stylesheet and write
 ```bash
 npm i github:Poiema-Tech/poiema-ui
 ```
-No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
+The `#semver:` range takes the newest release it allows; `npm update poiema-ui` moves within it, and `CHANGELOG.md` (in an app: `node_modules/poiema-ui/CHANGELOG.md`) says what each release changed. No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
 
 Then, optionally, give your coding agent the context:
 ```bash
 npx poiema-ui init      # copies skills to .claude/skills and adds a Poiema section to AGENTS.md / CLAUDE.md
 ```
+Add `"postinstall": "poiema-ui init"` to the app's scripts so the skills follow every update.
 
 ## Plain HTML / any server-rendered app (Rails, Django, Laravel, Go, PHP…)
 Copy `dist/poiema.min.css` and `dist/poiema.auto.js` (from the repo or `node_modules/poiema-ui/dist/`) into the app's static folder:

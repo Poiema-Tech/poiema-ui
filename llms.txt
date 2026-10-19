@@ -8,6 +8,7 @@ Start with AGENTS.md (rules + cheat-sheet). Everything in one file: llms-full.tx
 - [AGENTS.md](AGENTS.md): rules for coding agents, class cheat-sheet, checklist
 - [Principles](docs/principles.md): tone, mood, do/don't
 - [Voice](docs/voice.md): conversation style, microcopy kit (pt-BR + en)
+- [Changelog](CHANGELOG.md): what each release changed
 
 ## Foundations
 - [Color](docs/color.md): grayscale room, material palette, themes, contrast table

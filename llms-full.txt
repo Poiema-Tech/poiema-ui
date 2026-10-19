@@ -75,6 +75,7 @@ Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label -
 - `npm test` builds and runs `test/`. The build fails if a contrast pair in `src/tokens.json` drops below its threshold.
 - New component: add CSS in the right file, document it in `docs/components.md` (HTML snippet), add it to the cheat-sheet above and to `demo/index.html`.
 - After visual changes, refresh the README images with `npm run screenshots` (needs Playwright: `npm i --no-save playwright`). `screenshots/` is not shipped in the package.
+- Releases come only from the **Release** workflow (`.github/workflows/release.yml`, run from GitHub Actions): it bumps `package.json` and the plugin manifest, points install snippets at the new `#semver:` range, rebuilds, writes `CHANGELOG.md`, tags `vX.Y.Z` and publishes a GitHub release listing the commits since the last tag. Never bump the version, edit `CHANGELOG.md` or tag by hand. Bump `patch` for docs, skills and fixes, `minor` for new components or tokens, `major` for renamed or removed classes and tokens or rules that make agents rewrite existing screens (while on `0.x`, breaking changes go out as `minor`).
 - Zero runtime dependencies. Keep it that way.
 
 
@@ -840,12 +841,13 @@ The system is **CSS-first**. Every framework just imports a stylesheet and write
 ```bash
 npm i github:Poiema-Tech/poiema-ui
 ```
-No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
+The `#semver:` range takes the newest release it allows; `npm update poiema-ui` moves within it, and `CHANGELOG.md` (in an app: `node_modules/poiema-ui/CHANGELOG.md`) says what each release changed. No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
 
 Then, optionally, give your coding agent the context:
 ```bash
 npx poiema-ui init      # copies skills to .claude/skills and adds a Poiema section to AGENTS.md / CLAUDE.md
 ```
+Add `"postinstall": "poiema-ui init"` to the app's scripts so the skills follow every update.
 
 ## Plain HTML / any server-rendered app (Rails, Django, Laravel, Go, PHP…)
 Copy `dist/poiema.min.css` and `dist/poiema.auto.js` (from the repo or `node_modules/poiema-ui/dist/`) into the app's static folder:

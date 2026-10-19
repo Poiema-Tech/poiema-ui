@@ -58,7 +58,8 @@
     "AGENTS.md",
     "llms.txt",
     "llms-full.txt",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",

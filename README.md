@@ -66,6 +66,20 @@ Other tools can read [`llms.txt`](llms.txt) (index) or [`llms-full.txt`](llms-fu
 | `poiema-voice` | write headlines, microcopy, empty states and errors (pt-BR and en) |
 | `poiema-review` | audit a page, diff or screenshot and list or apply fixes |
 
+## Versions
+
+Every release is a git tag (`v0.2.0`) with a GitHub release that lists its commits. The same list goes into [CHANGELOG.md](CHANGELOG.md), which ships in the package. Apps install a version range, not `main`:
+
+```bash
+npm i github:Poiema-Tech/poiema-ui
+```
+
+- **Take fixes and additions:** `npm update poiema-ui` (or `pnpm update poiema-ui`) moves to the newest release in the range.
+- **Cross a breaking release:** read the changelog, then raise the range in `package.json`. While the version starts with `0.`, any minor release may break; from `1.0.0` on, only a major does.
+- **Keep the agent skills in step:** add `"postinstall": "poiema-ui init"` to the app's scripts, so every install refreshes `.claude/skills/` and the Poiema section of `AGENTS.md`.
+
+To cut a release, run the **Release** workflow (Actions → Release → Run workflow, or `gh workflow run release.yml -f bump=patch`) and pick the bump: `patch` for docs, skills and fixes, `minor` for new components or tokens, `major` for renamed or removed classes and tokens, or rules that make agents rewrite existing screens. It bumps the version, rebuilds, updates the changelog, tags and publishes the release.
+
 ## What was extracted
 
 | | |
