@@ -161,7 +161,7 @@ Items are ink-2; `<strong>` inside them is ink.
   <button role="tab" aria-selected="false">Drafts</button>
 </div>
 ```
-Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill).
+Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill). Hover is a quiet line tint, so only the active pill looks selected.
 
 ## Topbar
 ```html
@@ -186,7 +186,7 @@ Sticky, 80% canvas glass with a 14px blur. Its height is `--pm-sticky-top` (58px
   <a class="pm-scroll-cue" href="#next" aria-label="Scroll"></a>
 </section>
 ```
-`--pillars` adds the two glowing light capsules on the sides.
+`--pillars` adds the two glowing light capsules on the sides, always behind the content (`.pm-hero` is its own stacking context).
 
 ## Marquee
 Render the group **twice**; the second copy is `aria-hidden`. Loops in 40s and pauses on hover.
