@@ -161,7 +161,7 @@ Items are ink-2; `<strong>` inside them is ink.
   <button role="tab" aria-selected="false">Drafts</button>
 </div>
 ```
-Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill). Hover is a quiet line tint, so only the active pill looks selected.
+Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill). Hover is a quiet line tint, so only the active pill looks selected. Inside a `.pm-card` or `.pm-dialog`, resting pills get a `--pm-line` hairline so they stay visible on the paper fill; on the canvas they stay plain.
 
 ## Topbar
 ```html
@@ -284,6 +284,7 @@ Native `<dialog>`. [JS] `data-pm-open="id"` opens it, a backdrop click closes it
 import { toast } from 'poiema-ui';
 toast('Project created ✓');
 ```
+Toasts stack at the bottom center, as wide as the message up to the page gutters. One line reads as a pill; a longer message wraps into balanced, centered lines in a 24px box. Keep it to one or two short lines.
 
 ## Progress, spinner, skeleton
 ```html

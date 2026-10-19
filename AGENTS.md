@@ -36,7 +36,7 @@ alert       .pm-alert(--danger|--success) > strong.pm-alert__title + p
 lists       .pm-list (◆) | --check (✓ must keep) | --open (○ your call) | --numbered
 buttons     .pm-btn | --soft | --outline | --ghost | --danger | --sm | --lg | --icon | --block | --rich(__icon __text __arrow)
 chips       .pm-chip | --solid | --outline     .pm-tag (outlined uppercase)
-nav         .pm-pillnav(--sticky) > a|button (+ .pm-ring--sm), active = aria-current / aria-selected
+nav         .pm-pillnav(--sticky) > a|button (+ .pm-ring--sm), active = aria-current / aria-selected / aria-pressed
 data        .pm-stat(__value __label) .pm-numeral .pm-ticket(__main __dates __month __side __row) .pm-table .pm-progress
 forms       .pm-field > .pm-label + .pm-input|.pm-select|.pm-textarea + .pm-hint|.pm-error ; .pm-choice > .pm-check|.pm-radio|.pm-switch
 overlay     dialog.pm-dialog (+ data-pm-open="id", data-pm-close) ; toast('Saved ✓')
