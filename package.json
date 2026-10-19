@@ -1,6 +1,6 @@
 {
   "name": "poiema-ui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Poiema design system (proprietary, Poiema use only): monochrome, tactile, editorial. Framework-agnostic CSS tokens + pm-* component classes, tiny optional JS behaviors, Tailwind v4 theme, and agent context (AGENTS.md, skills) so AI builds in the same voice.",
   "type": "module",

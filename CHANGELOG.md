@@ -2,6 +2,12 @@
 
 Every release lists its commits. Written by `scripts/release.mjs`; never edit it by hand.
 
+## v0.2.1 · 2026-10-19
+
+- fix(css): keep hero pillars behind content and quiet the pill hover ([9e80d2d](https://github.com/Poiema-Tech/poiema-ui/commit/9e80d2d))
+
+Full diff: https://github.com/Poiema-Tech/poiema-ui/compare/v0.2.0...v0.2.1
+
 ## v0.2.0 · 2026-10-19
 
 - feat: release workflow with commit-based release notes ([dfda1f8](https://github.com/Poiema-Tech/poiema-ui/commit/dfda1f8))
