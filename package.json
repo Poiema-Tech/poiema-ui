@@ -7,7 +7,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/guilherme-toti/poiema-style-guide.git"
+    "url": "git+https://github.com/Poiema-Tech/poiema-ui.git"
   },
   "keywords": [
     "design-system",

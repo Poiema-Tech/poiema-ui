@@ -838,7 +838,7 @@ The system is **CSS-first**. Every framework just imports a stylesheet and write
 ## Install
 
 ```bash
-npm i github:guilherme-toti/poiema-style-guide
+npm i github:Poiema-Tech/poiema-ui
 ```
 No build step. `dist/` is committed. The repository is **private and proprietary** (see `LICENSE`): the machine installing it needs GitHub access (SSH key or `gh auth login`; a read-only deploy key or token in CI), and the package is never published to npm or a public CDN.
 

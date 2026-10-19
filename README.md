@@ -27,7 +27,7 @@
 ## Install
 
 ```bash
-npm i github:guilherme-toti/poiema-style-guide
+npm i github:Poiema-Tech/poiema-ui
 ```
 The repository is private, so the machine running the install needs GitHub access to it (an SSH key or `gh auth login`). Deploy and CI environments need a read-only deploy key or token. The package is never published to npm (`"private": true`).
 
@@ -54,7 +54,7 @@ This copies the three skills into `.claude/skills/` and adds a short Poiema sect
 
 Or install the skills globally as a Claude Code plugin (needs GitHub access to this private repo):
 ```
-/plugin marketplace add guilherme-toti/poiema-style-guide
+/plugin marketplace add Poiema-Tech/poiema-ui
 /plugin install poiema@poiema
 ```
 
