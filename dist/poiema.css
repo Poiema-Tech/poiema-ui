@@ -949,11 +949,15 @@
   .pm-pillnav > :is(a, button):has(> .pm-ring) { padding-left: 6px; }
   /* Hover stays a quiet tint so an inactive pill never looks selected. */
   .pm-pillnav > :is(a, button):hover { background: var(--pm-line); }
-  /* One :is() gives every active state (0,3,0), above the hover's (0,2,1),
-     so the active pill keeps its ink fill under the pointer. */
+  /* On a card's paper fill the surface pill nearly vanishes (~1:1), so resting
+     pills there take the outline hairline. On the canvas they stay plain. */
+  :is(.pm-card, .pm-dialog) .pm-pillnav > :is(a, button) { box-shadow: inset 0 0 0 1.5px var(--pm-line); }
+  /* One :is() gives every active state (0,3,0), above the hover's and the card
+     hairline's (0,2,1), so the active pill keeps a plain ink fill. */
   .pm-pillnav > :is([aria-current]:not([aria-current="false"]), [aria-selected="true"], [aria-pressed="true"]) {
     background: var(--pm-ink);
     color: var(--pm-on-ink);
+    box-shadow: none;
   }
   .pm-pillnav--sticky {
     position: sticky;
@@ -1202,21 +1206,25 @@
   .pm-dialog[open]::backdrop { animation: pm-fade var(--pm-dur-base) ease; }
 
   /* --- toast (created by toast() in poiema.js) ----------------------------------------- */
+  /* Inset to the gutters rather than left: 50%, which capped a toast at half the
+     viewport and wrapped one sentence into five lines on phones. */
   .pm-toaster {
     position: fixed;
-    left: 50%;
+    left: max(var(--pm-gutter), env(safe-area-inset-left));
+    right: max(var(--pm-gutter), env(safe-area-inset-right));
     bottom: max(24px, env(safe-area-inset-bottom));
     z-index: 100;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    translate: -50% 0;
     pointer-events: none;
   }
+  /* 24px is more than half a one-line toast's height, so one line still reads as a
+     pill; a message that wraps becomes a soft box instead of an oval. */
   .pm-toast {
     padding: 12px 20px;
-    border-radius: var(--pm-radius-pill);
+    border-radius: var(--pm-radius-md);
     background: color-mix(in srgb, var(--pm-inverse-bg) 84%, transparent);
     color: var(--pm-inverse-fg);
     -webkit-backdrop-filter: blur(var(--pm-blur));
@@ -1225,6 +1233,9 @@
     font-size: var(--pm-text-sm);
     font-weight: var(--pm-weight-bold);
     letter-spacing: var(--pm-tracking-tight);
+    line-height: var(--pm-leading-snug);
+    text-align: center;
+    text-wrap: balance;
     opacity: 0;
     transform: translateY(8px);
     transition: opacity var(--pm-dur-base) ease, transform var(--pm-dur-base) var(--pm-ease);
