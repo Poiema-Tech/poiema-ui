@@ -250,6 +250,14 @@
     :root { --pm-text-base: 16px; }
   }
 
+  @media (pointer: coarse) {
+    :root {
+      --pm-btn-h-sm: 44px;
+      --pm-chip-h: 44px;
+      --pm-sticky-top: 68px;
+    }
+  }
+
   .pm-app, .pm-shell {
     --pm-card: var(--pm-surface);
     --pm-text-base: 16px;
@@ -280,6 +288,7 @@
     --pm-section: 24px;
     --pm-card-pad: clamp(16px, 2vw, 24px);
     --pm-card-pad-sm: 16px;
+    --pm-sticky-top: 58px;
     --pm-btn-h: 44px;
     --pm-btn-h-sm: 44px;
     --pm-btn-h-lg: 48px;

@@ -187,7 +187,7 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-section` | `clamp(64px, 9vw, 120px)` | Vertical rhythm between sections. |
 | `--pm-card-pad` | `clamp(28px, 5.5vw, 72px)` |  |
 | `--pm-card-pad-sm` | `clamp(24px, 4vw, 48px)` |  |
-| `--pm-sticky-top` | `58px` | Height of .pm-topbar; offset for sticky elements below it. |
+| `--pm-sticky-top` | `58px` | Height of .pm-topbar; offset for sticky elements below it. Taller on touch: see Touch. |
 | `--pm-btn-h` | `48px` | Height of .pm-btn. The app register lowers every control size below. |
 | `--pm-btn-h-sm` | `36px` |  |
 | `--pm-btn-h-lg` | `56px` |  |
@@ -274,6 +274,7 @@ The app register: same room, working volume. `.pm-app` or `.pm-shell` applies `t
 | `--pm-section` | `24px` |  |  |
 | `--pm-card-pad` | `clamp(16px, 2vw, 24px)` |  |  |
 | `--pm-card-pad-sm` | `16px` |  |  |
+| `--pm-sticky-top` | `58px` |  | The site's default again, so `touch` never reaches an app. |
 | `--pm-btn-h` | `44px` | `40px` | Touch first: 44px targets. |
 | `--pm-btn-h-sm` | `44px` | `32px` |  |
 | `--pm-btn-h-lg` | `48px` | `44px` |  |
@@ -292,6 +293,16 @@ The app register: same room, working volume. `.pm-app` or `.pm-shell` applies `t
 | `--pm-dur-base` | `200ms` |  | Overlays open quickly. |
 | `--pm-btn-text` | | `14px` |  |
 | `--pm-field-text` | | `14px` |  |
+
+## Touch
+
+Sites on a touch screen. A coarse pointer re-points these tokens at `:root`, so small targets reach 44px and the offsets they push follow. With a mouse nothing changes. Every key names an existing token and is also set in `app.tokens` (the build fails otherwise), so an app keeps its own sizes.
+
+| Variable | Touch | Note |
+|---|---|---|
+| `--pm-btn-h-sm` | `44px` | `.pm-btn--sm` and its round icon button. |
+| `--pm-chip-h` | `44px` | A `.pm-pillnav` pill. |
+| `--pm-sticky-top` | `68px` | A `.pm-topbar` holding 44px targets: 44 plus 12px of padding above and below. |
 
 ## Breakpoints
 

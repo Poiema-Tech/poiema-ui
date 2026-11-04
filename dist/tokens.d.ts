@@ -233,6 +233,11 @@ export declare const tokens: {
     "app-rail": string;
     "app-columns": string;
   };
+  "touch": {
+    "btn-h-sm": string;
+    "chip-h": string;
+    "sticky-top": string;
+  };
   "app": {
     "tokens": {
       "card": string;
@@ -264,6 +269,7 @@ export declare const tokens: {
       "section": string;
       "card-pad": string;
       "card-pad-sm": string;
+      "sticky-top": string;
       "btn-h": string;
       "btn-h-sm": string;
       "btn-h-lg": string;

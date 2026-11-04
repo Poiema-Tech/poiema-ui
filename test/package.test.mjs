@@ -164,11 +164,52 @@ test('app register re-points tokens without touching the site defaults', () => {
   assert.equal(T.layout['field-text'].value, '16px');
 });
 
+test('a coarse pointer grows small targets at :root, and the app register keeps its own', () => {
+  const css = read('dist/tokens.css');
+  const T = JSON.parse(read('src/tokens.json'));
+  const touch = css.match(/@media \(pointer: coarse\) \{\s*:root \{([^}]*)\}/);
+  assert.ok(touch, 'touch tokens live on :root under a coarse pointer');
+  for (const declaration of ['--pm-btn-h-sm: 44px;', '--pm-chip-h: 44px;', '--pm-sticky-top: 68px;']) {
+    assert.ok(touch[1].includes(declaration), `${declaration} missing from the coarse block`);
+  }
+  for (const published of ['--pm-btn-h-sm: 36px;', '--pm-chip-h: 0px;', '--pm-sticky-top: 58px;']) {
+    assert.ok(css.indexOf(published) < touch.index, `${published} stays the default at :root`);
+  }
+  assert.ok(touch.index < css.indexOf('.pm-app, .pm-shell {'), 'the app register comes later, so it wins');
+  assert.match(css, /\.pm-app, \.pm-shell \{[^}]*--pm-sticky-top: 58px/, 'an app must not inherit the taller topbar');
+  assert.equal(T.app.tokens['sticky-top'].value, T.layout['sticky-top'].value);
+  assert.match(read('dist/poiema.min.css'), /@media \(pointer: coarse\)\{:root\{[^}]*--pm-chip-h: 44px/);
+
+  const components = read('src/css/components.css');
+  assert.match(components, /\.pm-topbar__nav:not\(:is\(\.pm-app, \.pm-shell\) \*\) a \{[^}]*min-height: var\(--pm-btn-h-sm\)/);
+  assert.match(components, /\.pm-input-group:not\(:is\(\.pm-app, \.pm-shell\) \*\) > \.pm-btn \{[^}]*min-height: var\(--pm-btn-h-sm\)/);
+  assert.match(read('docs/tokens.md'), /## Touch[\s\S]*\| `--pm-sticky-top` \| `68px` \|/);
+});
+
+test('the build rejects a touch key that is no token, or that an app would inherit', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'poiema-touch-'));
+  try {
+    mkdirSync(join(dir, 'scripts'));
+    mkdirSync(join(dir, 'src'));
+    cpSync(join(root, 'scripts/build.mjs'), join(dir, 'scripts/build.mjs'));
+    cpSync(join(root, 'package.json'), join(dir, 'package.json'));
+    const build = (touch) => {
+      writeFileSync(join(dir, 'src/tokens.json'), JSON.stringify({ ...JSON.parse(read('src/tokens.json')), touch }));
+      return () => execFileSync(process.execPath, [join(dir, 'scripts/build.mjs')], { stdio: 'pipe' });
+    };
+    assert.throws(build({ 'btn-h-small': '44px' }), /touch: unknown token "btn-h-small"/);
+    assert.throws(build({ 'btn-text': '16px' }), /touch: "btn-text" would reach the app register/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('nothing in app.css can change a page without the app scope', () => {
   const strip = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '');
   const classes = (css) => new Set([...css.matchAll(/\.pm-[\w-]+/g)].map((m) => m[0]));
   const gallery = new Set(['type', 'layout', 'components', 'forms', 'motion', 'utilities'].flatMap((f) => [...classes(strip(read(`src/css/${f}.css`)))]));
   gallery.delete('.pm-tabbar'); // components.css only lists it among the regions that invert
+  for (const scope of ['.pm-app', '.pm-shell']) gallery.delete(scope); // components.css only names them to keep its touch rules off an app
   const css = strip(read('src/css/app.css'));
   const leaks = [];
   for (const rule of css.matchAll(/(^|[{}])\s*([^{}@]+)\{/g)) {

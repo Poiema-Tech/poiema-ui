@@ -45,20 +45,24 @@ tokensCss += `  [data-theme="dark"] {\n    color-scheme: dark;\n${themeBlock('da
 tokensCss += `  @media (prefers-color-scheme: dark) {\n    [data-theme="auto"] {\n      color-scheme: dark;\n${themeBlock('dark').replace(/^/gm, '  ')}\n    }\n  }\n\n`;
 tokensCss += `  @media (max-width: ${val(T.breakpoint.sm)}) {\n    :root { --${P}-text-base: ${T.text.md}; }\n  }\n\n`;
 
-// The app register re-points existing tokens, so a typo must not silently create a new one.
+// The app register and touch re-point existing tokens, so a typo must not silently create a new one.
 const known = new Set([
   ...entries(T.primitives).map(([k]) => k),
   ...entries(T.color).map(([k]) => k),
   ...SCALES.flatMap((g) => entries(T[g]).map(([k]) => varName(g, k).slice(P.length + 3))),
 ]);
-for (const group of [T.app.tokens, T.app.fine]) {
-  for (const [k] of entries(group)) if (!known.has(k)) throw new Error(`app register: unknown token "${k}"`);
+for (const [name, group] of [['app register', T.app.tokens], ['app register', T.app.fine], ['touch', T.touch]]) {
+  for (const [k] of entries(group)) if (!known.has(k)) throw new Error(`${name}: unknown token "${k}"`);
 }
+// What touch raises at :root, an app would inherit unless it re-points the token itself.
+for (const [k] of entries(T.touch)) if (!(k in T.app.tokens)) throw new Error(`touch: "${k}" would reach the app register, set it in app.tokens too`);
 const APP = `.${P}-app, .${P}-shell`;
-const appBlock = (group, pad) => entries(group).map(([k, v]) => `${pad}--${P}-${k}: ${val(v)};`).join('\n');
-tokensCss += `  ${APP} {\n${appBlock(T.app.tokens, '    ')}\n  }\n\n`;
+const tokenBlock = (group, pad) => entries(group).map(([k, v]) => `${pad}--${P}-${k}: ${val(v)};`).join('\n');
+// Ahead of the app register: same layer, same specificity, so .pm-app wins on an element that is both.
+tokensCss += `  @media (pointer: coarse) {\n    :root {\n${tokenBlock(T.touch, '      ')}\n    }\n  }\n\n`;
+tokensCss += `  ${APP} {\n${tokenBlock(T.app.tokens, '    ')}\n  }\n\n`;
 tokensCss += `  :is(${APP}) [data-theme] { --${P}-card: ${val(T.app.tokens.card)}; }\n\n`;
-tokensCss += `  @media (pointer: fine) {\n    ${APP} {\n${appBlock(T.app.fine, '      ')}\n    }\n  }\n}\n`;
+tokensCss += `  @media (pointer: fine) {\n    ${APP} {\n${tokenBlock(T.app.fine, '      ')}\n    }\n  }\n}\n`;
 
 // ---------- poiema.css bundle ----------
 const CSS_ORDER = ['base', 'type', 'layout', 'components', 'forms', 'motion', 'app', 'utilities'];
@@ -175,7 +179,7 @@ const resolved = {
     light: Object.fromEntries(entries(T.color).map(([k, v]) => [k, refRaw(v.light)])),
     dark: Object.fromEntries(entries(T.color).map(([k, v]) => [k, refRaw(v.dark)])),
   },
-  ...Object.fromEntries([...SCALES, 'breakpoint'].map((g) => [g, Object.fromEntries(entries(T[g]).map(([k, v]) => [k, val(v)]))])),
+  ...Object.fromEntries([...SCALES, 'breakpoint', 'touch'].map((g) => [g, Object.fromEntries(entries(T[g]).map(([k, v]) => [k, val(v)]))])),
   app: Object.fromEntries(['tokens', 'fine'].map((g) => [g, Object.fromEntries(entries(T.app[g]).map(([k, v]) => [k, val(v)]))])),
 };
 const tokensJs = `${banner}export const tokens = ${JSON.stringify(resolved, null, 2)};\n\n` +
@@ -225,6 +229,8 @@ for (const g of SCALES) {
 tokensMd += `\n## App register\n\n${T.app.$description}\n\n| Variable | App | Mouse | Note |\n|---|---|---|---|\n` +
   entries(T.app.tokens).map(([k, v]) => `| \`--${P}-${k}\` | \`${val(v)}\` | ${k in T.app.fine ? `\`${val(T.app.fine[k])}\`` : ''} | ${desc(v)} |`).join('\n') + '\n' +
   entries(T.app.fine).filter(([k]) => !(k in T.app.tokens)).map(([k, v]) => `| \`--${P}-${k}\` | | \`${val(v)}\` | ${desc(v)} |`).join('\n') + '\n';
+tokensMd += `\n## Touch\n\n${T.touch.$description}\n\n| Variable | Touch | Note |\n|---|---|---|\n` +
+  entries(T.touch).map(([k, v]) => `| \`--${P}-${k}\` | \`${val(v)}\` | ${desc(v)} |`).join('\n') + '\n';
 tokensMd += `\n## Breakpoints\n\n${T.breakpoint.$description}\n\n| Name | Value | Note |\n|---|---|---|\n` +
   entries(T.breakpoint).map(([k, v]) => `| ${k} | \`${val(v)}\` | ${desc(v)} |`).join('\n') + '\n';
 

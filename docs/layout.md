@@ -8,6 +8,7 @@
 - **Cards** pad `clamp(28px, 5.5vw, 72px)`, which is generous. Content never touches a card's edge.
 - **Gaps between cards** are small (16–20px). Cards read as a stack of plates, not a grid of tiles.
 - **Breakpoints:** 900px (columns collapse) and 560px (type and padding shrink).
+- **Touch:** on a coarse pointer, small targets reach 44px: `.pm-btn--sm`, `.pm-pillnav` pills, `.pm-topbar__nav` links, `.pm-choice` rows and the button in `.pm-input-group`. To hold them, the topbar and `--pm-sticky-top` go from 58px to 68px, and everything offset by that token follows. With a mouse nothing changes. The values are under Touch in `docs/tokens.md`.
 
 ## Space scale
 4 · 8 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 · 72 · 96 · 120 (`--pm-space-1` … `--pm-space-30`). Typical values: 8 between chips, 12–16 between list items and tiles, 28 between a title and its body, 36 under a section head.

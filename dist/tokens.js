@@ -233,6 +233,11 @@ export const tokens = {
     "app-rail": "1280px",
     "app-columns": "1100px"
   },
+  "touch": {
+    "btn-h-sm": "44px",
+    "chip-h": "44px",
+    "sticky-top": "68px"
+  },
   "app": {
     "tokens": {
       "card": "var(--pm-surface)",
@@ -264,6 +269,7 @@ export const tokens = {
       "section": "24px",
       "card-pad": "clamp(16px, 2vw, 24px)",
       "card-pad-sm": "16px",
+      "sticky-top": "58px",
       "btn-h": "44px",
       "btn-h-sm": "44px",
       "btn-h-lg": "48px",

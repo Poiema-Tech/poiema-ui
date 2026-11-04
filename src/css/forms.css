@@ -27,9 +27,11 @@
   }
   .pm-input::placeholder,
   .pm-textarea::placeholder { color: var(--pm-muted); opacity: 1; }
-  .pm-input:hover,
-  .pm-select:hover,
-  .pm-textarea:hover { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pm-ink) 40%, transparent); }
+  @media (hover: hover) {
+    .pm-input:hover,
+    .pm-select:hover,
+    .pm-textarea:hover { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pm-ink) 40%, transparent); }
+  }
   .pm-input:focus-visible,
   .pm-select:focus-visible,
   .pm-textarea:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--pm-ink); }
@@ -71,6 +73,8 @@
     color: var(--pm-ink);
     cursor: pointer;
   }
+  /* The whole row is the target, so on touch the row is what gets the 44px. */
+  @media (pointer: coarse) { .pm-choice { min-height: 44px; } }
 
   .pm-check,
   .pm-radio,

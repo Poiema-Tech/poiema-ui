@@ -252,6 +252,14 @@
     :root { --pm-text-base: 16px; }
   }
 
+  @media (pointer: coarse) {
+    :root {
+      --pm-btn-h-sm: 44px;
+      --pm-chip-h: 44px;
+      --pm-sticky-top: 68px;
+    }
+  }
+
   .pm-app, .pm-shell {
     --pm-card: var(--pm-surface);
     --pm-text-base: 16px;
@@ -282,6 +290,7 @@
     --pm-section: 24px;
     --pm-card-pad: clamp(16px, 2vw, 24px);
     --pm-card-pad-sm: 16px;
+    --pm-sticky-top: 58px;
     --pm-btn-h: 44px;
     --pm-btn-h-sm: 44px;
     --pm-btn-h-lg: 48px;
@@ -704,8 +713,16 @@
     text-decoration: none;
     transition: background-color var(--pm-dur-fast);
   }
-  .pm-topbar__nav a:hover,
   .pm-topbar__nav a[aria-current] { background: var(--pm-line); }
+  @media (hover: hover) { .pm-topbar__nav a:hover { background: var(--pm-line); } }
+  /* Touch targets a token can't reach. Sites only: an app keeps its own sizes, and its 44px field
+     has no room for a 44px button. The :not() also outweighs forms.css, which loads after this file. */
+  @media (pointer: coarse) {
+    .pm-topbar__nav:not(:is(.pm-app, .pm-shell) *) a { display: flex; align-items: center; min-height: var(--pm-btn-h-sm); }
+    .pm-input-group:not(:is(.pm-app, .pm-shell) *) > .pm-btn { right: 4px; min-height: var(--pm-btn-h-sm); }
+    /* The margin takes back the padding, so the brand gets a bigger target and the bar stays put. */
+    .pm-topbar__brand { padding-block: 11px; margin-block: -11px; }
+  }
 
   /* --- chips & tags --------------------------------------------------------- */
   .pm-chip {
@@ -770,7 +787,8 @@
       background-color var(--pm-dur-fast),
       color var(--pm-dur-fast);
   }
-  .pm-btn:hover { transform: translateY(var(--pm-lift)); }
+  /* Hover only where there's a pointer to hover with: after a tap it would stay stuck on. */
+  @media (hover: hover) { .pm-btn:hover { transform: translateY(var(--pm-lift)); } }
   .pm-btn:active { transform: translateY(0) scale(.98); }
   .pm-btn:disabled,
   .pm-btn[aria-disabled="true"] { opacity: .4; cursor: not-allowed; transform: none; }
@@ -779,7 +797,7 @@
   .pm-btn--soft { --pm-btn-bg: var(--pm-surface); --pm-btn-fg: var(--pm-ink); box-shadow: var(--pm-shadow-xs); }
   .pm-btn--outline { --pm-btn-bg: transparent; --pm-btn-fg: var(--pm-ink); box-shadow: inset 0 0 0 1.5px currentColor; }
   .pm-btn--ghost { --pm-btn-bg: transparent; --pm-btn-fg: var(--pm-ink); }
-  .pm-btn--ghost:hover { --pm-btn-bg: var(--pm-line); transform: none; }
+  @media (hover: hover) { .pm-btn--ghost:hover { --pm-btn-bg: var(--pm-line); transform: none; } }
   .pm-btn--danger { --pm-btn-bg: var(--pm-danger); --pm-btn-fg: var(--pm-gray-100); }
 
   .pm-btn--sm { min-height: var(--pm-btn-h-sm); padding: var(--pm-btn-pad-sm); font-size: var(--pm-text-sm); gap: 8px; }
@@ -800,7 +818,7 @@
       transform var(--pm-dur-base) var(--pm-ease),
       box-shadow var(--pm-dur-base) var(--pm-ease);
   }
-  .pm-btn--rich:hover { transform: translateY(var(--pm-lift-lg)); box-shadow: var(--pm-shadow-lift-hover); }
+  @media (hover: hover) { .pm-btn--rich:hover { transform: translateY(var(--pm-lift-lg)); box-shadow: var(--pm-shadow-lift-hover); } }
   .pm-btn__icon {
     display: grid;
     place-items: center;
@@ -812,12 +830,12 @@
     color: var(--pm-btn-bg);
   }
   .pm-btn__icon svg { width: 22px; height: 22px; transition: transform var(--pm-dur-base) var(--pm-ease); }
-  .pm-btn--rich:hover .pm-btn__icon svg { transform: translateY(2px); }
+  @media (hover: hover) { .pm-btn--rich:hover .pm-btn__icon svg { transform: translateY(2px); } }
   .pm-btn__text { display: flex; flex-direction: column; gap: 3px; line-height: 1.2; white-space: normal; }
   .pm-btn__text b { font-size: 18px; font-weight: var(--pm-weight-heavy); letter-spacing: var(--pm-tracking-snug); }
   .pm-btn__text small { font-size: 13px; font-weight: var(--pm-weight-medium); letter-spacing: 0; opacity: .62; }
   .pm-btn__arrow { margin-left: auto; padding-left: 4px; font-size: 22px; font-weight: var(--pm-weight-bold); transition: transform var(--pm-dur-base) var(--pm-ease); }
-  .pm-btn:hover .pm-btn__arrow { transform: translate(3px, -3px); }
+  @media (hover: hover) { .pm-btn:hover .pm-btn__arrow { transform: translate(3px, -3px); } }
   @media (max-width: 560px) {
     .pm-btn--rich { width: 100%; padding-right: 18px; gap: 12px; }
     .pm-btn__text b { font-size: 16px; }
@@ -845,7 +863,7 @@
     background: currentColor;
     clip-path: polygon(0 0, 100% 50%, 0 100%);
   }
-  .pm-play:hover { transform: scale(1.08); }
+  @media (hover: hover) { .pm-play:hover { transform: scale(1.08); } }
 
   /* --- cards ------------------------------------------------------------------ */
   .pm-card {
@@ -861,7 +879,7 @@
   .pm-card--outline { background: transparent; box-shadow: inset 0 0 0 1.5px var(--pm-line); }
   .pm-card--flat { box-shadow: none; }
   a.pm-card { display: block; text-decoration: none; transition: transform var(--pm-dur-base) var(--pm-ease); }
-  a.pm-card:hover { transform: translateY(var(--pm-lift-lg)); }
+  @media (hover: hover) { a.pm-card:hover { transform: translateY(var(--pm-lift-lg)); } }
 
   /* Small outlined tile (the "series" boxes). */
   .pm-tile {
@@ -1044,7 +1062,7 @@
   }
   .pm-pillnav > :is(a, button):has(> .pm-ring) { padding-left: 6px; }
   /* Hover stays a quiet tint so an inactive pill never looks selected. */
-  .pm-pillnav > :is(a, button):hover { background: var(--pm-line); }
+  @media (hover: hover) { .pm-pillnav > :is(a, button):hover { background: var(--pm-line); } }
   /* On a card's paper fill the surface pill nearly vanishes (~1:1), so resting
      pills there take the outline hairline. On the canvas they stay plain. */
   :is(.pm-card, .pm-dialog) .pm-pillnav > :is(a, button) { box-shadow: inset 0 0 0 1.5px var(--pm-line); }
@@ -1434,9 +1452,11 @@
   }
   .pm-input::placeholder,
   .pm-textarea::placeholder { color: var(--pm-muted); opacity: 1; }
-  .pm-input:hover,
-  .pm-select:hover,
-  .pm-textarea:hover { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pm-ink) 40%, transparent); }
+  @media (hover: hover) {
+    .pm-input:hover,
+    .pm-select:hover,
+    .pm-textarea:hover { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pm-ink) 40%, transparent); }
+  }
   .pm-input:focus-visible,
   .pm-select:focus-visible,
   .pm-textarea:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--pm-ink); }
@@ -1478,6 +1498,8 @@
     color: var(--pm-ink);
     cursor: pointer;
   }
+  /* The whole row is the target, so on touch the row is what gets the 44px. */
+  @media (pointer: coarse) { .pm-choice { min-height: 44px; } }
 
   .pm-check,
   .pm-radio,
@@ -1610,7 +1632,7 @@
 
   /* Hover lift for anything clickable that isn't a .pm-btn. */
   .pm-lift { transition: transform var(--pm-dur-fast) var(--pm-ease); }
-  .pm-lift:hover { transform: translateY(var(--pm-lift)); }
+  @media (hover: hover) { .pm-lift:hover { transform: translateY(var(--pm-lift)); } }
 
   @keyframes pm-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 var(--pm-float-distance); } }
   @keyframes pm-marquee { to { transform: translateX(-50%); } }

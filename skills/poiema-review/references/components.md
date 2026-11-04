@@ -83,6 +83,7 @@ Solid buttons use ink, so they are dark on light surfaces and paper on dark card
 ```
 The labels default to English: set `data-pm-copied` and `data-pm-copy-failed` in any other language. Screen readers hear the same text without the ✓, success or failure, through a hidden live region added on the first press, inside the open dialog when the button is in one.
 `.pm-play` is a round paper play button (for media covers).
+`.pm-btn--sm` is 36px tall with a mouse and 44px on touch, and `.pm-btn--icon.pm-btn--sm` stays round at both sizes.
 
 ## Cards
 ```html
@@ -166,7 +167,7 @@ Items are ink-2; `<strong>` inside them is ink.
   <button role="tab" aria-selected="false">Drafts</button>
 </div>
 ```
-Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill). Hover is a quiet line tint, so only the active pill looks selected. Inside a `.pm-card` or `.pm-dialog`, resting pills get a `--pm-line` hairline so they stay visible on the paper fill; on the canvas they stay plain.
+Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill). Hover is a quiet line tint, so only the active pill looks selected. Inside a `.pm-card` or `.pm-dialog`, resting pills get a `--pm-line` hairline so they stay visible on the paper fill; on the canvas they stay plain. Pills are 44px tall on touch.
 
 ## Topbar
 ```html
@@ -176,7 +177,7 @@ Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fi
   <span class="pm-tag">Internal · Team</span>
 </header>
 ```
-Sticky, 80% canvas glass with a 14px blur. Its height is `--pm-sticky-top` (58px), and sticky children offset by it.
+Sticky, 80% canvas glass with a 14px blur. Its height is `--pm-sticky-top`, and sticky children offset by it: 58px with a mouse, 68px on touch, where its links and small buttons are 44px.
 
 ## Hero
 ```html
@@ -269,7 +270,7 @@ The notches use `--pm-notch` (default `--pm-canvas`). Set it to the ticket's rea
 <label class="pm-choice"><input class="pm-radio" type="radio" name="r" checked> Monthly</label>
 <label class="pm-choice"><input class="pm-switch" type="checkbox" role="switch"> Dark mode</label>
 ```
-Invalid state: `aria-invalid="true"` (clay border). Focus: 2px ink ring. The checked radio is the brand ring.
+Invalid state: `aria-invalid="true"` (clay border). Focus: 2px ink ring. The checked radio is the brand ring. The button in `.pm-input-group` is 40px tall with a mouse and 44px on touch.
 
 ## Dialog
 Native `<dialog>`. [JS] `data-pm-open="id"` opens it, a backdrop click closes it, and `[data-pm-close]` or `<form method="dialog">` closes it.
