@@ -1679,7 +1679,7 @@
   :is(.pm-app, .pm-shell) .pm-btn--soft { box-shadow: var(--pm-shadow-card); }
   /* "Copy" and "Copied ✓" take turns in one pill, so it starts wide enough for both. A longer
      failure message or translation widens it instead of spilling out. */
-  :is(.pm-app, .pm-shell) .pm-btn--sm[data-pm-copy] { min-width: 88px; }
+  :is(.pm-app, .pm-shell) .pm-btn--sm[data-pm-copy] { min-width: 96px; vertical-align: top; }
   :is(.pm-app, .pm-shell) .pm-btn--sm[data-pm-copy][data-pm-feedback] { font-size: 0; }
   :is(.pm-app, .pm-shell) .pm-btn--sm[data-pm-copy][data-pm-feedback]::after { position: static; font-size: var(--pm-text-sm); }
   /* Paper on paper would vanish, so inside a sheet or a card the soft button is a gray fill. */

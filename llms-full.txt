@@ -829,9 +829,9 @@ Solid buttons use ink, so they are dark on light surfaces and paper on dark card
 
 <!-- [JS] copy with feedback -->
 <button class="pm-btn" data-pm-copy="Text to copy" data-pm-copied="Copied ✓" data-pm-copy-failed="Couldn't copy">Copy details</button>
-<button class="pm-btn" data-pm-copy-target="#details">Copy details</button>
+<button class="pm-btn" data-pm-copy data-pm-copy-target="#details">Copy details</button>
 ```
-The labels default to English: set `data-pm-copied` and `data-pm-copy-failed` in any other language.
+The labels default to English: set `data-pm-copied` and `data-pm-copy-failed` in any other language. Screen readers hear the same text without the ✓, success or failure, through a hidden live region added on the first press, inside the open dialog when the button is in one.
 `.pm-play` is a round paper play button (for media covers).
 
 ## Cards
@@ -1084,7 +1084,7 @@ In an app: `.pm-faded` (a past day: dim until hovered or focused), `.pm-phone-on
 | `data-pm-stagger` | children reveal 80ms apart | `stagger(el, opts)` |
 | `data-pm-tilt` | first child tilts toward the pointer | `tilt(el, {max, scale})` |
 | `data-pm-cycle="1800"` | children cross-fade in turn | `cycle(el, {interval})` |
-| `data-pm-copy="text"` / `data-pm-copy-target="#id"` | copy + "Copied ✓" | `copy(el, opts)` |
+| `data-pm-copy="text"` / `data-pm-copy data-pm-copy-target="#id"` | copy + "Copied ✓" | `copy(el, opts)` |
 | `data-pm-countdown="ISO date"` | writes days left | `countdown(el)` / `daysUntil(date)` |
 | `data-pm-open="dialogId"` | opens a `<dialog>` | `opener(el)` |
 | `dialog.pm-dialog`, `.pm-sheet`, `.pm-panel`, `.pm-fabmenu` | backdrop click + `[data-pm-close]`; a sheet drags down to close and rises above the phone keyboard | `dialog(el)` |

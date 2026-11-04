@@ -38,6 +38,77 @@ test('ESM entry exposes the documented API and is SSR-safe to import', async () 
   mod.toast('no DOM, no crash');
 });
 
+test('copy says its result to screen readers, and writes nothing until it is pressed', async () => {
+  const { copy } = await import(join(root, 'dist/poiema.js'));
+  const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+  const element = () => ({
+    textContent: '', children: [], attributes: {},
+    setAttribute(name, value) { this.attributes[name] = value; },
+    appendChild(child) { this.children.push(child); },
+    querySelector() { return this.children[0] ?? null; },
+  });
+  const button = (host) => ({
+    ...element(),
+    hasAttribute: () => false,
+    removeAttribute() {},
+    closest: () => host,
+    addEventListener(_, press) { this.press = press; },
+    removeEventListener() {},
+  });
+  const body = element();
+  const dialog = element();
+  let write = async () => {};
+  const realNavigator = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { clipboard: { writeText: () => write() } } });
+  globalThis.document = { body, createElement: element };
+  try {
+    const onPage = button(null);
+    copy(onPage, { text: 'x', duration: 200 });
+    assert.equal(body.children.length, 0, 'mounting must not write to the page, or hydration breaks');
+
+    await onPage.press();
+    const [region] = body.children;
+    assert.equal(region.attributes['aria-live'], 'polite');
+    assert.equal(region.className, 'pm-sr-only');
+    assert.equal(region.textContent, '', 'text set as a region appears gets missed');
+    await wait(150);
+    assert.equal(region.textContent, 'Copied');
+
+    await onPage.press();
+    assert.equal(region.textContent, '', 'a repeat only counts as a change if it empties first');
+    assert.equal(body.children.length, 1, 'one region, reused');
+    await wait(150);
+    assert.equal(region.textContent, 'Copied');
+    await wait(250);
+    assert.equal(region.textContent, '', 'gone with the label, not left in the reading order');
+
+    write = () => Promise.reject(new Error('denied'));
+    await onPage.press();
+    await wait(150);
+    assert.equal(region.textContent, 'Could not copy');
+
+    const nothing = button(null);
+    let wrote = false;
+    write = async () => { wrote = true; };
+    copy(nothing, { text: '', duration: 200 });
+    await nothing.press();
+    assert.equal(wrote, false, 'nothing to copy must not wipe the clipboard');
+    assert.equal(nothing.attributes['data-pm-feedback'], 'Could not copy');
+
+    const inDialog = button(dialog);
+    copy(inDialog, { text: 'x', duration: 200 });
+    write = async () => {};
+    await inDialog.press();
+    await wait(150);
+    assert.equal(dialog.children[0].textContent, 'Copied', 'outside an open modal, a region stays silent');
+    assert.equal(body.children.length, 1);
+  } finally {
+    delete globalThis.document;
+    if (realNavigator) Object.defineProperty(globalThis, 'navigator', realNavigator);
+    else delete globalThis.navigator;
+  }
+});
+
 test('daysUntil rounds up and never goes negative', async () => {
   const { daysUntil } = await import(join(root, 'dist/poiema.js'));
   const now = new Date('2026-10-18T12:00:00-03:00');

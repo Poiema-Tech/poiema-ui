@@ -64,7 +64,36 @@ function cycle(node, { interval = Number(attr(node, 'data-pm-cycle', '')) || 180
   return { destroy: () => clearInterval(id) };
 }
 
-/** Copy text to the clipboard on click and briefly show "Copied ✓" in place of the label. */
+const announcing = new WeakMap(); // live region -> its pending timer
+
+/**
+ * Says `message` to screen readers. The region appears on first use, so a screen the server
+ * rendered still matches when React hydrates it, and in the open dialog the button is in: a modal
+ * makes the rest of the page inert, and a region out there would stay silent.
+ */
+function announce(node, message, lasts) {
+  const host = node.closest('dialog[open]') ?? document.body;
+  let region = host.querySelector(':scope > [data-pm-announcer]');
+  if (!region) {
+    region = document.createElement('div');
+    region.className = 'pm-sr-only';
+    region.setAttribute('data-pm-announcer', '');
+    region.setAttribute('role', 'status');
+    region.setAttribute('aria-live', 'polite');
+    host.appendChild(region);
+  }
+  // Emptied now and written a moment later: many screen readers miss text set as a region appears,
+  // and a repeat of what it already holds. Emptied again once the label is back, or someone
+  // browsing later would still find "Copied ✓" at the end of the page.
+  clearTimeout(announcing.get(region));
+  region.textContent = '';
+  announcing.set(region, setTimeout(() => {
+    region.textContent = message;
+    announcing.set(region, setTimeout(() => { region.textContent = ''; }, lasts));
+  }, 100));
+}
+
+/** Copy text to the clipboard on click, briefly show "Copied ✓" in place of the label, and say it to screen readers. */
 function copy(node, {
   text,
   target = attr(node, 'data-pm-copy-target'),
@@ -76,9 +105,12 @@ function copy(node, {
   const click = async () => {
     const value = text ?? (attr(node, 'data-pm-copy', '') ||
       (target && document.querySelector(target)?.innerText) || '');
-    let ok = true;
-    try { await navigator.clipboard.writeText(value); } catch { ok = false; }
-    node.setAttribute('data-pm-feedback', ok ? success : failure);
+    // Nothing to copy is a failure: writing it would wipe the clipboard and claim success.
+    let ok = value !== '';
+    if (ok) { try { await navigator.clipboard.writeText(value); } catch { ok = false; } }
+    const message = ok ? success : failure;
+    node.setAttribute('data-pm-feedback', message);
+    announce(node, message.replace(/\s*✓\s*/g, ''), duration); // read aloud it's just "check mark"
     clearTimeout(t);
     t = setTimeout(() => node.removeAttribute('data-pm-feedback'), duration);
   };
@@ -257,7 +289,8 @@ function popmenu(node) {
 function toast(message, { duration, action } = {}) {
   if (typeof document === 'undefined') return;
   let region = document.querySelector('.pm-toaster');
-  if (!region) {
+  const isNew = !region;
+  if (isNew) {
     region = document.createElement('div');
     region.className = 'pm-toaster';
     region.setAttribute('role', 'status');
@@ -283,9 +316,14 @@ function toast(message, { duration, action } = {}) {
     button.addEventListener('click', () => { clearTimeout(timer); action.onClick?.(); dismiss(); });
     el.appendChild(button);
   }
-  region.appendChild(el);
-  requestAnimationFrame(() => requestAnimationFrame(() => el.setAttribute('data-pm-in', '')));
-  timer = setTimeout(dismiss, duration ?? (action ? 6000 : 2200));
+  const show = () => {
+    region.appendChild(el);
+    requestAnimationFrame(() => requestAnimationFrame(() => el.setAttribute('data-pm-in', '')));
+    timer = setTimeout(dismiss, duration ?? (action ? 6000 : 2200));
+  };
+  // A live region has to be there before its text, or many screen readers miss the first toast.
+  if (isNew) setTimeout(show, 100);
+  else show();
 }
 
 /**
