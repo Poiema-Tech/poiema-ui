@@ -10,7 +10,7 @@
 |---|---|
 | quiet, weighty, calm | loud, busy, "growth-hacky" |
 | tactile and physical (objects, shadows, paper) | flat, glossy, neon, gradient-heavy |
-| editorial and poster-like | dashboard-like, template-like |
+| editorial and poster-like (on a site); calm and direct (in an app) | template-like, a stock admin kit |
 | sincere and pastoral ("we", "our family") | salesy, ironic, jokey |
 | clear and decisive | vague, hedging |
 | contemporary and reverent | churchy-clichéd, or cold-corporate |
@@ -54,5 +54,7 @@ The voice separates **what must be kept** (✓ checks) from **what is up to you*
 | Calm outlined alerts ("Attention", "Important") | Red/yellow alert banners and exclamation icons |
 | Slow reveal on scroll and gentle float | Bouncy springs, parallax overload, auto-playing noise |
 
-## When building something that isn't a church page
-The system is not tied to its source. A dashboard, a store or a tool gets the same treatment: gray room, paper cards, ink actions, one big lowercase title per view, numbered steps in rings, and a single object (product shot, gem, photo) as the only color on screen.
+## Two registers: gallery and app
+The system is not tied to its source, but it doesn't speak at one volume. Everything above describes the **gallery**: pages people read once. A store's front page or an event page belongs there.
+
+Something people come back to and use is an **app**: an admin, a portal, a dashboard, an internal tool. It keeps the gray room, paper, ink, one typeface, lowercase page titles, the voice and no hue in the chrome. It turns the volume down: small titles, one card with a row per thing, navigation that stays put and no motion on content. A huge headline there only pushes the work below the fold. Start with `class="pm-app"` and follow `docs/app.md`.

@@ -11,6 +11,7 @@
   .pm-inverse,
   .pm-callout,
   .pm-marquee,
+  .pm-tabbar,
   .pm-ticket__main {
     background: var(--pm-inverse-bg);
     color: var(--pm-inverse-fg);
@@ -104,13 +105,13 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    min-height: 48px;
-    padding: 14px 26px;
+    min-height: var(--pm-btn-h);
+    padding: var(--pm-btn-pad);
     border: 0;
     border-radius: var(--pm-radius-pill);
     background: var(--pm-btn-bg);
     color: var(--pm-btn-fg);
-    font: var(--pm-weight-bold) 15px/1 var(--pm-font);
+    font: var(--pm-weight-bold) var(--pm-btn-text)/1 var(--pm-font);
     letter-spacing: var(--pm-tracking-tight);
     text-decoration: none;
     white-space: nowrap;
@@ -135,10 +136,10 @@
   .pm-btn--ghost:hover { --pm-btn-bg: var(--pm-line); transform: none; }
   .pm-btn--danger { --pm-btn-bg: var(--pm-danger); --pm-btn-fg: var(--pm-gray-100); }
 
-  .pm-btn--sm { min-height: 36px; padding: 9px 16px; font-size: var(--pm-text-sm); gap: 8px; }
-  .pm-btn--lg { min-height: 56px; padding: 18px 32px; font-size: 17px; }
-  .pm-btn--icon { width: 48px; padding: 0; }
-  .pm-btn--icon.pm-btn--sm { width: 36px; }
+  .pm-btn--sm { min-height: var(--pm-btn-h-sm); padding: var(--pm-btn-pad-sm); font-size: var(--pm-text-sm); gap: 8px; }
+  .pm-btn--lg { min-height: var(--pm-btn-h-lg); padding: var(--pm-btn-pad-lg); font-size: var(--pm-btn-text-lg); }
+  .pm-btn--icon { width: var(--pm-btn-h); padding: 0; }
+  .pm-btn--icon.pm-btn--sm { width: var(--pm-btn-h-sm); }
   .pm-btn--block { display: flex; width: 100%; }
 
   /* Rich CTA: icon disc + two-line label + ↗. For the one download/next step. */
@@ -291,7 +292,7 @@
 
   /* --- alert: calm outlined note. Never a colored banner. ---------------------- */
   .pm-alert {
-    padding: 20px 24px;
+    padding: var(--pm-alert-pad);
     border-radius: var(--pm-radius-md);
     box-shadow: inset 0 0 0 1.5px var(--pm-line-strong);
     font-size: var(--pm-text-md);
@@ -368,7 +369,10 @@
   }
 
   /* --- pill nav: numbered index / tabs / filters -------------------------------- */
+  /* relative: the containing block for sr-only text inside a pill, which would
+     otherwise escape the scroller's clip and widen the page. */
   .pm-pillnav {
+    position: relative;
     display: flex;
     gap: 8px;
     overflow-x: auto;
@@ -381,6 +385,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-height: var(--pm-chip-h);
     padding: 8px 16px;
     border: 0;
     border-radius: var(--pm-radius-pill);
@@ -528,9 +533,9 @@
   .pm-stat { display: flex; align-items: center; gap: 14px; }
   .pm-stat--stacked { flex-direction: column; align-items: flex-start; gap: 10px; }
   .pm-stat__value {
-    font-size: clamp(48px, 6vw, 72px);
+    font-size: var(--pm-text-stat);
     font-weight: var(--pm-weight-heavy);
-    letter-spacing: -.06em;
+    letter-spacing: var(--pm-tracking-stat);
     line-height: .9;
     color: var(--pm-ink);
   }
@@ -631,9 +636,12 @@
   .pm-table .pm-num { text-align: right; font-variant-numeric: tabular-nums; }
 
   /* --- dialog (native <dialog>) ------------------------------------------------------ */
+  /* margin: auto is the browser's own centering, restated because Tailwind's
+     preflight zeroes every margin and pins a <dialog> to the top-left corner. */
   .pm-dialog {
-    width: min(560px, calc(100vw - 32px));
+    width: min(var(--pm-dialog-w), calc(100vw - 32px));
     max-height: calc(100dvh - 32px);
+    margin: auto;
     padding: var(--pm-card-pad-sm);
     border: 0;
     border-radius: var(--pm-radius-xl);
@@ -668,6 +676,7 @@
   /* 24px is more than half a one-line toast's height, so one line still reads as a
      pill; a message that wraps becomes a soft box instead of an oval. */
   .pm-toast {
+    --pm-ink: var(--pm-inverse-fg);
     padding: 12px 20px;
     border-radius: var(--pm-radius-md);
     background: color-mix(in srgb, var(--pm-inverse-bg) 84%, transparent);
@@ -686,6 +695,21 @@
     transition: opacity var(--pm-dur-base) ease, transform var(--pm-dur-base) var(--pm-ease);
   }
   .pm-toast[data-pm-in] { opacity: 1; transform: none; }
+  /* The toaster lets clicks through to the page; its one button takes them back. */
+  .pm-toast__action {
+    min-height: 32px;
+    margin: -6px -10px -6px 12px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-on-ink-line);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .pm-toast:not([data-pm-in]) .pm-toast__action { pointer-events: none; }
+  @media (pointer: coarse) { .pm-toast__action { min-height: 44px; } }
 
   /* --- small states ----------------------------------------------------------------- */
   .pm-progress {

@@ -1,6 +1,8 @@
 # Layout, surfaces & spacing
 
 ## Grid & rhythm
+> Everything here is the gallery register, for pages. Apps have their own sizes and anatomy: see `docs/app.md`.
+
 - **Container:** `.pm-container`, 1180px max with a fluid gutter of `clamp(16px, 4vw, 48px)`.
 - **Sections:** `.pm-section` adds half of `clamp(64px, 9vw, 120px)` above and below, so sections stack with one full gap.
 - **Cards** pad `clamp(28px, 5.5vw, 72px)`, which is generous. Content never touches a card's edge.
@@ -20,6 +22,8 @@
 | `--pm-radius-sm` | 14 | Inner screens, skeletons |
 | `--pm-radius-xs` | 7 | Checkboxes |
 | `--pm-radius-pill` | 999 | Buttons, chips, tags, inputs, nav pills |
+
+Inside `.pm-app` the scale steps down to 24 / 20 / 16 / 12, and fields use 12 so they never read as buttons.
 
 ## Elevation
 Depth comes from **light, not borders**:
@@ -53,4 +57,4 @@ band          EYEBROW · centered statement · five materials floating · motto
 footer        dark, centered, small
 ```
 
-Use what you need. An app screen is usually: topbar → `.pm-section-head` (ring + lowercase title + lead) → cards.
+Use what you need. This anatomy is for pages people read. **An app screen doesn't follow it:** no hero, no section heads, no lead paragraphs, no stack of cards. It is `.pm-shell` → `.pm-pagehead` → one `.pm-rows` card (`docs/app.md`).

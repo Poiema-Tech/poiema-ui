@@ -70,5 +70,23 @@ for (const [selector, file] of [[null, 'mobile-hero.png'], ['#b2', 'mobile-card.
   shots.push(file);
 }
 
+// The app register, from its own demo.
+const appUrl = pathToFileURL(join(root, 'demo/app.html')).href;
+async function appScreen({ width, height, touch }, hash, file, act) {
+  const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 2, reducedMotion: 'reduce', isMobile: touch, hasTouch: touch });
+  const page = await ctx.newPage();
+  await page.goto(`${appUrl}#${hash}`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.fonts.ready);
+  if (act) await act(page);
+  await page.screenshot({ path: out(file) });
+  shots.push(file);
+  await ctx.close();
+}
+const appPhone = { width: 390, height: 844, touch: true };
+await appScreen({ width: 1440, height: 900, touch: false }, 'links', 'app-desktop.png');
+await appScreen(appPhone, 'links', 'app-phone-list.png');
+await appScreen(appPhone, 'schedule', 'app-phone-month.png');
+await appScreen(appPhone, 'links', 'app-phone-panel.png', (page) => page.evaluate(() => document.getElementById('new-link').showModal()));
+
 await browser.close();
 console.log(`screenshots/ ← ${shots.join(', ')}`);

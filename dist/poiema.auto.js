@@ -97,28 +97,164 @@ function countdown(node, { to = attr(node, 'data-pm-countdown') } = {}) {
   return noop;
 }
 
-/** Click opens a <dialog> by id: <button data-pm-open="invite">. */
+/**
+ * Click opens a <dialog> by id: <button data-pm-open="invite">. If the id is on the page twice
+ * (a framework keeping a hidden route mounted), it's the one on the visible screen that opens.
+ */
 function opener(node, { target = attr(node, 'data-pm-open') } = {}) {
-  const click = () => document.getElementById(target)?.showModal?.();
-  node.addEventListener('click', click);
-  return { destroy: () => node.removeEventListener('click', click) };
-}
-
-/** <dialog class="pm-dialog">: closes on backdrop click and on any [data-pm-close] inside. */
-function dialog(node) {
-  const click = (e) => {
-    if (e.target.closest?.('[data-pm-close]')) { node.close(); return; }
-    if (e.target !== node) return;
-    const r = node.getBoundingClientRect();
-    const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-    if (!inside) node.close();
+  const click = () => {
+    const matches = document.querySelectorAll(`[id="${target}"]`);
+    const shown = [...matches].find((el) => el.parentElement?.checkVisibility?.() !== false);
+    (shown ?? matches[0])?.showModal?.();
   };
   node.addEventListener('click', click);
   return { destroy: () => node.removeEventListener('click', click) };
 }
 
-/** Show a small glass pill at the bottom of the screen. */
-function toast(message, { duration = 2200 } = {}) {
+/**
+ * <dialog class="pm-dialog | pm-sheet | pm-panel | pm-fabmenu">: closes on any [data-pm-close]
+ * inside and on the backdrop. A sheet also drags down to close, because its grabber promises
+ * that, and rises above the on-screen keyboard: phones shrink only the visual viewport, so
+ * typing in a sheet fixed to the bottom would hide what it finds.
+ */
+function dialog(node) {
+  // A click on the backdrop has the dialog as its target. So does a press inside a field that
+  // was dragged out past the edge to select text, which is why the press has to start outside.
+  const onBackdrop = (e) => {
+    if (e.target !== node) return false;
+    if (node.classList.contains('pm-fabmenu')) return true; // it fills the screen
+    const r = node.getBoundingClientRect();
+    return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+  };
+  let pressedOutside = false;
+  const press = (e) => { pressedOutside = onBackdrop(e); };
+  const click = (e) => {
+    if (e.target.closest?.('[data-pm-close]')) node.close();
+    else if (pressedOutside && onBackdrop(e)) node.close();
+    pressedOutside = false;
+  };
+  node.addEventListener('pointerdown', press);
+  node.addEventListener('click', click);
+
+  const isSheet = node.classList.contains('pm-sheet');
+  const vv = isSheet && typeof visualViewport !== 'undefined' ? visualViewport : null;
+  const lift = () => {
+    const inset = Math.max(0, Math.round(innerHeight - vv.height - vv.offsetTop));
+    // Under ~80px it's the browser's address bar, not a keyboard.
+    if (inset > 80) node.style.setProperty('--pm-keyboard-inset', `${inset}px`);
+    else node.style.removeProperty('--pm-keyboard-inset');
+  };
+  vv?.addEventListener('resize', lift);
+  vv?.addEventListener('scroll', lift);
+
+  let dragFrom = null;
+  const stopDrag = () => { dragFrom = null; node.style.removeProperty('transform'); };
+  const touchstart = (e) => {
+    const fromTop = e.touches[0].clientY - node.getBoundingClientRect().top;
+    dragFrom = node.scrollTop === 0 && fromTop < 48 ? e.touches[0].clientY : null;
+  };
+  const touchmove = (e) => {
+    if (dragFrom === null) return;
+    const down = e.touches[0].clientY - dragFrom;
+    if (down < 0) { stopDrag(); return; } // going up is a scroll, not a drag
+    e.preventDefault();
+    node.style.transform = `translateY(${down}px)`;
+  };
+  const touchend = (e) => {
+    if (dragFrom === null) return;
+    const far = e.changedTouches[0].clientY - dragFrom > 80;
+    stopDrag();
+    if (far) node.close();
+  };
+  if (isSheet) {
+    node.addEventListener('touchstart', touchstart, { passive: true });
+    node.addEventListener('touchmove', touchmove, { passive: false });
+    node.addEventListener('touchend', touchend);
+    node.addEventListener('touchcancel', stopDrag);
+  }
+
+  return {
+    destroy() {
+      node.removeEventListener('pointerdown', press);
+      node.removeEventListener('click', click);
+      vv?.removeEventListener('resize', lift);
+      vv?.removeEventListener('scroll', lift);
+      if (isSheet) {
+        node.removeEventListener('touchstart', touchstart);
+        node.removeEventListener('touchmove', touchmove);
+        node.removeEventListener('touchend', touchend);
+        node.removeEventListener('touchcancel', stopDrag);
+      }
+    },
+  };
+}
+
+/** Empties the search field next to it and tells the app: <button data-pm-clear>. */
+function clear(node, { target = attr(node, 'data-pm-clear') } = {}) {
+  const click = () => {
+    const input = target ? document.querySelector(target) : node.closest('.pm-search')?.querySelector('input');
+    if (!input) return;
+    // Through the native setter, or React would not see the change as its own onChange.
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, '');
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.focus();
+  };
+  node.addEventListener('click', click);
+  return { destroy: () => node.removeEventListener('click', click) };
+}
+
+/**
+ * Places a popover menu under the button that opens it: <button popovertarget="more" data-pm-menu>.
+ * Found by id when it opens, because a framework may replace the popover after this mounts.
+ */
+function menu(node, { gap = 8 } = {}) {
+  const mine = (e) => e.newState === 'open'
+    && e.target.id === node.getAttribute('popovertarget')
+    && node.checkVisibility?.() !== false; // the same id may be on a hidden route
+  const place = (e) => {
+    if (!mine(e)) return;
+    const r = node.getBoundingClientRect();
+    e.target.style.top = `${r.bottom + gap}px`;
+    // clientWidth, not innerWidth: an always-on scrollbar isn't part of the page.
+    e.target.style.right = `${Math.max(16, document.documentElement.clientWidth - r.right)}px`;
+  };
+  // Flips up only when it would leave the screen, once it has a height to measure.
+  const flip = (e) => {
+    if (!mine(e)) return;
+    const r = node.getBoundingClientRect();
+    const h = e.target.offsetHeight;
+    if (r.bottom + gap + h > innerHeight) e.target.style.top = `${Math.max(16, r.top - gap - h)}px`;
+  };
+  document.addEventListener('beforetoggle', place, true);
+  document.addEventListener('toggle', flip, true);
+  return {
+    destroy() {
+      document.removeEventListener('beforetoggle', place, true);
+      document.removeEventListener('toggle', flip, true);
+    },
+  };
+}
+
+/**
+ * A menu closes when an item is chosen. In the capture phase, before the item's own handler: the
+ * browser then hands focus back to the button that opened the menu, so a sheet the item opens
+ * remembers that button, not a row that is about to disappear.
+ */
+function popmenu(node) {
+  const click = (e) => {
+    if (!e.target.closest?.('.pm-menu__item')) return;
+    if (node.tagName === 'DIALOG') node.close();
+    else node.hidePopover?.();
+  };
+  node.addEventListener('click', click, true);
+  return { destroy: () => node.removeEventListener('click', click, true) };
+}
+
+/**
+ * Show a small glass pill at the bottom of the screen. `action` adds a button to it, usually
+ * "Undo", and gives the reader longer: toast('Removed ✓', { action: { label: 'Undo', onClick } }).
+ */
+function toast(message, { duration, action } = {}) {
   if (typeof document === 'undefined') return;
   let region = document.querySelector('.pm-toaster');
   if (!region) {
@@ -131,12 +267,93 @@ function toast(message, { duration = 2200 } = {}) {
   const el = document.createElement('div');
   el.className = 'pm-toast';
   el.textContent = message;
-  region.appendChild(el);
-  requestAnimationFrame(() => requestAnimationFrame(() => el.setAttribute('data-pm-in', '')));
-  setTimeout(() => {
+  let button;
+  const dismiss = () => {
+    // Fading out isn't gone: a second click on Undo must not run it again.
+    if (button) button.disabled = true;
     el.removeAttribute('data-pm-in');
     setTimeout(() => el.remove(), 400);
-  }, duration);
+  };
+  let timer;
+  if (action) {
+    button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'pm-toast__action';
+    button.textContent = action.label;
+    button.addEventListener('click', () => { clearTimeout(timer); action.onClick?.(); dismiss(); });
+    el.appendChild(button);
+  }
+  region.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.setAttribute('data-pm-in', '')));
+  timer = setTimeout(dismiss, duration ?? (action ? 6000 : 2200));
+}
+
+/**
+ * A .pm-bars chart reads out the bar under the pointer, under a finger as it slides, or picked with
+ * the arrow keys. Nothing changes until then: a chart the server rendered must still match when
+ * React hydrates it, so the readout is CSS and the tabindex is the markup's.
+ */
+function bars(node) {
+  const items = () => Array.from(node.children);
+  let current = null;
+
+  const show = (bar) => {
+    current?.removeAttribute('data-pm-active');
+    current = bar;
+    if (!bar) return;
+    bar.setAttribute('data-pm-active', '');
+    const box = node.getBoundingClientRect();
+    const r = bar.getBoundingClientRect();
+    const width = parseFloat(getComputedStyle(bar, '::after').width) || 0;
+    const left = r.left + r.width / 2 - box.left - width / 2;
+    node.style.setProperty('--pm-bars-x', `${Math.max(0, Math.min(left, box.width - width))}px`);
+  };
+
+  // By column, not by element: the whole width answers, gaps included.
+  const over = (e) => {
+    const all = items();
+    const box = node.getBoundingClientRect();
+    const i = Math.floor(((e.clientX - box.left) / box.width) * all.length);
+    show(all[Math.max(0, Math.min(all.length - 1, i))]);
+  };
+  // A finger lifting leaves its reading up; a mouse leaving, or a tap elsewhere, clears it.
+  const clear = () => show(null);
+  const leave = (e) => { if (e.pointerType === 'mouse') clear(); };
+  const outside = (e) => { if (current && !node.contains(e.target)) clear(); };
+  const key = (e) => {
+    const all = items();
+    const i = all.indexOf(current);
+    const to = { ArrowRight: i + 1, ArrowLeft: i < 0 ? all.length - 1 : i - 1, Home: 0, End: all.length - 1 }[e.key];
+    if (e.key === 'Escape') clear();
+    if (to === undefined) return;
+    e.preventDefault();
+    show(all[Math.max(0, Math.min(all.length - 1, to))]);
+  };
+  const focus = () => { if (node.matches(':focus-visible') && !current) show(items().at(-1)); };
+
+  node.addEventListener('pointerdown', over);
+  node.addEventListener('pointermove', over);
+  node.addEventListener('pointerleave', leave);
+  node.addEventListener('pointercancel', clear);
+  node.addEventListener('keydown', key);
+  node.addEventListener('focus', focus);
+  node.addEventListener('blur', clear);
+  document.addEventListener('pointerdown', outside);
+
+  return {
+    destroy() {
+      node.removeEventListener('pointerdown', over);
+      node.removeEventListener('pointermove', over);
+      node.removeEventListener('pointerleave', leave);
+      node.removeEventListener('pointercancel', clear);
+      node.removeEventListener('keydown', key);
+      node.removeEventListener('focus', focus);
+      node.removeEventListener('blur', clear);
+      document.removeEventListener('pointerdown', outside);
+      clear();
+      node.style.removeProperty('--pm-bars-x');
+    },
+  };
 }
 
 /** Attribute -> behavior table used by init(). */
@@ -148,6 +365,8 @@ const behaviors = {
   'data-pm-copy': copy,
   'data-pm-countdown': countdown,
   'data-pm-open': opener,
+  'data-pm-clear': clear,
+  'data-pm-menu': menu,
 };
 
 /**
@@ -157,7 +376,9 @@ const behaviors = {
 function init(root = typeof document !== 'undefined' ? document : null, { observe = true } = {}) {
   if (!root) return () => {};
   const mounted = new Map(); // element -> Map(attribute -> handle)
-  const selector = [...Object.keys(behaviors).map((a) => `[${a}]`), 'dialog.pm-dialog'].join(',');
+  const dialogs = 'dialog.pm-dialog, dialog.pm-sheet, dialog.pm-panel, dialog.pm-fabmenu';
+  const popovers = '.pm-menu[popover], dialog.pm-fabmenu';
+  const selector = [...Object.keys(behaviors).map((a) => `[${a}]`), dialogs, popovers, '.pm-bars'].join(',');
 
   const mount = (el) => {
     let handles = mounted.get(el);
@@ -165,7 +386,9 @@ function init(root = typeof document !== 'undefined' ? document : null, { observ
     for (const [name, fn] of Object.entries(behaviors)) {
       if (el.hasAttribute(name) && !handles.has(name)) handles.set(name, fn(el));
     }
-    if (el.matches('dialog.pm-dialog') && !handles.has('dialog')) handles.set('dialog', dialog(el));
+    if (el.matches(dialogs) && !handles.has('dialog')) handles.set('dialog', dialog(el));
+    if (el.matches(popovers) && !handles.has('popmenu')) handles.set('popmenu', popmenu(el));
+    if (el.matches('.pm-bars') && !handles.has('bars')) handles.set('bars', bars(el));
   };
   const scan = (node) => {
     if (node.nodeType !== 1) return;
@@ -203,7 +426,7 @@ function init(root = typeof document !== 'undefined' ? document : null, { observ
   };
 }
 
-window.Poiema = { reveal, stagger, tilt, cycle, copy, daysUntil, countdown, opener, dialog, toast, behaviors, init };
+window.Poiema = { reveal, stagger, tilt, cycle, copy, daysUntil, countdown, opener, dialog, clear, menu, popmenu, toast, bars, behaviors, init };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { init(); });
 else init();
 })();

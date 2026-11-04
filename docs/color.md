@@ -15,6 +15,7 @@
 | Small labels | `--pm-label` | `#646464` | `#9a9a9a` |
 | Echo gray (large text only) | `--pm-muted` | `#7d7d7d` | `#8d8d8d` |
 | Hairlines | `--pm-line` | `rgba(43,43,43,.14)` | `rgba(255,255,255,.12)` |
+| Between rows | `--pm-divider` | `rgba(43,43,43,.08)` | `rgba(255,255,255,.07)` |
 
 Pure white `#fff` appears only as the 1px top highlight on cards (`--pm-card-edge`). Pages are never white.
 
@@ -35,8 +36,12 @@ The order matters. It tells a story of **formation** (clay → diamond), so when
 
 ### Semantic states
 - `--pm-danger` (clay): errors and destructive actions. It's a warm earth tone, never alarm red. Pair it with text such as "Couldn't save", never color alone.
+- `--pm-danger-soft` (a pale clay wash): behind danger text, on problem badges, destructive buttons in apps and problem notices.
 - `--pm-success` (grass): confirmations.
 - No "warning" or "info" hue. Use a neutral `.pm-alert` with an uppercase title.
+
+### In an app
+Cards are flat `--pm-surface`, because a gradient drifts into the canvas along a long list. **Black is emphasis: what's chosen, what's primary, a date, a fact worth a second look. Clay means a problem, and nothing else.** No green "active", no colored status chips: a state is a word, a check, or a dashed outline for "not final yet". A problem is always written or marked with `.pm-flag`, the clay diamond, so it survives without its color.
 
 ## Themes & inversion
 
@@ -69,6 +74,7 @@ The build checks these pairs in both themes and fails if one regresses. `muted` 
 | `on-ink-muted` | `ink` | 4.27 | 3.84 | 3 (large text) |
 | `danger` | `canvas` | 5.75 | 5.81 | 4.5 (AA) |
 | `danger` | `surface` | 6.95 | 4.86 | 4.5 (AA) |
+| `danger` | `danger-soft` | 6.06 | 4.66 | 4.5 (AA) |
 | `success` | `canvas` | 6.05 | 6.67 | 4.5 (AA) |
 | `success` | `surface` | 7.32 | 5.58 | 4.5 (AA) |
 <!-- contrast:end -->

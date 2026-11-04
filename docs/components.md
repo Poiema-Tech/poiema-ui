@@ -3,7 +3,9 @@
 Plain HTML + `pm-*` classes. They work in any framework: rename `class` → `className` in JSX. Behaviors marked **[JS]** need `init()` from `poiema-ui` (or the auto script). Everything else is CSS only.
 
 ## Contents
-Typography · Ring · Lockup · Chips & tags · Buttons · Cards · Feature · Section head · Callout · Alert · Lists · Pill nav · Topbar · Hero · Marquee · Object & frame · Stat · Ticket · Table · Forms · Dialog · Toast · Progress, spinner, skeleton · Footer · Layout helpers · Utilities
+Typography · Ring · Lockup · Chips & tags · Buttons · Cards · Feature · Section head · Callout · Alert · Lists · Pill nav · Topbar · Hero · Marquee · Object & frame · Stat · Ticket · Table · Forms · Dialog · Toast · Progress, spinner, skeleton · Footer · Layout helpers · Utilities · **App:** Shell · Page head · Search · Rows · Badge, count, flag · Dates · Notice · Empty state · Segmented & stepper · Screen actions · Sheet · Panel · Select mode · Workspace & to-do · Numbers · Gate · Loading
+
+**Building an app, portal or admin?** Read `docs/app.md` first, then the App section at the end of this page.
 
 ---
 
@@ -74,9 +76,10 @@ Solid buttons use ink, so they are dark on light surfaces and paper on dark card
 <!-- add pm-btn--soft for a paper rich CTA on a light page -->
 
 <!-- [JS] copy with feedback -->
-<button class="pm-btn" data-pm-copy="Text to copy" data-pm-copied="Copied ✓">Copy details</button>
+<button class="pm-btn" data-pm-copy="Text to copy" data-pm-copied="Copied ✓" data-pm-copy-failed="Couldn't copy">Copy details</button>
 <button class="pm-btn" data-pm-copy-target="#details">Copy details</button>
 ```
+The labels default to English: set `data-pm-copied` and `data-pm-copy-failed` in any other language.
 `.pm-play` is a round paper play button (for media covers).
 
 ## Cards
@@ -283,8 +286,9 @@ Native `<dialog>`. [JS] `data-pm-open="id"` opens it, a backdrop click closes it
 ```js
 import { toast } from 'poiema-ui';
 toast('Project created ✓');
+toast('Removed ✓', { action: { label: 'Undo', onClick: restore } });
 ```
-Toasts stack at the bottom center, as wide as the message up to the page gutters. One line reads as a pill; a longer message wraps into balanced, centered lines in a 24px box. Keep it to one or two short lines.
+Toasts stack at the bottom center, as wide as the message up to the page gutters. One line reads as a pill; a longer message wraps into balanced, centered lines in a 24px box. Keep it to one or two short lines. With an `action` the toast stays for 6 seconds instead of 2.2: prefer Undo to asking first. In an app on a phone, toasts clear the tab bar and the action circle. Close any open dialog first: a modal makes the rest of the page inert, toasts included.
 
 ## Progress, spinner, skeleton
 ```html
@@ -318,6 +322,8 @@ Override any gap with `style="--pm-gap: 24px"`.
 ## Utilities
 `.pm-ink .pm-ink-2 .pm-muted .pm-danger .pm-success .pm-lower .pm-upper .pm-nums .pm-balance .pm-center .pm-measure .pm-sr-only .pm-lift .pm-inverse`
 
+In an app: `.pm-faded` (a past day: dim until hovered or focused), `.pm-phone-only`, `.pm-desk-only` (either side of 900px, where the navigation switches), `.pm-narrow-only`, `.pm-wide-only` (either side of 1280px, where a rail appears).
+
 ## Behaviors [JS]
 
 | Attribute | Behavior | Action function |
@@ -329,4 +335,353 @@ Override any gap with `style="--pm-gap: 24px"`.
 | `data-pm-copy="text"` / `data-pm-copy-target="#id"` | copy + "Copied ✓" | `copy(el, opts)` |
 | `data-pm-countdown="ISO date"` | writes days left | `countdown(el)` / `daysUntil(date)` |
 | `data-pm-open="dialogId"` | opens a `<dialog>` | `opener(el)` |
-| `dialog.pm-dialog` | backdrop click + `[data-pm-close]` | `dialog(el)` |
+| `dialog.pm-dialog`, `.pm-sheet`, `.pm-panel`, `.pm-fabmenu` | backdrop click + `[data-pm-close]`; a sheet drags down to close and rises above the phone keyboard | `dialog(el)` |
+| `data-pm-clear` | empties the search field beside it and fires `input` (React sees it) | `clear(el)` |
+| `data-pm-menu` on a `popovertarget` button | places the popover under the button | `menu(el)` |
+| `.pm-menu[popover]`, `dialog.pm-fabmenu` | closes when an item is chosen, returning focus to the button | `popmenu(el)` |
+| `.pm-bars` | reads out a bar on hover, touch or arrow keys | `bars(el)` |
+
+---
+
+# App
+
+Put `class="pm-app"` on `<html>` first: it sets the sizes every component below expects. The rules for when to use each one are in `docs/app.md`.
+
+## Shell
+Sidebar from 900px up, tab bar below it. Each hides itself, so render both.
+```html
+<div class="pm-shell">
+  <aside class="pm-sidebar">
+    <a class="pm-sidebar__brand" href="/">poiema</a>
+    <nav class="pm-sidebar__nav" aria-label="Main">
+      <div class="pm-sidebar__group">
+        <p class="pm-sidebar__title">Work</p>
+        <a href="/people" aria-current="page"><svg aria-hidden="true">…</svg>People</a>
+        <a href="/schedule"><svg aria-hidden="true">…</svg>Schedule <span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>3<span class="pm-sr-only"> to fix</span></span></a>
+      </div>
+    </nav>
+    <div class="pm-sidebar__user">
+      <strong>Marina Duarte</strong> Administrator
+      <div class="pm-cluster"><a href="/profile">My profile</a><button type="button">Sign out</button></div>
+    </div>
+  </aside>
+  <main class="pm-shell__main">…</main>
+</div>
+<nav class="pm-tabbar" aria-label="Main">
+  <a href="/people" aria-current="page"><svg aria-hidden="true">…</svg>People</a>
+  <a href="/menu"><svg aria-hidden="true">…</svg>Menu</a>
+</nav>
+```
+Two to four tabs, Menu last. Render the tab bar outside `.pm-shell__main`. The main column's bottom padding already clears it.
+
+## Page head
+```html
+<header class="pm-pagehead">
+  <div class="pm-pagehead__line">
+    <a class="pm-btn pm-btn--soft pm-btn--icon" href="/people" aria-label="Back"><svg aria-hidden="true">…</svg></a>   <!-- detail screens -->
+    <div class="pm-pagehead__title">
+      <h1 class="pm-h1">people.</h1>
+      <p class="pm-pagehead__sub">167 people · 6 on vacation</p>
+    </div>
+    <span class="pm-badge pm-badge--dashed">Draft</span>                  <!-- optional state -->
+    <div class="pm-pagehead__actions">                                    <!-- hidden on phones -->
+      <button class="pm-btn pm-btn--soft">Select several</button>
+      <button class="pm-btn">Add person</button>
+    </div>
+  </div>
+  <div class="pm-toolbar">…search, filter button…</div>
+  <div class="pm-pillnav pm-pillnav--bleed" role="group" aria-label="Filter">
+    <button type="button" aria-pressed="true">All <span class="pm-count">167</span></button>
+    <button type="button" aria-pressed="false">No seat <span class="pm-count">26</span></button>
+    <button type="button" aria-pressed="false" data-tone="danger"><span class="pm-flag"></span>On vacation <span class="pm-count">6</span></button>
+  </div>
+</header>
+```
+`.pm-pagehead--pin` keeps only the title line on screen while a long page scrolls on a phone. `--bleed` lets the chips run edge to edge on phones. A button with `aria-pressed="true"` fills with ink: use it for a filter button with active filters.
+
+## Search
+No submit button: filter as the person types. The clear button hides itself while the field is empty, which it can only tell from the `placeholder`, so keep one.
+```html
+<label class="pm-search">
+  <svg aria-hidden="true">…</svg>
+  <input type="search" placeholder="Search by name" aria-label="Search people">
+  <button class="pm-search__clear" type="button" data-pm-clear aria-label="Clear search"><svg aria-hidden="true">…</svg></button>
+</label>
+```
+
+## Rows
+One card, one row per thing. `.pm-rows--columns` flows five or more into two columns from 1100px and three from 1600px.
+```html
+<div class="pm-rows pm-rows--columns">
+  <!-- the whole row is a link, with a chevron for free -->
+  <a class="pm-row" href="/people/1">
+    <span class="pm-row__text">
+      <span class="pm-row__title">Ana Souza</span>
+      <span class="pm-row__sub">married to João Souza</span>
+    </span>
+  </a>
+
+  <!-- the row opens the link and a button still works: a trailing item replaces the chevron -->
+  <div class="pm-row">
+    <span class="pm-row__text">
+      <a class="pm-row__title pm-row__link" href="/links/1">Easter signup</a>
+      <span class="pm-row__sub">/pascoa · 1,204 clicks</span>
+    </span>
+    <button class="pm-btn pm-btn--soft pm-btn--sm" data-pm-copy="…" data-pm-copied="Copied ✓">Copy</button>
+  </div>
+
+  <!-- a problem, fixed right here -->
+  <div class="pm-row pm-row--danger">
+    <span class="pm-row__text">
+      <span class="pm-row__title">Open seat</span>
+      <span class="pm-row__sub">Check-in</span>
+    </span>
+    <button class="pm-btn pm-btn--outline pm-btn--sm">Choose</button>
+  </div>
+
+  <div class="pm-row pm-row--off"><span class="pm-row__text"><span class="pm-row__title">Bruno Lima</span><span class="pm-row__sub pm-row__sub--danger">On vacation that Sunday</span></span></div>
+
+  <!-- a checkbox in front: the whole row toggles it -->
+  <label class="pm-row"><input class="pm-check" type="checkbox"><span class="pm-row__text"><span class="pm-row__title">Carla Mendes</span></span></label>
+
+  <!-- a switch or stepper behind -->
+  <label class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Couples serve together</span></span><input class="pm-switch" type="checkbox" role="switch"></label>
+
+  <!-- last row: one more of what the card lists -->
+  <button class="pm-row pm-row--add" type="button">Add person</button>
+</div>
+```
+With a header and sections, as on a Sunday card:
+```html
+<div class="pm-rows">
+  <div class="pm-rows__head"><h2>Sunday, Nov 8</h2><span class="pm-badge">4 people</span></div>
+  <p class="pm-rows__label">Now</p>            <!-- small uppercase caption -->
+  <p class="pm-rows__section">2 to 5 years</p> <!-- bold heading over the names under it -->
+  <a class="pm-row" href="…">…</a>
+</div>
+<div class="pm-rows"><p class="pm-rows__empty">Nobody with that name.</p></div>
+```
+A row's first `<svg>` is a 22px icon (the Menu screen), and the chevron stays. Any other trailing item replaces the chevron. A `<progress>` as a row's last child spans the whole row, so every bar compares:
+```html
+<a class="pm-row" href="/menu/folders"><svg aria-hidden="true">…</svg><span class="pm-row__text"><span class="pm-row__title">Folders</span><span class="pm-row__sub">how links are sorted</span></span></a>
+
+<div class="pm-row">
+  <span class="pm-row__text"><span class="pm-row__title">WhatsApp</span></span>
+  <span class="pm-badge">698</span>
+  <progress class="pm-progress" value="58" max="100" aria-label="58 percent"></progress>
+</div>
+```
+`<details class="pm-disclosure">` folds what is out of the way:
+```html
+<details class="pm-disclosure">
+  <summary>Past · 3</summary>
+  <div class="pm-rows pm-faded">…</div>
+</details>
+```
+
+## Badge, count, flag
+```html
+<span class="pm-badge">3 people</span>
+<span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>2 open seats</span>
+<span class="pm-badge pm-badge--solid">Band 1</span>
+<span class="pm-badge pm-badge--outline"><svg aria-hidden="true">…</svg>Published</span>
+<span class="pm-badge pm-badge--dashed">Draft</span>
+<span class="pm-count">26</span>                                    <!-- inside a chip or button -->
+<span class="pm-flag"></span><span class="pm-sr-only">has a problem</span>   <!-- the clay diamond -->
+```
+A problem is always written or flagged: never color alone, and always with text for screen readers.
+
+## Dates
+```html
+<span class="pm-datetile"><small>Sun</small><b>08</b></span>
+<span class="pm-datetile pm-datetile--sm"><small>Sun</small><b>08</b><span class="pm-flag"></span></span>
+
+<nav class="pm-datestrip" aria-label="Sundays">
+  <a class="pm-datetile pm-faded" href="#d1"><small>Sun</small><b>01</b></a>
+  <a class="pm-datetile" href="#d8" aria-current="true"><small>Sun</small><b>08</b></a>
+  <a class="pm-datetile" href="#d15"><small>Sun</small><b>15</b><span class="pm-flag"></span><span class="pm-sr-only">has open seats</span></a>
+</nav>
+```
+
+## Notice
+What this screen needs from you, and the button that does it. `--draft` is dashed: not final yet. `--danger` is the clay wash.
+```html
+<section class="pm-notice pm-notice--draft">
+  <div>
+    <h2>November draft: review and approve</h2>
+    <p>The teams see it once every ministry has approved.</p>
+  </div>
+  <button class="pm-btn">Approve Kids</button>
+</section>
+<section class="pm-notice pm-notice--danger"><div><h2>This Sunday has no band</h2></div><button class="pm-btn pm-btn--soft">Choose</button></section>
+```
+Use `.pm-alert` for a calm note with nothing to press.
+
+## Empty state
+```html
+<div class="pm-empty">
+  <span class="pm-empty__icon"><svg aria-hidden="true">…</svg></span>
+  <h2 class="pm-empty__title">nothing here yet.</h2>
+  <p>When you create your first link, it shows up here.</p>
+  <button class="pm-btn">Create link</button>
+</div>
+```
+
+## Segmented & stepper
+```html
+<div class="pm-segmented" role="radiogroup" aria-label="Redirect">
+  <label><input type="radio" name="r" checked><span>Temporary</span></label>
+  <label><input type="radio" name="r"><span>Permanent</span></label>
+</div>
+
+<span class="pm-stepper" role="group" aria-label="People per service">
+  <button type="button" aria-label="Fewer">−</button>
+  <output aria-live="polite">4</output>
+  <button type="button" aria-label="More">+</button>
+</span>
+```
+
+## Screen actions
+On a phone, the circle above the tab bar. With one action it does that action directly:
+```html
+<button class="pm-fab" type="button" aria-label="Add person" data-pm-open="new-person"><svg aria-hidden="true">…</svg></button>
+```
+With two or more it opens them, in a modal `<dialog>` so focus stays with the actions. A tap on the blur closes it, and the main action goes last, closest to the thumb:
+```html
+<button class="pm-fab" type="button" data-pm-open="actions" aria-label="Actions for this screen"><svg aria-hidden="true">…</svg></button>
+<dialog class="pm-fabmenu" id="actions" aria-label="Actions for this screen">
+  <div class="pm-menu">
+    <button class="pm-menu__item" type="button">
+      <span class="pm-menu__icon"><svg aria-hidden="true">…</svg></span>
+      <span><span class="pm-menu__label">Select several</span><span class="pm-menu__hint">to move them at once</span></span>
+    </button>
+    <button class="pm-menu__item pm-menu__item--primary" type="button" data-pm-open="new-person">
+      <span class="pm-menu__icon"><svg aria-hidden="true">…</svg></span>
+      <span class="pm-menu__label">Add person</span>
+    </button>
+  </div>
+  <button class="pm-fab" type="button" data-pm-close aria-label="Close actions"><svg aria-hidden="true">…</svg></button>
+</dialog>
+```
+On a desk, the same actions are header buttons, and the rarely used ones wait in a `⋯` menu:
+```html
+<button class="pm-btn pm-btn--soft pm-btn--icon" type="button" popovertarget="more" data-pm-menu aria-label="More actions"><svg aria-hidden="true">…</svg></button>
+<div class="pm-menu" id="more" popover>
+  <button class="pm-menu__item" type="button"><svg aria-hidden="true">…</svg><span><span class="pm-menu__label">Archive</span><span class="pm-menu__hint">the address keeps working</span></span></button>
+  <button class="pm-menu__item pm-menu__item--danger" type="button"><svg aria-hidden="true">…</svg><span class="pm-menu__label">Delete link</span></button>
+</div>
+```
+
+## Sheet
+Tapped a name, short choice. Rises from the bottom on a phone, centered at 420px on a desk. With `init()`, its top can be dragged down to close it, and it rises above the phone's keyboard.
+```html
+<dialog class="pm-sheet" id="person" aria-labelledby="person-name">
+  <h2 class="pm-sheet__title" id="person-name">Diego Prado</h2>
+  <p class="pm-sheet__sub">Kids · Sunday, Nov 8</p>
+  <div class="pm-sheet__actions">
+    <button class="pm-btn">Swap</button>
+    <button class="pm-btn pm-btn--soft">See person</button>
+    <button class="pm-btn pm-btn--ghost pm-btn--block pm-danger">Remove from schedule</button>
+  </div>
+</dialog>
+```
+
+## Panel
+Create, edit, pick from a long list. Full screen on a phone, a right-hand panel on a desk.
+```html
+<dialog class="pm-panel" id="new-person" aria-labelledby="new-person-title">
+  <div class="pm-panel__head">
+    <button class="pm-btn pm-btn--soft pm-btn--icon" type="button" data-pm-close aria-label="Back"><svg aria-hidden="true">…</svg></button>
+    <div>
+      <h2 class="pm-panel__title" id="new-person-title">Add person</h2>
+      <p class="pm-panel__sub">Kids</p>
+    </div>
+  </div>
+  <div class="pm-panel__body">…fields…</div>
+  <div class="pm-panel__foot">
+    <button class="pm-btn pm-btn--soft" type="button" data-pm-close>Cancel</button>
+    <button class="pm-btn">Save</button>
+  </div>
+</dialog>
+```
+For confirmations, use `.pm-dialog` with `.pm-dialog__foot` and `autofocus` on Cancel:
+```html
+<dialog class="pm-dialog" id="confirm" aria-labelledby="confirm-title">
+  <h2 class="pm-h2" id="confirm-title">delete this link?</h2>
+  <p class="pm-body">Printed QR codes stop working. This can't be undone.</p>
+  <div class="pm-dialog__foot">
+    <button class="pm-btn pm-btn--soft" data-pm-close autofocus>Cancel</button>
+    <button class="pm-btn pm-btn--danger">Delete link</button>
+  </div>
+</dialog>
+```
+
+## Select mode
+Rows turn into `label.pm-row` with a `.pm-check`, the circle goes away, and this bar holds what to do. It floats above the tab bar on a phone and sticks under the list on a desk.
+```html
+<div class="pm-selectbar">
+  <button class="pm-btn pm-btn--ghost pm-btn--icon" type="button" aria-label="Stop selecting"><svg aria-hidden="true">…</svg></button>
+  <p aria-live="polite">2 selected</p>
+  <button class="pm-btn">Move to folder</button>
+</div>
+```
+
+## Workspace & to-do
+The main column plus a 288px rail from 1280px up. Below that, the rail follows the main column, at the very end of the page. If what's in it matters sooner, add `.pm-wide-only` to the rail and offer the same thing in a `.pm-narrow-only` row that opens a sheet.
+```html
+<div class="pm-workspace">
+  <div class="pm-stack">…</div>
+  <aside class="pm-workspace__rail">
+    <div class="pm-todo">
+      <span class="pm-datetile"><small>Sun</small><b>15</b></span>
+      <h3>Kids · 2 open seats</h3>
+      <p>2 to 5 years · Helper, Check-in</p>
+      <button class="pm-btn pm-btn--outline pm-btn--sm">Fill</button>
+    </div>
+  </aside>
+</div>
+```
+
+## Numbers
+```html
+<div class="pm-card pm-card--compact pm-stats">
+  <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">3,482</strong><span class="pm-stat__label">Clicks</span></div>
+  <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">604</strong><span class="pm-stat__label">QR scans</span></div>
+</div>
+
+<div class="pm-cluster pm-cluster--between">
+  <h2 class="pm-h4">Clicks per day</h2>
+  <p class="pm-small pm-nums">Most: 104 clicks · Oct 6</p>
+</div>
+<div class="pm-bars" role="img" aria-label="Clicks per day over the last 30 days" tabindex="0">
+  <span style="--v:.4" data-value="42 clicks" data-label="Oct 5"></span>
+  <span style="--v:1" data-value="104 clicks" data-label="Oct 6"></span>
+  <span style="--v:0" data-value="0 clicks" data-label="Oct 7"></span>
+</div>
+<div class="pm-bars__axis" aria-hidden="true"><span>Oct 5</span><span>Oct 7</span></div>
+<table class="pm-sr-only">…the same numbers…</table>
+```
+`--v` runs from 0 to 1, relative to the tallest bar. With `init()`, a bar reads out its `data-value` and `data-label`: on hover, under a finger as it slides or taps, and with the arrow keys once the chart has focus. The whole column answers, not just the painted part, and a day with nothing still has a column.
+
+Say the highest value in the line above the chart, as here: it gives the chart a scale on screens that can't hover. Write the labels in the product's language, and leave out `title`: a native tooltip would appear over the readout.
+
+## Gate
+A screen with one job and no navigation: sign in, not found, a fatal error.
+```html
+<main class="pm-gate">
+  <div class="pm-card pm-card--compact pm-stack">
+    <h1 class="pm-h1">sign in.</h1>
+    …
+  </div>
+</main>
+```
+
+## Loading
+A skeleton shaped like the screen it stands in for, and one message for screen readers:
+```html
+<p class="pm-sr-only" role="status">Loading…</p>
+<div class="pm-rows" aria-hidden="true">
+  <div class="pm-row"><span class="pm-row__text"><span class="pm-skeleton" style="width:50%; height:16px"></span></span></div>
+  <div class="pm-row"><span class="pm-row__text"><span class="pm-skeleton" style="width:66%; height:16px"></span></span></div>
+</div>
+```

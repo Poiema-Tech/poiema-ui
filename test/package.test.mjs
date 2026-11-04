@@ -31,7 +31,7 @@ test('every package export points to a built file', () => {
 
 test('ESM entry exposes the documented API and is SSR-safe to import', async () => {
   const mod = await import(join(root, 'dist/poiema.js'));
-  for (const name of ['init', 'reveal', 'stagger', 'tilt', 'cycle', 'copy', 'countdown', 'opener', 'dialog', 'toast', 'daysUntil', 'behaviors']) {
+  for (const name of ['init', 'reveal', 'stagger', 'tilt', 'cycle', 'copy', 'countdown', 'opener', 'dialog', 'clear', 'menu', 'popmenu', 'bars', 'toast', 'daysUntil', 'behaviors']) {
     assert.ok(name in mod, `missing export ${name}`);
   }
   assert.equal(typeof mod.init(null), 'function', 'init without a DOM returns a no-op cleanup');
@@ -83,6 +83,50 @@ test('CSS bundle: layered, balanced, minified copy equivalent in structure', () 
     'components.css should use tokens, not hex literals');
 });
 
+test('app register re-points tokens without touching the site defaults', () => {
+  const css = read('dist/tokens.css');
+  const T = JSON.parse(read('src/tokens.json'));
+  assert.match(css, /\.pm-app, \.pm-shell \{[^}]*--pm-text-h1: clamp\(26px/);
+  assert.match(css, /--pm-text-h1: clamp\(40px, 7vw, 88px\);/, 'the gallery title stays huge at :root');
+  assert.match(css, /@media \(pointer: fine\) \{\s*\.pm-app, \.pm-shell \{[^}]*--pm-field-text: 14px/, 'small fields only with a mouse');
+  assert.equal(T.app.tokens['field-text'], undefined, 'fields stay at the 16px default on touch, or iOS zooms');
+  assert.equal(T.layout['field-text'].value, '16px');
+});
+
+test('nothing in app.css can change a page without the app scope', () => {
+  const strip = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '');
+  const classes = (css) => new Set([...css.matchAll(/\.pm-[\w-]+/g)].map((m) => m[0]));
+  const gallery = new Set(['type', 'layout', 'components', 'forms', 'motion', 'utilities'].flatMap((f) => [...classes(strip(read(`src/css/${f}.css`)))]));
+  gallery.delete('.pm-tabbar'); // components.css only lists it among the regions that invert
+  const css = strip(read('src/css/app.css'));
+  const leaks = [];
+  for (const rule of css.matchAll(/(^|[{}])\s*([^{}@]+)\{/g)) {
+    for (const selector of rule[2].split(/,(?![^(]*\))/)) {
+      const found = [...classes(selector)];
+      // Only classes a gallery page already uses, and no scope: it would reach that page.
+      if (found.length && found.every((c) => gallery.has(c)) && !selector.includes(':is(.pm-app, .pm-shell)')) leaks.push(selector.trim());
+    }
+  }
+  assert.deepEqual(leaks, []);
+  assert.ok(!/#[0-9a-f]{3,8}\b/i.test(css.replace(/rgba?\([^)]*\)/g, '')), 'app.css should use tokens, not hex literals');
+});
+
+test('the demos the docs point agents at ship in the package', () => {
+  assert.ok(pkg.files.includes('demo'), 'docs/app.md tells agents to open demo/app.html');
+  assert.match(read('demo/app.html'), /href="\.\.\/dist\/poiema\.css"/, 'the demo works from inside node_modules/poiema-ui');
+});
+
+test('app guide is reachable by agents and its demo exists', () => {
+  assert.match(read('AGENTS.md'), /Decide first: site or app\?/);
+  assert.match(read('AGENTS.md'), /docs\/app\.md/);
+  assert.match(read('skills/poiema-design/SKILL.md'), /references\/app\.md/);
+  assert.ok(existsSync(join(root, 'skills/poiema-design/references/app.md')));
+  assert.ok(read('llms-full.txt').includes('# The app register'));
+  const demo = read('demo/app.html');
+  assert.match(demo, /<html[^>]*class="pm-app"/);
+  for (const cls of ['pm-shell', 'pm-sidebar', 'pm-tabbar', 'pm-fab', 'pm-rows', 'pm-panel', 'pm-sheet']) assert.ok(demo.includes(cls), `${cls} missing from the app demo`);
+});
+
 test('every class documented in components.md exists in the CSS', () => {
   const css = read('dist/poiema.css');
   const documented = new Set([...read('docs/components.md').matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)).filter((c) => c.startsWith('pm-')));
@@ -91,7 +135,7 @@ test('every class documented in components.md exists in the CSS', () => {
 });
 
 test('skills have valid frontmatter (name = folder, description <= 1024 chars)', () => {
-  const dirs = readdirSync(join(root, 'skills'));
+  const dirs = readdirSync(join(root, 'skills')).filter((d) => !d.startsWith('.'));
   assert.deepEqual(dirs.sort(), ['poiema-design', 'poiema-review', 'poiema-voice']);
   for (const d of dirs) {
     const md = read(`skills/${d}/SKILL.md`);

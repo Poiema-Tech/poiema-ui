@@ -1,12 +1,13 @@
 # poiema-ui
 
-> Poiema design system. A monochrome gray gallery with huge lowercase Inter Tight headlines, 40px cards, pill buttons, ringed numbers and ink callouts. Color appears only in tactile material objects (clay, plaster, grass, iron, diamond). The voice is sincere and communal, and motion settles slowly. Framework-agnostic CSS (`pm-*` classes, `--pm-*` tokens), optional tiny JS behaviors, a Tailwind v4 theme, and Claude skills.
+> Poiema design system. A monochrome gray gallery with huge lowercase Inter Tight headlines, 40px cards, pill buttons, ringed numbers and ink callouts, plus an app register (`.pm-app`) with a sidebar, tab bar, rows, sheets and panels for tools people return to. Color appears only in tactile material objects (clay, plaster, grass, iron, diamond). The voice is sincere and communal, and motion settles slowly. Framework-agnostic CSS (`pm-*` classes, `--pm-*` tokens), optional tiny JS behaviors, a Tailwind v4 theme, and Claude skills.
 
 Start with AGENTS.md (rules + cheat-sheet). Everything in one file: llms-full.txt.
 
 ## Core
 - [AGENTS.md](AGENTS.md): rules for coding agents, class cheat-sheet, checklist
 - [Principles](docs/principles.md): tone, mood, do/don't
+- [App register](docs/app.md): building apps, portals, admins and dashboards instead of pages
 - [Voice](docs/voice.md): conversation style, microcopy kit (pt-BR + en)
 - [Changelog](CHANGELOG.md): what each release changed
 

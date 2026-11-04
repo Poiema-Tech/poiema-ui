@@ -1,0 +1,1052 @@
+/* ==========================================================================
+   app — the working register. Same room as the gallery (gray canvas, paper,
+   ink, one typeface), at the volume of something people use every week.
+   `.pm-app` (or `.pm-shell`) re-points the tokens, so existing components
+   follow; this file holds what a tool needs and a page doesn't: navigation
+   that stays put, one row per thing, overlays by purpose.
+   Breakpoint: 900px is where the phone's tab bar gives way to the sidebar.
+   ========================================================================== */
+@layer poiema.components {
+
+  /* --- the register itself ---------------------------------------------------- */
+  .pm-app, .pm-shell { font-size: var(--pm-text-base); line-height: var(--pm-leading-body); }
+
+  /* Smooth scrolling animates a router's jump to the top and lands under the header. Only for
+     a page that is an app: a .pm-app section inside a site leaves the site's scrolling alone. */
+  html.pm-app, html:has(body.pm-app, .pm-shell) { scroll-behavior: auto; }
+
+  /* Data is there the moment the screen is. Scroll reveals hid rows until JS ran. */
+  :is(.pm-app, .pm-shell) :is([data-pm-reveal], [data-pm-stagger] > *) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+
+  :is(.pm-app, .pm-shell) .pm-stack--lg { --pm-gap: 16px; }
+  :is(.pm-app, .pm-shell) .pm-stack--xl { --pm-gap: 24px; }
+
+  :is(.pm-app, .pm-shell) .pm-card:not(.pm-card--outline, .pm-card--flat) {
+    box-shadow: var(--pm-card-edge), var(--pm-shadow-card);
+  }
+  :is(.pm-app, .pm-shell) .pm-section-head { margin-bottom: 12px; column-gap: 12px; }
+  :is(.pm-app, .pm-shell) .pm-section-head > p { margin-top: 2px; font-size: var(--pm-text-sm); }
+  :is(.pm-app, .pm-shell) .pm-stat--stacked { gap: 4px; }
+  :is(.pm-app, .pm-shell) .pm-textarea { min-height: 96px; padding-block: 10px; border-radius: var(--pm-field-radius); }
+  :is(.pm-app, .pm-shell) .pm-field { gap: 6px; }
+
+  /* Buttons: a quiet tint on hover, never a jump. */
+  :is(.pm-app, .pm-shell) .pm-btn { touch-action: manipulation; }
+  :is(.pm-app, .pm-shell) .pm-btn--soft { box-shadow: var(--pm-shadow-card); }
+  /* "Copy" and "Copied ✓" take turns in one pill, so it starts wide enough for both. A longer
+     failure message or translation widens it instead of spilling out. */
+  :is(.pm-app, .pm-shell) .pm-btn--sm[data-pm-copy] { min-width: 88px; }
+  :is(.pm-app, .pm-shell) .pm-btn--sm[data-pm-copy][data-pm-feedback] { font-size: 0; }
+  :is(.pm-app, .pm-shell) .pm-btn--sm[data-pm-copy][data-pm-feedback]::after { position: static; font-size: var(--pm-text-sm); }
+  /* Paper on paper would vanish, so inside a sheet or a card the soft button is a gray fill. */
+  :is(.pm-app, .pm-shell) :is(.pm-card, .pm-rows, .pm-sheet, .pm-dialog, .pm-sidebar, .pm-selectbar, .pm-empty, .pm-notice, .pm-todo) .pm-btn--soft:not([aria-pressed="true"]) {
+    --pm-btn-bg: var(--pm-surface-2);
+    box-shadow: none;
+  }
+  /* Destructive is a pale clay wash, not a filled button: only one thing per screen is filled. */
+  :is(.pm-app, .pm-shell) .pm-btn--danger { --pm-btn-bg: var(--pm-danger-soft); --pm-btn-fg: var(--pm-danger); }
+  :is(.pm-app, .pm-shell) .pm-btn[aria-pressed="true"] { --pm-btn-bg: var(--pm-ink); --pm-btn-fg: var(--pm-on-ink); box-shadow: none; }
+  :is(.pm-app, .pm-shell) .pm-btn .pm-spinner { width: 16px; height: 16px; border-width: 2px; }
+  @media (hover: hover) {
+    :is(.pm-app, .pm-shell) .pm-btn:hover { --pm-btn-bg: color-mix(in srgb, var(--pm-ink) 86%, var(--pm-surface)); }
+    :is(.pm-app, .pm-shell) :is(.pm-btn--soft, .pm-btn--outline, .pm-btn--ghost):not([aria-pressed="true"]):hover { --pm-btn-bg: var(--pm-surface-2); }
+    :is(.pm-app, .pm-shell) :is(.pm-card, .pm-rows, .pm-sheet, .pm-dialog, .pm-sidebar, .pm-selectbar, .pm-empty, .pm-notice, .pm-todo) .pm-btn--soft:not([aria-pressed="true"]):hover { --pm-btn-bg: var(--pm-line); }
+    :is(.pm-app, .pm-shell) .pm-btn--danger:hover { --pm-btn-bg: color-mix(in srgb, var(--pm-danger) 18%, var(--pm-danger-soft)); }
+  }
+
+  /* Tables are for wide screens; under 900px, list the same data as rows. */
+  :is(.pm-app, .pm-shell) .pm-table { font-size: var(--pm-text-sm); }
+  :is(.pm-app, .pm-shell) .pm-table th { padding: 10px 12px; border-bottom: 1.5px solid var(--pm-line); }
+  :is(.pm-app, .pm-shell) .pm-table td { padding: 10px 12px; border-bottom: 1px solid var(--pm-divider); }
+
+  /* --- shell: sidebar + main on a desk, tab bar + main on a phone ---------------- */
+  .pm-shell {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 1600px;
+    min-height: 100dvh;
+    margin-inline: auto;
+  }
+  /* The bottom padding clears the tab bar and the action circle above it. */
+  .pm-shell__main {
+    flex: 1;
+    min-width: 0;
+    padding: 14px var(--pm-gutter) calc(var(--pm-tabbar-h) + 92px + env(safe-area-inset-bottom));
+  }
+
+  .pm-sidebar { display: none; }
+  @media (min-width: 900px) {
+    .pm-shell { padding: 16px; }
+    .pm-shell__main { padding: 6px 4px 32px; }
+    .pm-sidebar {
+      position: sticky;
+      top: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: none;
+      gap: 16px;
+      width: var(--pm-sidebar-w);
+      height: calc(100dvh - 32px);
+      padding: 12px;
+      border-radius: var(--pm-radius-xl);
+      background: var(--pm-surface);
+      box-shadow: var(--pm-card-edge), var(--pm-shadow-card);
+    }
+  }
+  .pm-sidebar__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    font-size: var(--pm-text-h2);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-heading);
+    line-height: 1.1;
+    color: var(--pm-ink);
+    text-decoration: none;
+  }
+  .pm-sidebar__brand > :is(img, svg) { flex: none; width: 24px; height: auto; }
+  /* The margin and padding cancel out: the scroller needs room for the links' focus ring. */
+  .pm-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: -6px;
+    padding: 6px;
+    overflow-y: auto;
+  }
+  .pm-sidebar__group { display: flex; flex-direction: column; gap: 2px; }
+  .pm-sidebar__title,
+  .pm-rows__label {
+    font-size: var(--pm-text-2xs);
+    font-weight: var(--pm-weight-bold);
+    letter-spacing: var(--pm-tracking-eyebrow);
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--pm-label);
+  }
+  .pm-sidebar__title { padding: 0 12px 6px; }
+  .pm-rows__label { padding: 12px 0 2px; }
+  .pm-sidebar__group > a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: var(--pm-radius-pill);
+    font-size: var(--pm-text-sm);
+    font-weight: var(--pm-weight-bold);
+    color: var(--pm-ink-2);
+    text-decoration: none;
+    transition: background-color var(--pm-dur-fast);
+  }
+  .pm-sidebar__group > a > svg { flex: none; width: 18px; height: 18px; }
+  .pm-sidebar__group > a > .pm-badge { margin-left: auto; }
+  .pm-sidebar__group > a:hover { background: var(--pm-surface-2); }
+  .pm-sidebar__group > a:is([aria-current]:not([aria-current="false"])) { background: var(--pm-ink); color: var(--pm-on-ink); }
+  .pm-sidebar__user {
+    margin-top: auto;
+    padding: 10px 12px;
+    border-radius: var(--pm-radius-md);
+    background: var(--pm-surface-2);
+    font-size: var(--pm-text-sm);
+    line-height: 1.35;
+    color: var(--pm-ink-2);
+  }
+  .pm-sidebar__user > strong { display: block; overflow-wrap: anywhere; color: var(--pm-ink); }
+  .pm-sidebar__user > .pm-cluster { margin-top: 6px; --pm-gap: 12px; font-weight: var(--pm-weight-bold); color: var(--pm-ink); }
+  .pm-sidebar__user :is(a, button) {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .pm-sidebar__user :is(a, button):hover { text-decoration: underline; text-underline-offset: 2px; }
+  /* An iPad in landscape gets the sidebar, and it's still touched. */
+  @media (pointer: coarse) {
+    .pm-sidebar__group > a { min-height: 44px; }
+    .pm-sidebar__user :is(a, button) { display: inline-flex; align-items: center; min-height: 44px; }
+  }
+
+  /* Floating ink pill: the one inversion an app always has. Content scrolls under it. */
+  .pm-tabbar {
+    position: fixed;
+    z-index: 40;
+    inset-inline: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 2px;
+    max-width: 520px;
+    min-height: var(--pm-tabbar-h);
+    margin-inline: auto;
+    padding: 5px;
+    border-radius: var(--pm-radius-pill);
+    box-shadow: var(--pm-shadow-pop);
+  }
+  .pm-tabbar > a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 48px;
+    border-radius: var(--pm-radius-pill);
+    font-size: var(--pm-text-xs);
+    font-weight: var(--pm-weight-bold);
+    line-height: 1.1;
+    color: var(--pm-ink-2);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pm-tabbar > a > svg { width: 20px; height: 20px; }
+  .pm-tabbar > a:is([aria-current]:not([aria-current="false"])) { background: var(--pm-ink); color: var(--pm-on-ink); }
+  .pm-tabbar > a:focus-visible { outline-offset: -3px; }
+  /* The current tab is paper on the ink bar, so a ring in the bar's own paper wouldn't show. */
+  .pm-tabbar > a:is([aria-current]:not([aria-current="false"])):focus-visible { outline-color: var(--pm-on-ink); }
+  @media (min-width: 900px) { .pm-tabbar { display: none; } }
+
+  /* --- page head: title, a line of state, the screen's actions ------------------- */
+  .pm-pagehead { display: flex; flex-direction: column; gap: 10px; padding-bottom: 12px; }
+  .pm-pagehead__line { display: flex; align-items: center; gap: 10px; }
+  .pm-pagehead__title { flex: 1; min-width: 0; }
+  .pm-pagehead__title > :is(h1, .pm-h1) { overflow-wrap: anywhere; }
+  .pm-pagehead__sub {
+    margin-top: 2px;
+    font-size: var(--pm-text-sm);
+    font-weight: var(--pm-weight-medium);
+    line-height: 1.3;
+    color: var(--pm-ink-2);
+  }
+  /* On a phone these live in the action circle. */
+  .pm-pagehead__actions { display: none; }
+  @media (min-width: 900px) {
+    .pm-pagehead__line { flex-wrap: wrap; }
+    .pm-pagehead__title { min-width: 192px; }
+    .pm-pagehead__actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+  }
+  /* Phones: only the title line stays pinned while the rows under it scroll away. */
+  @media (max-width: 899px) {
+    .pm-pagehead--pin { display: contents; }
+    .pm-pagehead--pin > .pm-pagehead__line {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      margin: -14px calc(var(--pm-gutter) * -1) 2px;
+      padding: 14px var(--pm-gutter) 8px;
+      background: var(--pm-canvas);
+    }
+    .pm-pagehead--pin > :not(.pm-pagehead__line) { margin-bottom: 10px; }
+  }
+
+  .pm-toolbar { display: flex; align-items: center; gap: 8px; }
+  @media (min-width: 900px) { .pm-toolbar { max-width: 576px; } }
+
+  /* Filtering is immediate, so there is no submit button: only a way to clear. */
+  .pm-search {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    min-height: 44px;
+    cursor: text;
+    padding: 0 6px 0 14px;
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: var(--pm-shadow-card);
+  }
+  .pm-search:focus-within { box-shadow: inset 0 0 0 2px var(--pm-ink); }
+  .pm-search > svg { flex: none; width: 17px; height: 17px; }
+  .pm-search > input {
+    flex: 1;
+    align-self: stretch;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    color: inherit;
+    font: var(--pm-weight-medium) var(--pm-field-text)/1.4 var(--pm-font);
+    appearance: none;
+  }
+  .pm-search > input::placeholder { color: var(--pm-label); opacity: 1; }
+  .pm-search > input::-webkit-search-cancel-button { appearance: none; }
+  .pm-search__clear {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  @media (hover: hover) { .pm-search__clear:hover { background: var(--pm-surface-2); } }
+  .pm-search__clear > svg { width: 16px; height: 16px; }
+  .pm-search:has(> input:placeholder-shown) > .pm-search__clear { display: none; }
+  @media (pointer: coarse) { .pm-search__clear { width: 44px; height: 44px; margin-right: -6px; } }
+
+  /* Filter chips are .pm-pillnav. In an app they carry a count and a soft shadow. A scroller
+     clips what overflows it, so it gets room for that shadow and takes the room back outside. */
+  :is(.pm-app, .pm-shell) .pm-pillnav { margin: -4px -8px -18px; padding: 4px 8px 18px; }
+  :is(.pm-app, .pm-shell) .pm-pillnav > :is(a, button) { font-weight: var(--pm-weight-bold); box-shadow: var(--pm-shadow-card); }
+  :is(.pm-app, .pm-shell) .pm-pillnav > :is(a, button) > svg { width: 14px; height: 14px; }
+  @media (hover: hover) {
+    :is(.pm-app, .pm-shell) .pm-pillnav > :is(a, button):hover { background: var(--pm-surface-2); }
+  }
+  :is(.pm-app, .pm-shell) .pm-pillnav > [data-tone="danger"] { background: var(--pm-danger-soft); color: var(--pm-danger); box-shadow: none; }
+  :is(.pm-app, .pm-shell) .pm-pillnav > :is([aria-current]:not([aria-current="false"]), [aria-selected="true"], [aria-pressed="true"]) {
+    background: var(--pm-ink);
+    color: var(--pm-on-ink);
+    box-shadow: none;
+  }
+  /* On paper a resting pill would vanish, so it takes the hairline instead of a shadow. */
+  :is(.pm-app, .pm-shell) :is(.pm-card, .pm-rows, .pm-sheet, .pm-dialog, .pm-empty, .pm-notice, .pm-todo) .pm-pillnav > :is(a, button) { box-shadow: inset 0 0 0 1.5px var(--pm-line); }
+  @media (max-width: 899px) {
+    :is(.pm-app, .pm-shell) .pm-pillnav--bleed {
+      margin-inline: calc(var(--pm-gutter) * -1);
+      padding-inline: var(--pm-gutter);
+      scroll-padding-inline: var(--pm-gutter);
+    }
+    /* A pinned head has no flex gap to lean on, so the chips keep their own distance. */
+    :is(.pm-app, .pm-shell) .pm-pagehead--pin > .pm-pillnav { margin-bottom: -8px; }
+  }
+  .pm-count { font-size: .92em; font-weight: var(--pm-weight-semibold); font-variant-numeric: tabular-nums; opacity: .72; }
+  /* Clay is already darker on its own wash: fading it further would drop it below AA. */
+  [data-tone="danger"]:not([aria-pressed="true"], [aria-current]) > .pm-count { opacity: 1; }
+
+  /* The problem mark is the system's one sharp shape, so it reads without its color. */
+  .pm-flag {
+    display: inline-block;
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 1.5px;
+    background: var(--pm-danger);
+    transform: rotate(45deg);
+  }
+  /* Clay on ink nearly disappears, and this mark has to read without its color. */
+  .pm-pillnav > :is([aria-current]:not([aria-current="false"]), [aria-selected="true"], [aria-pressed="true"]) > .pm-flag { background: var(--pm-on-ink); }
+
+  /* --- badge: a small fact on a row or a card header ------------------------------ */
+  .pm-badge {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-surface-2);
+    color: var(--pm-ink-2);
+    font-size: var(--pm-text-xs);
+    font-weight: var(--pm-weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .pm-badge > svg { width: 12px; height: 12px; }
+  .pm-badge--solid { background: var(--pm-ink); color: var(--pm-on-ink); }
+  .pm-badge--danger { background: var(--pm-danger-soft); color: var(--pm-danger); }
+  .pm-badge--outline { background: transparent; color: var(--pm-ink); box-shadow: inset 0 0 0 1.5px var(--pm-line); }
+  /* Dashed means "not final yet": a draft. */
+  .pm-badge--dashed { background: var(--pm-surface); color: var(--pm-ink); box-shadow: none; outline: 1.5px dashed var(--pm-ink); outline-offset: -1.5px; }
+
+  /* --- rows: one card, one row per thing ------------------------------------------ */
+  .pm-rows {
+    display: block;
+    margin: 0;
+    padding: 2px 14px;
+    border-radius: var(--pm-radius-xl);
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: var(--pm-card-edge), var(--pm-shadow-card);
+  }
+  .pm-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid var(--pm-divider);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    break-inside: avoid;
+  }
+  :is(a, button, label).pm-row { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  /* The line sits above each row, so nothing that follows a row can leave one hanging, and a
+     row wrapped in a <form> or <li> still gets its own. Only the top of a card and the row
+     right under a heading go without. */
+  .pm-rows > .pm-row:first-child,
+  .pm-rows > :first-child > .pm-row:first-child,
+  .pm-rows__head + .pm-row,
+  .pm-rows__section + .pm-row,
+  .pm-rows__label + .pm-row { border-top: 0; }
+  .pm-rows > * + :is(.pm-rows__section, .pm-rows__label) { border-top: 1px solid var(--pm-divider); }
+  .pm-rows > .pm-rows__head + :is(.pm-rows__section, .pm-rows__label) { border-top: 0; }
+  /* The only trailing thing a row gets for free is a chevron, and only if it leads somewhere.
+     A leading icon doesn't count as trailing: the Menu's rows still lead somewhere. */
+  :is(a, button).pm-row:not(.pm-row--add, :has(> :not(.pm-row__text, svg:first-child)))::after {
+    content: "›";
+    flex: none;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--pm-muted);
+    transition: translate var(--pm-dur-fast) var(--pm-ease);
+  }
+  @media (hover: hover) {
+    :is(a, button).pm-row:hover::after { color: var(--pm-ink); translate: 2px 0; }
+  }
+  .pm-row > :not(.pm-row__text) { flex: none; }
+  .pm-row > svg:first-child { width: 22px; height: 22px; }
+  .pm-row__text { flex: 1; min-width: 0; }
+  /* Names wrap and are never cut: a truncated name is a different person. */
+  .pm-row__title {
+    display: block;
+    font-size: var(--pm-text-md);
+    font-weight: var(--pm-weight-medium);
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    color: var(--pm-ink);
+    text-decoration: none;
+  }
+  button.pm-row__title { padding: 0; border: 0; background: none; font-family: inherit; text-align: left; cursor: pointer; }
+  .pm-row__sub {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--pm-text-sm);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    color: var(--pm-ink-2);
+  }
+  .pm-row__sub--danger { font-weight: var(--pm-weight-semibold); color: var(--pm-danger); }
+  /* A share bar spans the whole row, so every track is the same length and bars compare. */
+  .pm-row:has(> .pm-progress) { flex-wrap: wrap; row-gap: 6px; }
+  .pm-row > .pm-progress { flex: 0 0 100%; order: 1; }
+  /* The whole row opens the title's link; a button in the row still sits on top of it. */
+  .pm-row__link::after { content: ""; position: absolute; inset: 0; }
+  .pm-row__link:focus-visible { outline: none; }
+  .pm-row:has(> .pm-row__text .pm-row__link:focus-visible) { outline: 2px solid var(--pm-ink); outline-offset: -2px; border-radius: var(--pm-radius-sm); }
+  .pm-row > :is(.pm-btn, button, a) { position: relative; z-index: 1; }
+  .pm-row--danger .pm-row__title { font-weight: var(--pm-weight-bold); color: var(--pm-danger); }
+  .pm-row--off .pm-row__title { color: var(--pm-label); }
+  .pm-row--add {
+    font-size: var(--pm-text-sm);
+    font-weight: var(--pm-weight-bold);
+    color: var(--pm-label);
+  }
+  @media (hover: hover) { .pm-row--add:hover { color: var(--pm-ink); } }
+  .pm-row--add::after { content: "+"; flex: none; font-size: 19px; font-weight: var(--pm-weight-medium); line-height: 1; }
+
+  .pm-rows__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--pm-divider);
+  }
+  .pm-rows__head > :first-child {
+    margin: 0;
+    font-size: var(--pm-text-md);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-tight);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .pm-rows__section {
+    padding: 14px 0 2px;
+    font-size: var(--pm-text-sm);
+    font-weight: var(--pm-weight-heavy);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .pm-rows__empty { padding: 16px 0; font-size: var(--pm-text-md); text-align: center; color: var(--pm-ink-2); }
+
+  /* A wide screen shows more rows, not longer ones, once there are enough to fill the columns:
+     a single result shouldn't sit in half a card. In columns the divider is a shadow the card
+     clips, so no column starts on a line. */
+  @media (min-width: 1100px) {
+    .pm-rows--columns:has(> :nth-child(5)) {
+      columns: 2;
+      column-gap: 40px;
+      padding: 0 20px;
+      overflow: hidden;
+    }
+    .pm-rows--columns:has(> :nth-child(5)) > :is(.pm-row, li) { border-top: 0; box-shadow: 0 -1px 0 var(--pm-divider); break-inside: avoid; }
+    .pm-rows--columns:has(> :nth-child(5)) > li > .pm-row { border-top: 0; }
+    .pm-rows--columns > .pm-rows__head { column-span: all; }
+  }
+  @media (min-width: 1600px) { .pm-rows--columns:has(> :nth-child(5)) { columns: 3; } }
+
+  /* A day that already happened: still there to fix a record, but out of the way. Recessed by
+     re-pointing tokens, because opacity would drop its text below AA with no hover to undo it. */
+  .pm-faded {
+    --pm-ink: var(--pm-ink-2);
+    --pm-ink-2: var(--pm-label);
+    --pm-surface: var(--pm-surface-2);
+  }
+
+  .pm-disclosure > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: var(--pm-radius-sm);
+    background: var(--pm-surface-2);
+    font-size: var(--pm-text-xs);
+    font-weight: var(--pm-weight-bold);
+    letter-spacing: var(--pm-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--pm-ink-2);
+    list-style: none;
+    cursor: pointer;
+  }
+  .pm-disclosure > summary::-webkit-details-marker { display: none; }
+  .pm-disclosure > summary::after {
+    content: "›";
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: 0;
+    transition: rotate var(--pm-dur-fast) var(--pm-ease);
+  }
+  .pm-disclosure[open] > summary { margin-bottom: 8px; }
+  .pm-disclosure[open] > summary::after { rotate: 90deg; }
+
+  /* --- dates: an ink tile for a day, and a strip of them to jump between ----------- */
+  .pm-datetile {
+    position: relative;
+    display: inline-grid;
+    flex: none;
+    place-content: center;
+    justify-items: center;
+    gap: 2px;
+    width: 42px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--pm-radius-sm);
+    background: var(--pm-ink);
+    color: var(--pm-on-ink);
+    font-family: var(--pm-font);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
+  .pm-datetile > small {
+    font-size: var(--pm-text-2xs);
+    font-weight: var(--pm-weight-bold);
+    letter-spacing: .05em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--pm-on-ink-2);
+  }
+  .pm-datetile > b { font-size: var(--pm-text-md); font-weight: var(--pm-weight-heavy); line-height: 1; }
+  .pm-datetile > .pm-flag { position: absolute; top: -2px; right: -2px; box-shadow: 0 0 0 2px var(--pm-canvas); }
+  .pm-datetile--sm { width: 36px; height: 38px; }
+  .pm-datetile--sm > b { font-size: var(--pm-text-sm); }
+
+  .pm-datestrip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+  @media (min-width: 900px) { .pm-datestrip { max-width: 576px; } }
+  .pm-datestrip > .pm-datetile {
+    width: auto;
+    height: 52px;
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: var(--pm-shadow-card);
+    cursor: pointer;
+  }
+  .pm-datestrip > .pm-datetile > small { color: var(--pm-label); }
+  .pm-datestrip > .pm-datetile:is([aria-current]:not([aria-current="false"]), [aria-selected="true"], [aria-pressed="true"]) {
+    background: var(--pm-ink);
+    color: var(--pm-on-ink);
+    box-shadow: none;
+  }
+  .pm-datestrip > .pm-datetile:is([aria-current]:not([aria-current="false"]), [aria-selected="true"], [aria-pressed="true"]) > small { color: var(--pm-on-ink-2); }
+
+  /* --- notice: something this screen needs from you, and the button that does it ---- */
+  .pm-notice {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--pm-radius-lg);
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: inset 0 0 0 1.5px var(--pm-line);
+  }
+  .pm-notice > .pm-btn { align-self: flex-start; }
+  .pm-notice > :is(h2, h3, strong):first-child,
+  .pm-notice > div > :is(h2, h3, strong):first-child {
+    display: block;
+    margin: 0;
+    font-size: var(--pm-text-md);
+    font-weight: var(--pm-weight-heavy);
+    letter-spacing: var(--pm-tracking-tight);
+    line-height: 1.25;
+  }
+  .pm-notice p { margin-top: 4px; font-size: var(--pm-text-sm); line-height: 1.4; color: var(--pm-ink-2); }
+  .pm-notice--draft { box-shadow: none; outline: 1.5px dashed var(--pm-ink); outline-offset: -1.5px; }
+  .pm-notice--danger { background: var(--pm-danger-soft); color: var(--pm-danger); box-shadow: none; }
+  .pm-notice--danger p { color: inherit; }
+  @media (min-width: 900px) {
+    .pm-notice { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; }
+    .pm-notice > .pm-btn { align-self: center; }
+  }
+
+  /* --- empty state: what this will hold, and the button that starts it -------------- */
+  .pm-empty {
+    display: grid;
+    justify-items: start;
+    gap: 8px;
+    padding: 24px;
+    border-radius: var(--pm-radius-xl);
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: var(--pm-card-edge), var(--pm-shadow-card);
+  }
+  .pm-empty__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--pm-surface-2);
+  }
+  .pm-empty__icon > svg { width: 20px; height: 20px; }
+  .pm-empty__title { margin: 0; font-size: var(--pm-text-h2); font-weight: var(--pm-weight-heavy); letter-spacing: var(--pm-tracking-title); line-height: 1.2; }
+  .pm-empty > p { max-width: 38ch; font-size: var(--pm-text-md); line-height: 1.4; color: var(--pm-ink-2); }
+  .pm-empty > .pm-btn { margin-top: 8px; }
+
+  /* --- segmented and stepper ---------------------------------------------------------- */
+  .pm-segmented {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    padding: 3px;
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-surface);
+    box-shadow: inset 0 0 0 1.5px var(--pm-line);
+  }
+  .pm-segmented > label { position: relative; display: block; cursor: pointer; }
+  .pm-segmented > label > input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .pm-segmented > label > span {
+    display: grid;
+    place-items: center;
+    min-height: calc(var(--pm-field-h) - 6px);
+    padding: 4px 12px;
+    border-radius: var(--pm-radius-pill);
+    font-size: var(--pm-text-sm);
+    font-weight: var(--pm-weight-bold);
+    line-height: 1.2;
+    text-align: center;
+    color: var(--pm-ink-2);
+    transition: background-color var(--pm-dur-fast), color var(--pm-dur-fast);
+  }
+  .pm-segmented > label > input:checked + span { background: var(--pm-ink); color: var(--pm-on-ink); }
+  .pm-segmented > label > input:focus-visible + span { outline: 2px solid var(--pm-ink); outline-offset: 2px; }
+
+  .pm-stepper {
+    display: inline-flex;
+    align-items: center;
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-surface-2);
+    font-size: var(--pm-text-md);
+    font-weight: var(--pm-weight-heavy);
+    font-variant-numeric: tabular-nums;
+  }
+  .pm-stepper > button {
+    display: grid;
+    place-items: center;
+    width: var(--pm-btn-h-sm);
+    height: var(--pm-btn-h-sm);
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--pm-ink-2);
+    font: var(--pm-weight-bold) 18px/1 var(--pm-font);
+    cursor: pointer;
+  }
+  .pm-stepper > button:hover:not(:disabled) { color: var(--pm-ink); }
+  .pm-stepper > button:disabled { opacity: .4; cursor: not-allowed; }
+  .pm-stepper > output { min-width: 20px; text-align: center; }
+
+  /* --- screen actions: the circle above the tab bar and what it opens ---------------- */
+  .pm-fab {
+    position: fixed;
+    z-index: 40;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(var(--pm-tabbar-h) + 24px + env(safe-area-inset-bottom));
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--pm-ink);
+    color: var(--pm-on-ink);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--pm-canvas) 90%, transparent), var(--pm-shadow-pop);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pm-fab > svg { width: 19px; height: 19px; }
+  /* Slop around the circle, since it floats over rows you might also mean to tap. */
+  .pm-fab::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; }
+  @media (min-width: 900px) { .pm-fab { display: none; } }
+
+  .pm-menu {
+    gap: 2px;
+    padding: 6px;
+    border: 0;
+    border-radius: var(--pm-radius-xl);
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: var(--pm-shadow-pop);
+  }
+  /* A popover must stay display: none until it opens, so its grid only applies once open. */
+  .pm-menu:not([popover]), .pm-menu:popover-open { display: grid; }
+  .pm-menu[popover] { inset: auto; width: min(288px, calc(100vw - 32px)); margin: 0; }
+  .pm-menu:popover-open { animation: pm-menu-rise var(--pm-dur-fast) var(--pm-ease); }
+  .pm-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 48px;
+    padding: 8px;
+    border: 0;
+    border-radius: var(--pm-radius-md);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (hover: hover) { .pm-menu__item:hover { background: var(--pm-surface-2); } }
+  .pm-menu__item:disabled { opacity: .5; cursor: not-allowed; }
+  .pm-menu__item > svg { flex: none; width: 18px; height: 18px; }
+  .pm-menu__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--pm-surface-2);
+  }
+  .pm-menu__icon > svg { width: 17px; height: 17px; }
+  .pm-menu__item--primary .pm-menu__icon { background: var(--pm-ink); color: var(--pm-on-ink); }
+  .pm-menu__item--danger { color: var(--pm-danger); }
+  .pm-menu__label { display: block; font-size: var(--pm-text-md); font-weight: var(--pm-weight-bold); line-height: 1.2; }
+  .pm-menu__hint { display: block; margin-top: 1px; font-size: var(--pm-text-sm); font-weight: var(--pm-weight-regular); line-height: 1.3; color: var(--pm-ink-2); }
+  .pm-menu__item--danger .pm-menu__hint { color: inherit; }
+
+  /* The screen blurs, the actions rise above the circle, and the circle becomes ✕ in the same
+     spot. A modal <dialog>, so focus stays with the actions and not on the blurred page behind
+     them; it fills the screen, and dialog() in poiema.js closes it on a tap on its own background. */
+  .pm-fabmenu {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--pm-canvas) 55%, transparent);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+  .pm-fabmenu::backdrop { background: transparent; }
+  .pm-fabmenu > .pm-menu {
+    position: absolute;
+    right: 12px;
+    left: 58px;
+    bottom: calc(var(--pm-tabbar-h) + 80px + env(safe-area-inset-bottom));
+    max-height: calc(100dvh - var(--pm-tabbar-h) - 100px);
+    overflow-y: auto;
+    animation: pm-menu-rise var(--pm-dur-fast) var(--pm-ease);
+  }
+
+  /* --- overlays: a sheet for a quick choice, a panel for a form, a dialog to confirm -- */
+  :root:has(:is(.pm-sheet, .pm-panel, .pm-fabmenu)[open]),
+  html.pm-app:has(.pm-dialog[open]),
+  html:has(.pm-shell):has(.pm-dialog[open]) { overflow: hidden; }
+
+  .pm-sheet,
+  .pm-panel {
+    border: 0;
+    color: var(--pm-ink);
+    box-shadow: var(--pm-shadow-pop);
+    overscroll-behavior: contain;
+  }
+  :is(.pm-sheet, .pm-panel)::backdrop {
+    background: var(--pm-scrim);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+  :is(.pm-sheet, .pm-panel)[open]::backdrop { animation: pm-fade var(--pm-dur-base) ease; }
+
+  /* --pm-keyboard-inset is set by dialog() in poiema.js: phones shrink only the visual
+     viewport when the keyboard opens, so a sheet fixed to the bottom would sit behind it. */
+  .pm-sheet {
+    position: fixed;
+    inset: auto 6px calc(6px + env(safe-area-inset-bottom) + var(--pm-keyboard-inset, 0px));
+    width: auto;
+    max-width: none;
+    max-height: calc(85dvh - var(--pm-keyboard-inset, 0px));
+    margin: 0;
+    padding: 10px 16px 20px;
+    border-radius: var(--pm-radius-xl);
+    background: var(--pm-surface);
+    overflow-y: auto;
+  }
+  .pm-sheet::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 5px;
+    margin: 0 auto 12px;
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-line);
+  }
+  .pm-sheet[open] { animation: pm-sheet-up var(--pm-dur-base) var(--pm-ease); }
+  .pm-sheet__title { margin: 0; font-size: var(--pm-text-xl); font-weight: var(--pm-weight-heavy); letter-spacing: var(--pm-tracking-title); line-height: 1.2; overflow-wrap: anywhere; }
+  .pm-sheet__sub { margin-top: 2px; font-size: var(--pm-text-sm); line-height: 1.35; color: var(--pm-ink-2); }
+  .pm-sheet__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+  .pm-sheet__actions > .pm-btn { white-space: normal; line-height: 1.15; }
+  .pm-sheet__actions > .pm-btn--block { grid-column: 1 / -1; }
+  @media (min-width: 900px) {
+    .pm-sheet { inset: 0; width: 420px; height: fit-content; margin: auto; padding-top: 20px; }
+    .pm-sheet::before { display: none; }
+  }
+
+  /* Full screen on a phone, a side panel on a desk: the list it came from stays in reach. */
+  .pm-panel {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    background: var(--pm-canvas);
+    overflow: hidden;
+  }
+  .pm-panel[open] { display: flex; flex-direction: column; animation: pm-panel-in var(--pm-dur-base) var(--pm-ease); }
+  .pm-panel__head {
+    display: flex;
+    align-items: center;
+    flex: none;
+    gap: 10px;
+    padding: calc(14px + env(safe-area-inset-top)) var(--pm-gutter) 10px;
+  }
+  .pm-panel__title { margin: 0; font-size: var(--pm-text-h2); font-weight: var(--pm-weight-heavy); letter-spacing: var(--pm-tracking-title); line-height: 1.2; overflow-wrap: anywhere; }
+  .pm-panel__sub { font-size: var(--pm-text-sm); line-height: 1.3; color: var(--pm-ink-2); }
+  .pm-panel__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+    padding: 4px var(--pm-gutter) 24px;
+    overflow-y: auto;
+  }
+  .pm-panel__foot {
+    display: grid;
+    flex: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px var(--pm-gutter) calc(14px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 900px) {
+    .pm-panel { inset: 12px 12px 12px auto; width: 440px; height: calc(100dvh - 24px); border-radius: var(--pm-radius-xl); }
+    .pm-panel__head, .pm-panel__body, .pm-panel__foot { padding-inline: 18px; }
+    .pm-panel__head { padding-top: 16px; }
+    .pm-panel__foot { padding-bottom: 16px; }
+  }
+
+  .pm-dialog__foot { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 20px; }
+  @media (min-width: 560px) {
+    .pm-dialog__foot { display: flex; justify-content: flex-end; }
+  }
+
+  /* --- select mode: rows turn into checkboxes and this bar holds what to do ----------- */
+  .pm-selectbar {
+    position: fixed;
+    z-index: 40;
+    inset-inline: 12px;
+    bottom: calc(var(--pm-tabbar-h) + 22px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: var(--pm-shadow-pop);
+  }
+  .pm-selectbar > p { flex: 1; min-width: 0; font-size: var(--pm-text-sm); font-weight: var(--pm-weight-bold); line-height: 1.2; }
+  @media (min-width: 900px) {
+    .pm-selectbar { position: sticky; inset-inline: auto; bottom: 16px; max-width: 448px; margin-top: 12px; }
+  }
+
+  /* --- work beside the to-do list: main column + a rail on a wide screen ------------- */
+  .pm-workspace { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (min-width: 1280px) {
+    .pm-workspace { grid-template-columns: minmax(0, 1fr) 288px; }
+    .pm-workspace__rail { position: sticky; top: 16px; }
+  }
+  .pm-workspace__rail { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+
+  /* A problem, and the button that opens its fix. */
+  .pm-todo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px 12px;
+    align-items: start;
+    padding: 12px 14px;
+    border-radius: var(--pm-radius-lg);
+    background: var(--pm-surface);
+    color: var(--pm-ink);
+    box-shadow: var(--pm-shadow-card);
+  }
+  .pm-todo:has(> .pm-datetile) { grid-template-columns: auto minmax(0, 1fr); }
+  .pm-todo > .pm-datetile { grid-row: span 3; }
+  .pm-todo > :is(h3, strong) { margin: 0; font-size: var(--pm-text-sm); font-weight: var(--pm-weight-bold); line-height: 1.3; overflow-wrap: anywhere; }
+  .pm-todo > p { font-size: var(--pm-text-sm); line-height: 1.35; overflow-wrap: anywhere; color: var(--pm-ink-2); }
+  .pm-todo > .pm-btn { justify-self: start; margin-top: 4px; }
+
+  /* --- numbers: a row of stats and a small bar chart --------------------------------- */
+  .pm-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)); gap: 16px; }
+
+  /* Each bar sets --v from 0 to 1, and data-value + data-label for its readout. The whole column
+     is the target, not its painted part, so a short bar is as easy to hit as a tall one. The
+     room above the tallest bar is where the readout sits, so it never has to cover its own bar.
+     The readout is a pseudo-element because a chart the server rendered must still match when
+     React hydrates it: bars() in poiema.js only marks the active bar and clamps it to the chart.
+     Pair the chart with a real table for screen readers. */
+  .pm-bars {
+    --pm-bars-room: 36px;
+    position: relative;
+    display: flex;
+    gap: min(2px, .3%);
+    height: 168px;
+    padding-top: var(--pm-bars-room);
+    border-bottom: 1.5px solid var(--pm-line);
+    touch-action: pan-y;
+  }
+  .pm-bars:focus-visible { border-radius: var(--pm-radius-sm); outline-offset: 4px; }
+  .pm-bars > * {
+    display: flex;
+    flex: 1;
+    align-items: flex-end;
+    justify-content: center;
+    min-width: 0;
+  }
+  /* A day with anything at all stays visible at 3px; a day with nothing draws no bar. */
+  .pm-bars > *::before {
+    content: "";
+    width: min(100%, 24px);
+    height: calc(var(--v, 0) * 100%);
+    min-height: calc(min(var(--v, 0) * 1000, 1) * 3px);
+    border-radius: 4px 4px 0 0;
+    background: var(--pm-ink);
+  }
+  .pm-bars:has(> [data-pm-active]) > :not([data-pm-active])::before { opacity: .35; }
+  .pm-bars > [data-pm-active]::after {
+    content: attr(data-value) " · " attr(data-label);
+    position: absolute;
+    z-index: 2;
+    left: var(--pm-bars-x, 0);
+    bottom: calc(var(--v, 0) * (100% - var(--pm-bars-room)) + 6px);
+    padding: 6px 10px;
+    border-radius: var(--pm-radius-sm);
+    background: var(--pm-inverse-bg);
+    color: var(--pm-inverse-fg);
+    box-shadow: var(--pm-shadow-pop);
+    font-size: var(--pm-text-sm);
+    font-weight: var(--pm-weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .pm-bars__axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: var(--pm-text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--pm-ink-2);
+  }
+
+  /* --- gate: a screen with one job and no navigation (sign in, not found) ------------ */
+  .pm-gate {
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: var(--pm-gutter);
+  }
+  .pm-gate > * { width: min(100%, 384px); }
+
+  /* The same 900px line the navigation switches on: a back button only a phone needs. */
+  @media (min-width: 900px) { .pm-phone-only { display: none !important; } }
+  @media (max-width: 899px) { .pm-desk-only { display: none !important; } }
+  /* The line a .pm-workspace rail appears on: to offer the rail's content another way below it. */
+  @media (min-width: 1280px) { .pm-narrow-only { display: none !important; } }
+  @media (max-width: 1279px) { .pm-wide-only { display: none !important; } }
+
+  /* --- toasts clear the tab bar and the circle on a phone ----------------------------- */
+  @media (max-width: 899px) {
+    :root:has(.pm-tabbar) .pm-toaster { bottom: calc(var(--pm-tabbar-h) + 80px + env(safe-area-inset-bottom)); }
+  }
+
+  @keyframes pm-sheet-up { from { transform: translateY(100%); } }
+  @keyframes pm-panel-in { from { opacity: 0; transform: translateX(32px); } }
+  @keyframes pm-menu-rise { from { opacity: 0; transform: translateY(8px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pm-sheet[open], .pm-panel[open], .pm-menu:popover-open, .pm-fabmenu > .pm-menu,
+    :is(.pm-sheet, .pm-panel)[open]::backdrop { animation: none; }
+    .pm-row::after, .pm-disclosure > summary::after { transition: none; }
+  }
+}

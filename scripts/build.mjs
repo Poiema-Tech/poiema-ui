@@ -43,10 +43,25 @@ tokensCss += `    --${P}-font: var(--${P}-font-sans);\n  }\n\n`;
 tokensCss += `  :root, [data-theme="light"], [data-theme="auto"] {\n    color-scheme: light;\n${themeBlock('light')}\n  }\n\n`;
 tokensCss += `  [data-theme="dark"] {\n    color-scheme: dark;\n${themeBlock('dark')}\n  }\n\n`;
 tokensCss += `  @media (prefers-color-scheme: dark) {\n    [data-theme="auto"] {\n      color-scheme: dark;\n${themeBlock('dark').replace(/^/gm, '  ')}\n    }\n  }\n\n`;
-tokensCss += `  @media (max-width: ${T.breakpoint.sm}) {\n    :root { --${P}-text-base: ${T.text.md}; }\n  }\n}\n`;
+tokensCss += `  @media (max-width: ${val(T.breakpoint.sm)}) {\n    :root { --${P}-text-base: ${T.text.md}; }\n  }\n\n`;
+
+// The app register re-points existing tokens, so a typo must not silently create a new one.
+const known = new Set([
+  ...entries(T.primitives).map(([k]) => k),
+  ...entries(T.color).map(([k]) => k),
+  ...SCALES.flatMap((g) => entries(T[g]).map(([k]) => varName(g, k).slice(P.length + 3))),
+]);
+for (const group of [T.app.tokens, T.app.fine]) {
+  for (const [k] of entries(group)) if (!known.has(k)) throw new Error(`app register: unknown token "${k}"`);
+}
+const APP = `.${P}-app, .${P}-shell`;
+const appBlock = (group, pad) => entries(group).map(([k, v]) => `${pad}--${P}-${k}: ${val(v)};`).join('\n');
+tokensCss += `  ${APP} {\n${appBlock(T.app.tokens, '    ')}\n  }\n\n`;
+tokensCss += `  :is(${APP}) [data-theme] { --${P}-card: ${val(T.app.tokens.card)}; }\n\n`;
+tokensCss += `  @media (pointer: fine) {\n    ${APP} {\n${appBlock(T.app.fine, '      ')}\n    }\n  }\n}\n`;
 
 // ---------- poiema.css bundle ----------
-const CSS_ORDER = ['base', 'type', 'layout', 'components', 'forms', 'motion', 'utilities'];
+const CSS_ORDER = ['base', 'type', 'layout', 'components', 'forms', 'motion', 'app', 'utilities'];
 const layerOrder = '@layer poiema.tokens, poiema.base, poiema.components, poiema.utilities;\n';
 const bundle = banner + layerOrder + '\n' + tokensCss + '\n' +
   CSS_ORDER.map((f) => read(`src/css/${f}.css`).trim()).join('\n\n') + '\n';
@@ -124,6 +139,8 @@ ${twText.join('\n')}
   --radius-tile: var(--${P}-radius-md);
   --radius-frame: var(--${P}-radius-sm);
 
+  --shadow-card: var(--${P}-shadow-card);
+  --shadow-pop: var(--${P}-shadow-pop);
   --shadow-lift: var(--${P}-shadow-lift);
   --shadow-float: var(--${P}-shadow-float);
   --drop-shadow-object: var(--${P}-shadow-object);
@@ -159,6 +176,7 @@ const resolved = {
     dark: Object.fromEntries(entries(T.color).map(([k, v]) => [k, refRaw(v.dark)])),
   },
   ...Object.fromEntries([...SCALES, 'breakpoint'].map((g) => [g, Object.fromEntries(entries(T[g]).map(([k, v]) => [k, val(v)]))])),
+  app: Object.fromEntries(['tokens', 'fine'].map((g) => [g, Object.fromEntries(entries(T.app[g]).map(([k, v]) => [k, val(v)]))])),
 };
 const tokensJs = `${banner}export const tokens = ${JSON.stringify(resolved, null, 2)};\n\n` +
   `/** CSS variable reference for a token, e.g. cssVar('ink') -> "var(--${P}-ink)". */\n` +
@@ -204,8 +222,11 @@ for (const g of SCALES) {
   tokensMd += `\n## ${g[0].toUpperCase() + g.slice(1)}\n\n${T[g].$description ? T[g].$description + '\n\n' : ''}| Variable | Value | Note |\n|---|---|---|\n` +
     entries(T[g]).map(([k, v]) => `| \`${varName(g, k)}\` | \`${val(v)}\` | ${desc(v)} |`).join('\n') + '\n';
 }
-tokensMd += `\n## Breakpoints\n\n${T.breakpoint.$description}\n\n| Name | Value |\n|---|---|\n` +
-  entries(T.breakpoint).map(([k, v]) => `| ${k} | \`max-width: ${v}\` |`).join('\n') + '\n';
+tokensMd += `\n## App register\n\n${T.app.$description}\n\n| Variable | App | Mouse | Note |\n|---|---|---|---|\n` +
+  entries(T.app.tokens).map(([k, v]) => `| \`--${P}-${k}\` | \`${val(v)}\` | ${k in T.app.fine ? `\`${val(T.app.fine[k])}\`` : ''} | ${desc(v)} |`).join('\n') + '\n' +
+  entries(T.app.fine).filter(([k]) => !(k in T.app.tokens)).map(([k, v]) => `| \`--${P}-${k}\` | | \`${val(v)}\` | ${desc(v)} |`).join('\n') + '\n';
+tokensMd += `\n## Breakpoints\n\n${T.breakpoint.$description}\n\n| Name | Value | Note |\n|---|---|---|\n` +
+  entries(T.breakpoint).map(([k, v]) => `| ${k} | \`${val(v)}\` | ${desc(v)} |`).join('\n') + '\n';
 
 // ---------- write dist ----------
 rmSync(r('dist'), { recursive: true, force: true });
@@ -227,11 +248,11 @@ for (const f of readdirSync(r('assets'))) copyFileSync(r('assets', f), r('dist/a
 write('docs/tokens.md', tokensMd);
 replaceBetween('docs/color.md', 'contrast', table.trim());
 
-const DOCS = ['principles', 'voice', 'color', 'typography', 'layout', 'motion', 'components', 'imagery', 'frameworks', 'tokens'];
+const DOCS = ['principles', 'app', 'voice', 'color', 'typography', 'layout', 'motion', 'components', 'imagery', 'frameworks', 'tokens'];
 const SKILL_REFS = {
-  'poiema-design': ['principles', 'color', 'typography', 'layout', 'motion', 'components', 'imagery', 'frameworks', 'tokens'],
-  'poiema-voice': ['voice', 'principles'],
-  'poiema-review': ['principles', 'voice', 'color', 'typography', 'motion', 'components'],
+  'poiema-design': ['principles', 'app', 'color', 'typography', 'layout', 'motion', 'components', 'imagery', 'frameworks', 'tokens'],
+  'poiema-voice': ['voice', 'principles', 'app'],
+  'poiema-review': ['principles', 'app', 'voice', 'color', 'typography', 'motion', 'components'],
 };
 for (const [skill, docs] of Object.entries(SKILL_REFS)) {
   rmSync(r(`skills/${skill}/references`), { recursive: true, force: true });

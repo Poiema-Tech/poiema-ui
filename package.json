@@ -53,6 +53,7 @@
     "dist",
     "src",
     "docs",
+    "demo",
     "skills",
     "bin",
     "AGENTS.md",
