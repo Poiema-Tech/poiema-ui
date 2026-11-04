@@ -12,7 +12,7 @@ You build interfaces in one quiet gray room, at one of two volumes. **A site** f
 - **Used again and again** (admin, portal, dashboard, internal tool, anything behind a login) → the app register. **Read `references/app.md` first and follow it instead of steps 3 and 5 below.** `class="pm-app"` goes on `<html>`, and every screen is `.pm-shell` → `.pm-pagehead` → one `.pm-rows` card. No hero, section heads, lead paragraphs, stacks of cards, reveal or stagger. On a list screen on a 390×844 phone, the first row of data starts within about 200px of the top. `demo/app.html` in the package is a working example.
 
 ## Workflow
-1. **Find the system.** Look for `node_modules/poiema-ui/` (or this repo's `dist/`). If it's missing, install it: `npm i github:Poiema-Tech/poiema-ui#semver:^0.2.2` (a private, proprietary repo; only for Poiema projects), then import `poiema-ui/css` once and load Inter Tight (see `references/frameworks.md`).
+1. **Find the system.** Look for `node_modules/poiema-ui/` (or this repo's `dist/`). If it's missing, install it: `npm i github:Poiema-Tech/poiema-ui#semver:^0.3.0` (a private, proprietary repo; only for Poiema projects), then import `poiema-ui/css` once and load Inter Tight (see `references/frameworks.md`).
 2. **Read before building:** `references/components.md` for the exact class names and HTML, and `references/principles.md` for the mood. Use `references/tokens.md` when you need a value.
 3. **Plan the page as a numbered journey:** hero → `00` first step → sections `01…n` (each with a ring and a lowercase title) → closing band with a motto.
 4. **Write the copy in the Poiema voice** (lowercase display + period, triads, "not X — Y", verb-first buttons, ✓ feedback). Use the `poiema-voice` skill if it's available.

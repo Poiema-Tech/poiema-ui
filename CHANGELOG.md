@@ -2,6 +2,15 @@
 
 Every release lists its commits. Written by `scripts/release.mjs`; never edit it by hand.
 
+## v0.3.0 · 2026-11-04
+
+- fix(forms): keep hints out of a field's accessible name ([f1c9fc7](https://github.com/Poiema-Tech/poiema-ui/commit/f1c9fc7))
+- fix(touch): give sites 44px targets ([b48cbdc](https://github.com/Poiema-Tech/poiema-ui/commit/b48cbdc))
+- fix(copy): tell screen readers what happened ([4337b36](https://github.com/Poiema-Tech/poiema-ui/commit/4337b36))
+- feat(app): add an app register for tools and admins ([a88afea](https://github.com/Poiema-Tech/poiema-ui/commit/a88afea))
+
+Full diff: https://github.com/Poiema-Tech/poiema-ui/compare/v0.2.2...v0.3.0
+
 ## v0.2.2 · 2026-10-19
 
 - fix(css): full-width toasts on phones and visible pills on cards ([d37a6ea](https://github.com/Poiema-Tech/poiema-ui/commit/d37a6ea))
