@@ -42,5 +42,15 @@
 5. **Respect `prefers-reduced-motion`.** Already handled: reveals show instantly, loops stop, tilt is disabled. If you write new motion, add it to the reduced-motion block.
 6. Hover effects only on `(hover: hover)` devices when they rely on the pointer (tilt).
 
+## In an app
+**Nothing moves on the way in.** Data is there the moment the screen is. Inside `.pm-app` the reveal and stagger attributes are switched off, hover doesn't lift, and smooth scrolling is off (it animates a router's jump to the top). Only overlays move, and quickly:
+
+| Motion | How | Values |
+|---|---|---|
+| **Sheet** | `.pm-sheet` | slides up from the bottom, 200ms settle |
+| **Panel** | `.pm-panel` | fades in from 32px to the right, 200ms settle |
+| **Menu** | `.pm-menu[popover]`, `.pm-fabmenu` | rises 8px + fade, 200ms settle |
+| **Row hover** | chevron | darkens and moves 2px right |
+
 ## Without JS
 All CSS motion (float, marquee, lift, nudge, scroll cue, dialog/toast transitions) works without JavaScript. JS-driven content (`data-pm-reveal`) is hidden only when scripting is enabled, and a CSS failsafe reveals it after 2.5s if `init()` never runs.

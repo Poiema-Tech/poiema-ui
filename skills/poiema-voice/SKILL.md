@@ -11,8 +11,10 @@ The voice is a **pastor-editor**: warm, communal, sure of itself and brief. It s
 - Detect the language from the project or the user (pt-BR or English) and keep it consistent.
 - Identify the **one point** of each section. Put it in the headline and first line; everything else supports it.
 
+**Writing for an app** (a tool people return to)? Say less. Only the page title, empty-state titles and dialog questions are display. No lead paragraphs, triads or couplets on a working screen. See "In an app" in `references/voice.md` and "Copy in an app" in `references/app.md`.
+
 ## Rules
-1. **Display headlines:** lowercase, end with `.` (questions with `?`). `assista primeiro.` / `watch first.` Body text uses normal sentence case.
+1. **Display headlines:** lowercase, end with `.` (questions with `?`). `assista primeiro.` / `watch first.` Body text uses normal sentence case. A title that is a name stays a name: `Ana Souza`, never `ana souza.`
 2. **Triads:** three short beats with periods: `de cristo. em nós. para o mundo.` In display type, the middle beat gets `.pm-muted`.
 3. **Reframe:** say what it is *not*, then what it is. `Não é apenas X. É Y.` / `It isn't just X. It's Y.` Also `Mais do que X, …`, `não apenas …, mas também …`.
 4. **Key-message callout only on request:** the reference page briefed leaders and closed each section with a `Mensagem que precisa ficar clara` / `The message that must be clear` callout. Poiema products mostly speak to consumers, so add one (1–2 sentences) only when the user asks for it.

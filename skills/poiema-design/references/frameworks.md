@@ -56,6 +56,8 @@ export function PoiemaBehaviors() {
 Per element instead: `useEffect(() => { const h = tilt(ref.current!); return h.destroy; }, [])`.
 Use `daysUntil()` in render rather than `data-pm-countdown` (React owns the text node). Toasts: `import { toast } from 'poiema-ui'`.
 
+**An app, portal or admin?** Add `pm-app` to the same `<html>` and follow `docs/app.md`: `<html lang="pt-BR" className={`${font.variable} pm-app`} data-theme="light">`, with `viewportFit: 'cover'` in the `viewport` export. It also turns smooth scrolling off, so the router's jump to the top doesn't animate.
+
 ## SvelteKit / Svelte
 ```svelte
 <!-- +layout.svelte -->

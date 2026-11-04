@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en" class="pm-app" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e2e2e2">
+<title>poiema ui · app register</title>
+<meta name="description" content="A working app built only with the Poiema app register. Every name and number is made up.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../dist/poiema.css">
+<script defer src="../dist/poiema.auto.js"></script>
+<style>
+  /* demo-only helpers */
+  /* The icons are a sprite, and <use> inherits from where it's used, not from the sprite. */
+  svg[aria-hidden="true"] { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  html[data-gate] :is(.pm-sidebar, .pm-tabbar) { display: none; }
+  .qr { display: block; width: 100%; max-width: 200px; margin-inline: auto; padding: 12px; border-radius: var(--pm-radius-md); background: var(--pm-gray-0); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="19" cy="12" r="1.4" fill="currentColor"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-checks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M10 18h4"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3M7 10l5 5 5-5M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="m16 3 4 4-4 4M20 7H4M8 21l-4-4 4-4M4 17h16"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.5 21.5 21.5 2.5 2.5 9.5l8 3.5 4 8.5ZM21.5 2.5 10.5 13"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+</svg>
+
+<div class="pm-shell">
+
+  <!-- Desktop navigation -->
+  <aside class="pm-sidebar">
+    <a class="pm-sidebar__brand" href="#links">poiema</a>
+    <nav class="pm-sidebar__nav" aria-label="Main">
+      <div class="pm-sidebar__group">
+        <p class="pm-sidebar__title">Work</p>
+        <a href="#links" data-nav="links"><svg aria-hidden="true"><use href="#i-link"/></svg>Links</a>
+        <a href="#schedule" data-nav="schedule"><svg aria-hidden="true"><use href="#i-calendar"/></svg>Schedule<span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>3<span class="pm-sr-only"> to fix</span></span></a>
+      </div>
+      <div class="pm-sidebar__group">
+        <p class="pm-sidebar__title">Insights</p>
+        <a href="#stats" data-nav="stats"><svg aria-hidden="true"><use href="#i-chart"/></svg>Analytics</a>
+      </div>
+      <div class="pm-sidebar__group">
+        <p class="pm-sidebar__title">Account</p>
+        <a href="#settings" data-nav="settings"><svg aria-hidden="true"><use href="#i-sliders"/></svg>Settings</a>
+      </div>
+    </nav>
+    <div class="pm-sidebar__user">
+      <strong>Marina Duarte</strong>
+      Administrator
+      <div class="pm-cluster"><a href="#settings">My profile</a><a href="#signin">Sign out</a></div>
+    </div>
+  </aside>
+
+  <main class="pm-shell__main">
+
+    <!-- LINKS: one card, one row per link; filters count before you tap -->
+    <section data-screen="links">
+      <header class="pm-pagehead">
+        <div class="pm-pagehead__line">
+          <div class="pm-pagehead__title">
+            <h1 class="pm-h1">your links.</h1>
+            <p class="pm-pagehead__sub" id="links-sub"></p>
+          </div>
+          <div class="pm-pagehead__actions">
+            <button class="pm-btn pm-btn--soft" type="button" id="links-select" data-action="select" aria-pressed="false"><svg aria-hidden="true"><use href="#i-checks"/></svg>Select several</button>
+            <button class="pm-btn" type="button" data-pm-open="new-link" data-action="new"><svg aria-hidden="true"><use href="#i-plus"/></svg>Create link</button>
+          </div>
+        </div>
+        <div class="pm-toolbar">
+          <label class="pm-search">
+            <svg aria-hidden="true"><use href="#i-search"/></svg>
+            <input id="links-q" type="search" placeholder="Search by title or address" aria-label="Search links">
+            <button class="pm-search__clear" type="button" data-pm-clear aria-label="Clear search"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+          </label>
+        </div>
+        <div class="pm-pillnav pm-pillnav--bleed" id="links-chips" role="group" aria-label="Filter links"></div>
+      </header>
+
+      <div id="links-select-all" class="pm-cluster" style="margin-bottom:8px" hidden>
+        <label class="pm-choice"><input class="pm-check" type="checkbox" id="links-all"> All in this list</label>
+      </div>
+      <div id="links-rows"></div>
+      <p class="pm-small pm-desk-only" style="margin-top:12px">Tip: paste a link anywhere on this page to start a new one.</p>
+      <div class="pm-selectbar" id="links-bar" hidden>
+        <button class="pm-btn pm-btn--ghost pm-btn--icon" type="button" data-action="unselect" aria-label="Stop selecting"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+        <p aria-live="polite" id="links-bar-text"></p>
+        <button class="pm-btn" type="button" id="links-bar-go" disabled>Move to folder</button>
+      </div>
+
+      <button class="pm-fab" type="button" data-pm-open="links-actions" aria-label="Actions for this screen" id="links-fab"><svg aria-hidden="true"><use href="#i-more"/></svg></button>
+      <dialog class="pm-fabmenu" id="links-actions" aria-label="Actions for this screen">
+        <div class="pm-menu">
+          <button class="pm-menu__item" type="button" data-action="select">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-checks"/></svg></span>
+            <span><span class="pm-menu__label">Select several</span><span class="pm-menu__hint">to move or archive them at once</span></span>
+          </button>
+          <button class="pm-menu__item pm-menu__item--primary" type="button" data-pm-open="new-link" data-action="new">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-plus"/></svg></span>
+            <span><span class="pm-menu__label">Create link</span></span>
+          </button>
+        </div>
+        <button class="pm-fab" type="button" data-pm-close aria-label="Close actions"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+      </dialog>
+    </section>
+
+    <!-- ONE LINK: its name is data, so it keeps its case and takes no period -->
+    <section data-screen="link" hidden>
+      <header class="pm-pagehead">
+        <div class="pm-pagehead__line">
+          <a class="pm-btn pm-btn--soft pm-btn--icon" href="#links" aria-label="Back to links"><svg aria-hidden="true"><use href="#i-back"/></svg></a>
+          <div class="pm-pagehead__title">
+            <h1 class="pm-h1" id="link-title"></h1>
+            <p class="pm-pagehead__sub" id="link-sub"></p>
+          </div>
+          <span class="pm-badge pm-badge--solid">Top link</span>
+          <div class="pm-pagehead__actions">
+            <button class="pm-btn pm-btn--soft" type="button" data-pm-open="new-link" data-action="edit"><svg aria-hidden="true"><use href="#i-pencil"/></svg>Edit</button>
+            <button class="pm-btn" type="button" data-pm-copy="https://links.poiemaorlando.com/pascoa" data-pm-copied="Copied ✓"><svg aria-hidden="true"><use href="#i-link"/></svg>Copy link</button>
+            <button class="pm-btn pm-btn--soft pm-btn--icon" type="button" popovertarget="link-more" data-pm-menu aria-label="More actions"><svg aria-hidden="true"><use href="#i-more"/></svg></button>
+            <div class="pm-menu" id="link-more" popover>
+              <button class="pm-menu__item" type="button"><svg aria-hidden="true"><use href="#i-archive"/></svg><span><span class="pm-menu__label">Archive</span><span class="pm-menu__hint">the address keeps working</span></span></button>
+              <button class="pm-menu__item pm-menu__item--danger" type="button" data-pm-open="delete-link"><svg aria-hidden="true"><use href="#i-trash"/></svg><span><span class="pm-menu__label">Delete link</span></span></button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="pm-workspace">
+        <div class="pm-stack">
+          <div class="pm-rows pm-narrow-only">
+            <button class="pm-row" type="button" data-pm-open="qr-sheet"><svg aria-hidden="true"><use href="#i-link"/></svg><span class="pm-row__text"><span class="pm-row__title">QR code</span><span class="pm-row__sub">Show it, or download it to print</span></span></button>
+          </div>
+          <div class="pm-pillnav pm-pillnav--bleed" role="group" aria-label="Period">
+            <button type="button" aria-pressed="false">7 days</button>
+            <button type="button" aria-pressed="true">30 days</button>
+            <button type="button" aria-pressed="false">All time</button>
+          </div>
+          <div class="pm-card pm-card--compact pm-stats">
+            <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">1,204</strong><span class="pm-stat__label">Clicks</span></div>
+            <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">877</strong><span class="pm-stat__label">People</span></div>
+            <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">312</strong><span class="pm-stat__label">QR scans</span></div>
+          </div>
+          <div class="pm-rows">
+            <div class="pm-rows__head"><h2>Where people came from</h2><span class="pm-badge">4 sources</span></div>
+            <div class="pm-row"><span class="pm-row__text"><span class="pm-row__title">WhatsApp</span></span><span class="pm-badge">698</span><progress class="pm-progress" value="58" max="100" aria-label="58 percent"></progress></div>
+            <div class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Instagram</span></span><span class="pm-badge">289</span><progress class="pm-progress" value="24" max="100" aria-label="24 percent"></progress></div>
+            <div class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Printed QR code</span></span><span class="pm-badge">156</span><progress class="pm-progress" value="13" max="100" aria-label="13 percent"></progress></div>
+            <div class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Direct</span></span><span class="pm-badge">61</span><progress class="pm-progress" value="5" max="100" aria-label="5 percent"></progress></div>
+          </div>
+        </div>
+        <aside class="pm-workspace__rail pm-wide-only">
+          <div class="pm-card pm-card--compact pm-stack pm-stack--sm">
+            <h2 class="pm-h4">QR code</h2>
+            <svg class="qr" id="link-qr" viewBox="0 0 21 21" role="img" aria-label="QR code for this link"></svg>
+            <div class="pm-grid pm-grid--2" style="--pm-gap:8px; grid-template-columns:repeat(2,minmax(0,1fr))">
+              <button class="pm-btn pm-btn--soft pm-btn--sm" type="button" onclick="Poiema.toast('Downloaded ✓')">PNG</button>
+              <button class="pm-btn pm-btn--soft pm-btn--sm" type="button" onclick="Poiema.toast('Downloaded ✓')">SVG</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <button class="pm-fab" type="button" data-pm-open="link-actions" aria-label="Actions for this screen"><svg aria-hidden="true"><use href="#i-more"/></svg></button>
+      <dialog class="pm-fabmenu" id="link-actions" aria-label="Actions for this screen">
+        <div class="pm-menu">
+          <button class="pm-menu__item pm-menu__item--danger" type="button" data-pm-open="delete-link">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-trash"/></svg></span>
+            <span class="pm-menu__label">Delete link</span>
+          </button>
+          <button class="pm-menu__item" type="button">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-archive"/></svg></span>
+            <span><span class="pm-menu__label">Archive</span><span class="pm-menu__hint">the address keeps working</span></span>
+          </button>
+          <button class="pm-menu__item" type="button" data-pm-open="new-link" data-action="edit">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-pencil"/></svg></span>
+            <span class="pm-menu__label">Edit</span>
+          </button>
+          <button class="pm-menu__item pm-menu__item--primary" type="button" onclick="navigator.clipboard.writeText('https://links.poiemaorlando.com/pascoa').then(() => Poiema.toast('Copied ✓'), () => Poiema.toast('Could not copy'))">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-link"/></svg></span>
+            <span class="pm-menu__label">Copy link</span>
+          </button>
+        </div>
+        <button class="pm-fab" type="button" data-pm-close aria-label="Close actions"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+      </dialog>
+    </section>
+
+    <!-- SCHEDULE: problems shown and fixed where they are; a rail on a wide screen -->
+    <section data-screen="schedule" hidden>
+      <header class="pm-pagehead pm-pagehead--pin">
+        <div class="pm-pagehead__line">
+          <div class="pm-pagehead__title">
+            <h1 class="pm-h1">november 2026.</h1>
+            <p class="pm-pagehead__sub">Kids · 4 Sundays · 3 open seats</p>
+          </div>
+          <span class="pm-badge pm-badge--dashed" id="month-state">Draft</span>
+          <div class="pm-pagehead__actions">
+            <button class="pm-btn pm-btn--soft" type="button"><svg aria-hidden="true"><use href="#i-swap"/></svg>Swap someone</button>
+            <button class="pm-btn pm-btn--soft" type="button" onclick="Poiema.toast('PDF ready ✓')"><svg aria-hidden="true"><use href="#i-download"/></svg>Export PDF</button>
+          </div>
+        </div>
+        <div class="pm-pillnav pm-pillnav--bleed" role="group" aria-label="Ministries">
+          <button type="button" aria-pressed="false">Worship</button>
+          <button type="button" aria-pressed="true">Kids <span class="pm-flag"></span><span class="pm-sr-only">, has open seats</span></button>
+          <button type="button" aria-pressed="false">Hospitality</button>
+          <button type="button" aria-pressed="false">Media</button>
+          <button type="button" aria-pressed="false">Prayer</button>
+        </div>
+        <nav class="pm-datestrip" aria-label="Sundays">
+          <a class="pm-datetile pm-faded" href="#sun-01"><small>Sun</small><b>01</b></a>
+          <a class="pm-datetile" href="#sun-08" aria-current="true"><small>Sun</small><b>08</b></a>
+          <a class="pm-datetile" href="#sun-15"><small>Sun</small><b>15</b><span class="pm-flag"></span><span class="pm-sr-only">has open seats</span></a>
+          <a class="pm-datetile" href="#sun-22"><small>Sun</small><b>22</b></a>
+          <a class="pm-datetile" href="#sun-29"><small>Sun</small><b>29</b><span class="pm-flag"></span><span class="pm-sr-only">has open seats</span></a>
+        </nav>
+      </header>
+
+      <div class="pm-workspace">
+        <div class="pm-stack">
+          <section class="pm-notice pm-notice--draft">
+            <div>
+              <h2>November draft: review and approve</h2>
+              <p>Adjust Kids if you need to. The teams see it once every ministry has approved.</p>
+            </div>
+            <button class="pm-btn" type="button" id="approve"><svg aria-hidden="true"><use href="#i-check"/></svg>Approve Kids</button>
+          </section>
+
+          <div id="past-sundays"></div>
+          <div class="pm-grid" style="--pm-min:300px; --pm-gap:10px; align-items:start" id="sundays"></div>
+        </div>
+
+        <aside class="pm-workspace__rail" aria-labelledby="todo-title">
+          <h2 class="pm-h3 pm-cluster" id="todo-title">To do <span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>3<span class="pm-sr-only"> to fix</span></span></h2>
+          <div class="pm-todo"><span class="pm-datetile pm-datetile--sm"><small>Sun</small><b>15</b></span><h3>Kids · 2 open seats</h3><p>2 to 5 years · Helper, Check-in</p><button class="pm-btn pm-btn--outline pm-btn--sm" type="button" data-sheet-pick>Fill</button></div>
+          <div class="pm-todo"><span class="pm-datetile pm-datetile--sm"><small>Sun</small><b>29</b></span><h3>Kids · 1 open seat</h3><p>6 to 10 years · Lead</p><button class="pm-btn pm-btn--outline pm-btn--sm" type="button" data-sheet-pick>Fill</button></div>
+          <details class="pm-disclosure">
+            <summary>Approvals · 6 of 9</summary>
+            <div class="pm-card pm-card--compact pm-small">Waiting on Media, Prayer and Hospitality. It goes out on its own the Sunday before the month starts.</div>
+          </details>
+        </aside>
+      </div>
+
+      <button class="pm-fab" type="button" data-pm-open="schedule-actions" aria-label="Actions for this screen"><svg aria-hidden="true"><use href="#i-more"/></svg></button>
+      <dialog class="pm-fabmenu" id="schedule-actions" aria-label="Actions for this screen">
+        <div class="pm-menu">
+          <button class="pm-menu__item" type="button">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-swap"/></svg></span>
+            <span><span class="pm-menu__label">Swap someone</span><span class="pm-menu__hint">starting from a name you were told</span></span>
+          </button>
+          <button class="pm-menu__item" type="button" onclick="Poiema.toast('PDF ready ✓')">
+            <span class="pm-menu__icon"><svg aria-hidden="true"><use href="#i-download"/></svg></span>
+            <span><span class="pm-menu__label">Export PDF</span><span class="pm-menu__hint">for the team's WhatsApp group</span></span>
+          </button>
+        </div>
+        <button class="pm-fab" type="button" data-pm-close aria-label="Close actions"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+      </dialog>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section data-screen="stats" hidden>
+      <header class="pm-pagehead">
+        <div class="pm-pagehead__line">
+          <div class="pm-pagehead__title">
+            <h1 class="pm-h1">analytics.</h1>
+            <p class="pm-pagehead__sub">Last 30 days · every link</p>
+          </div>
+        </div>
+        <div class="pm-pillnav pm-pillnav--bleed" role="group" aria-label="Period">
+          <button type="button" aria-pressed="false">7 days</button>
+          <button type="button" aria-pressed="true">30 days</button>
+          <button type="button" aria-pressed="false">90 days</button>
+          <button type="button" aria-pressed="false">All time</button>
+        </div>
+      </header>
+      <div class="pm-stack">
+        <div class="pm-card pm-card--compact pm-stats">
+          <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">3,482</strong><span class="pm-stat__label">Clicks</span></div>
+          <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">2,117</strong><span class="pm-stat__label">People</span></div>
+          <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">604</strong><span class="pm-stat__label">QR scans</span></div>
+        </div>
+        <div class="pm-card pm-card--compact">
+          <div class="pm-cluster pm-cluster--between">
+            <h2 class="pm-h4">Clicks per day</h2>
+            <p class="pm-small pm-nums" id="bars-peak"></p>
+          </div>
+          <div class="pm-bars" id="bars" role="img" aria-label="Clicks per day over the last 30 days" tabindex="0"></div>
+          <div class="pm-bars__axis" aria-hidden="true"><span>Oct 5</span><span>Nov 3</span></div>
+          <table class="pm-sr-only" id="bars-table"></table>
+        </div>
+        <div class="pm-grid" style="--pm-min:300px; --pm-gap:10px; align-items:start">
+          <div class="pm-rows">
+            <div class="pm-rows__head"><h2>Top links</h2></div>
+            <a class="pm-row" href="#link"><span class="pm-row__text"><span class="pm-row__title">Easter service signup</span><span class="pm-row__sub">/pascoa · 1,204 clicks</span></span></a>
+            <a class="pm-row" href="#link"><span class="pm-row__text"><span class="pm-row__title">Sunday livestream</span><span class="pm-row__sub">/aovivo · 891 clicks</span></span></a>
+            <a class="pm-row" href="#link"><span class="pm-row__text"><span class="pm-row__title">Kids check-in</span><span class="pm-row__sub">/kids · 642 clicks</span></span></a>
+          </div>
+          <div class="pm-rows">
+            <div class="pm-rows__head"><h2>Devices</h2></div>
+            <p class="pm-rows__label">This month</p>
+            <div class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Phone</span></span><span class="pm-badge">2,820</span><progress class="pm-progress" value="81" max="100" aria-label="81 percent"></progress></div>
+            <div class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Computer</span></span><span class="pm-badge">522</span><progress class="pm-progress" value="15" max="100" aria-label="15 percent"></progress></div>
+            <div class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Tablet</span></span><span class="pm-badge">140</span><progress class="pm-progress" value="4" max="100" aria-label="4 percent"></progress></div>
+          </div>
+          <div class="pm-rows">
+            <div class="pm-rows__head"><h2>Campaigns</h2></div>
+            <p class="pm-rows__empty">No campaigns yet.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS: a form that is the whole job can be a screen -->
+    <section data-screen="settings" hidden>
+      <header class="pm-pagehead">
+        <div class="pm-pagehead__line">
+          <a class="pm-btn pm-btn--soft pm-btn--icon pm-phone-only" href="#menu" aria-label="Back to menu"><svg aria-hidden="true"><use href="#i-back"/></svg></a>
+          <div class="pm-pagehead__title">
+            <h1 class="pm-h1">settings.</h1>
+            <p class="pm-pagehead__sub">Marina Duarte · Administrator</p>
+          </div>
+        </div>
+      </header>
+      <form class="pm-stack pm-measure" onsubmit="event.preventDefault(); Poiema.toast('Saved ✓')">
+        <div class="pm-card pm-card--compact pm-stack">
+          <div class="pm-field">
+            <label class="pm-label" for="settings-name">Name</label>
+            <input class="pm-input" id="settings-name" value="Marina Duarte" autocomplete="off">
+          </div>
+          <div class="pm-field">
+            <label class="pm-label" for="settings-email">Email</label>
+            <input class="pm-input" id="settings-email" type="email" value="marina@example.com" aria-invalid="false" aria-describedby="settings-email-hint" autocomplete="off">
+            <span class="pm-hint" id="settings-email-hint">We only use it to send you the month's schedule.</span>
+          </div>
+          <div class="pm-field">
+            <span class="pm-label" id="theme-label">Appearance</span>
+            <div class="pm-segmented" role="radiogroup" aria-labelledby="theme-label">
+              <label><input type="radio" name="theme" value="light" checked><span>Light</span></label>
+              <label><input type="radio" name="theme" value="dark"><span>Dark</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="pm-rows">
+          <div class="pm-rows__head"><h2>Kids ministry</h2><span class="pm-badge pm-badge--outline"><svg aria-hidden="true"><use href="#i-check"/></svg>Published</span></div>
+          <div class="pm-row">
+            <span class="pm-row__text"><span class="pm-row__title">People per service</span><span class="pm-row__sub">Counted in every Sunday's seats</span></span>
+            <span class="pm-stepper" role="group" aria-label="People per service">
+              <button type="button" aria-label="Fewer people" data-step="-1">−</button>
+              <output id="step-value" aria-live="polite">4</output>
+              <button type="button" aria-label="More people" data-step="1">+</button>
+            </span>
+          </div>
+          <label class="pm-row">
+            <span class="pm-row__text"><span class="pm-row__title" id="couples-title">Couples serve together</span><span class="pm-row__sub" id="couples-sub">They always land on the same Sunday</span></span>
+            <input class="pm-switch" type="checkbox" role="switch" aria-labelledby="couples-title" aria-describedby="couples-sub" checked>
+          </label>
+          <label class="pm-row">
+            <span class="pm-row__text"><span class="pm-row__title">Once a month</span></span>
+            <input class="pm-switch" type="checkbox" role="switch">
+          </label>
+        </div>
+        <div class="pm-alert" role="note">
+          <strong class="pm-alert__title">Important</strong>
+          <p>These rules apply the next time a month is generated. Months already sent stay as they are.</p>
+        </div>
+        <div class="pm-cluster"><button class="pm-btn" type="submit">Save changes</button></div>
+      </form>
+    </section>
+
+    <!-- MENU: everything that isn't a tab, on a phone -->
+    <section data-screen="menu" hidden>
+      <header class="pm-pagehead">
+        <div class="pm-pagehead__line">
+          <div class="pm-pagehead__title">
+            <h1 class="pm-h1">menu.</h1>
+            <p class="pm-pagehead__sub">Marina Duarte · Administrator</p>
+          </div>
+        </div>
+      </header>
+      <div class="pm-stack pm-stack--sm pm-measure">
+        <div class="pm-rows">
+          <a class="pm-row" href="#settings"><svg aria-hidden="true"><use href="#i-sliders"/></svg><span class="pm-row__text"><span class="pm-row__title">Settings</span><span class="pm-row__sub">rules, name, appearance</span></span></a>
+          <a class="pm-row" href="#links"><svg aria-hidden="true"><use href="#i-folder"/></svg><span class="pm-row__text"><span class="pm-row__title">Folders and tags</span><span class="pm-row__sub">how links are sorted</span></span></a>
+          <a class="pm-row" href="#settings"><svg aria-hidden="true"><use href="#i-user"/></svg><span class="pm-row__text"><span class="pm-row__title">My profile</span><span class="pm-row__sub">name, email, password</span></span></a>
+        </div>
+        <a class="pm-btn pm-btn--ghost pm-btn--block" href="#signin"><svg aria-hidden="true"><use href="#i-logout"/></svg>Sign out</a>
+      </div>
+    </section>
+
+    <!-- SIGN IN: one job and no navigation -->
+    <section data-screen="signin" hidden>
+      <div class="pm-gate">
+        <form class="pm-card pm-card--compact pm-stack" onsubmit="event.preventDefault(); location.hash = 'links'">
+          <h1 class="pm-h1">sign in.</h1>
+          <div class="pm-field"><label class="pm-label" for="signin-email">Email</label><input class="pm-input" id="signin-email" type="email" value="marina@example.com" autocomplete="off"></div>
+          <div class="pm-field"><label class="pm-label" for="signin-password">Password</label><input class="pm-input" id="signin-password" type="password" value="made-up" autocomplete="off"></div>
+          <button class="pm-btn pm-btn--block" type="submit">Sign in</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Phone navigation -->
+<nav class="pm-tabbar" aria-label="Main">
+  <a href="#links" data-nav="links"><svg aria-hidden="true"><use href="#i-link"/></svg>Links</a>
+  <a href="#schedule" data-nav="schedule"><svg aria-hidden="true"><use href="#i-calendar"/></svg>Schedule</a>
+  <a href="#stats" data-nav="stats"><svg aria-hidden="true"><use href="#i-chart"/></svg>Analytics</a>
+  <a href="#menu" data-nav="menu"><svg aria-hidden="true"><use href="#i-menu"/></svg>Menu</a>
+</nav>
+
+<!-- Panel: a form over the list it belongs to -->
+<dialog class="pm-panel" id="new-link" aria-labelledby="new-link-title">
+  <form method="dialog" id="new-link-form" style="display:contents">
+    <div class="pm-panel__head">
+      <button class="pm-btn pm-btn--soft pm-btn--icon" type="button" data-pm-close aria-label="Back"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+      <div>
+        <h2 class="pm-panel__title" id="new-link-title">Create link</h2>
+        <p class="pm-panel__sub">One short address and one QR code</p>
+      </div>
+    </div>
+    <div class="pm-panel__body">
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-dest">Destination</label>
+        <input class="pm-input" id="new-link-dest" name="dest" type="url" inputmode="url" placeholder="https://" autocomplete="off" aria-describedby="new-link-dest-hint">
+        <span class="pm-hint" id="new-link-dest-hint">Where people land. You can change it any time, even after printing.</span>
+      </div>
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-title-input">Title</label>
+        <input class="pm-input" id="new-link-title-input" name="title" autocomplete="off">
+        <span class="pm-error" id="new-link-error" hidden>Give it a name so we can find it later.</span>
+      </div>
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-slug">Short address</label>
+        <input class="pm-input" id="new-link-slug" name="slug" placeholder="links.poiemaorlando.com/…" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="new-link-slug-hint">
+        <span class="pm-hint" id="new-link-slug-hint">Leave it empty and we pick one.</span>
+      </div>
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-folder">Folder</label>
+        <select class="pm-select" id="new-link-folder" name="folder"><option>Events</option><option>Campaigns</option><option>Ministries</option></select>
+      </div>
+      <div class="pm-field">
+        <span class="pm-label" id="redirect-label">Redirect</span>
+        <div class="pm-segmented" role="radiogroup" aria-labelledby="redirect-label">
+          <label><input type="radio" name="redirect" checked><span>Temporary</span></label>
+          <label><input type="radio" name="redirect"><span>Permanent</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="pm-panel__foot">
+      <button class="pm-btn pm-btn--soft" type="button" data-pm-close>Cancel</button>
+      <button class="pm-btn" type="button" id="new-link-save">Create link</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Sheet: tap a name, make a short choice -->
+<dialog class="pm-sheet" id="person" aria-labelledby="person-name">
+  <h2 class="pm-sheet__title" id="person-name"></h2>
+  <p class="pm-sheet__sub" id="person-where"></p>
+  <div class="pm-sheet__actions" id="person-actions">
+    <button class="pm-btn" type="button" data-pm-close data-pm-open="picker">Swap</button>
+    <button class="pm-btn pm-btn--soft" type="button" data-pm-close>See person</button>
+    <button class="pm-btn pm-btn--ghost pm-btn--block pm-danger" type="button" id="person-remove">Remove from schedule</button>
+  </div>
+  <div class="pm-sheet__actions" id="person-confirm" hidden>
+    <p class="pm-small" style="grid-column:1/-1">Remove <strong id="person-confirm-name"></strong> from this Sunday? The seat stays open.</p>
+    <button class="pm-btn pm-btn--soft" type="button" id="person-cancel">Cancel</button>
+    <button class="pm-btn pm-btn--danger" type="button" id="person-remove-go">Remove</button>
+  </div>
+</dialog>
+
+<!-- Sheet: choosing someone. Who can't serve stays listed, with the reason. -->
+<dialog class="pm-sheet" id="picker" aria-labelledby="picker-title">
+  <h2 class="pm-sheet__title" id="picker-title">Who takes this seat?</h2>
+  <p class="pm-sheet__sub">Kids · 2 to 5 years · Helper</p>
+  <div style="margin-top:6px">
+    <p class="pm-rows__label">Available</p>
+    <button class="pm-row" type="button" data-pm-close data-pick-person><span class="pm-row__text"><span class="pm-row__title">Laura Campos</span><span class="pm-row__sub">Hasn't served this month</span></span></button>
+    <button class="pm-row" type="button" data-pm-close data-pick-person><span class="pm-row__text"><span class="pm-row__title">Marcos Teixeira</span><span class="pm-row__sub">Serving once this month</span></span></button>
+    <p class="pm-rows__label">Can't this Sunday</p>
+    <div class="pm-row pm-row--off"><span class="pm-row__text"><span class="pm-row__title">Bruno Lima</span><span class="pm-row__sub pm-row__sub--danger">On vacation</span></span></div>
+    <div class="pm-row pm-row--off"><span class="pm-row__text"><span class="pm-row__title">Paula Moreira</span><span class="pm-row__sub pm-row__sub--danger">Already serving in Worship</span></span></div>
+  </div>
+</dialog>
+
+<!-- Sheet: what the rail holds, on a screen too narrow for the rail -->
+<dialog class="pm-sheet" id="qr-sheet" aria-labelledby="qr-title">
+  <h2 class="pm-sheet__title" id="qr-title">QR code</h2>
+  <p class="pm-sheet__sub">Scans are counted apart from clicks</p>
+  <svg class="qr" id="link-qr-sheet" viewBox="0 0 21 21" role="img" aria-label="QR code for this link" style="margin-top:12px"></svg>
+  <div class="pm-sheet__actions">
+    <button class="pm-btn pm-btn--soft" type="button" data-pm-close onclick="Poiema.toast('Downloaded ✓')">PNG</button>
+    <button class="pm-btn pm-btn--soft" type="button" data-pm-close onclick="Poiema.toast('Downloaded ✓')">SVG</button>
+  </div>
+</dialog>
+
+<!-- Dialog: confirm something that can't be undone -->
+<dialog class="pm-dialog" id="delete-link" aria-labelledby="delete-link-title">
+  <h2 class="pm-h2" id="delete-link-title">delete this link?</h2>
+  <p class="pm-body" style="margin-top:8px">Printed QR codes stop working and its address is freed. This can't be undone.</p>
+  <div class="pm-dialog__foot">
+    <button class="pm-btn pm-btn--soft" type="button" data-pm-close autofocus>Cancel</button>
+    <button class="pm-btn pm-btn--danger" type="button" data-pm-close onclick="Poiema.toast('Link deleted ✓'); location.hash = 'links'">Delete link</button>
+  </div>
+</dialog>
+
+<script>
+// Demo-only wiring. Everything visual comes from the pm-* classes; this only fakes the app's data.
+document.addEventListener('DOMContentLoaded', () => {
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => [...document.querySelectorAll(s)];
+  const icon = (n) => `<svg aria-hidden="true"><use href="#i-${n}"/></svg>`;
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // --- navigation
+  const TAB_OF = { link: 'links', settings: 'menu' };
+  const show = () => {
+    const screen = (location.hash || '#links').slice(1).replace(/^sun-.*/, 'schedule');
+    const known = $$('[data-screen]').some((s) => s.dataset.screen === screen);
+    const name = known ? screen : 'links';
+    $$('[data-screen]').forEach((s) => { s.hidden = s.dataset.screen !== name; });
+    document.documentElement.toggleAttribute('data-gate', name === 'signin');
+    $$('.pm-sidebar [data-nav]').forEach((a) => {
+      const on = a.dataset.nav === name || (name === 'link' && a.dataset.nav === 'links');
+      on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+    });
+    $$('.pm-tabbar [data-nav]').forEach((a) => {
+      const on = a.dataset.nav === (TAB_OF[name] || name);
+      on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+    });
+    if (!location.hash.startsWith('#sun-')) scrollTo(0, 0);
+  };
+  addEventListener('hashchange', show);
+
+  // --- links: filters answer instantly and say how many before you tap
+  const links = [
+    ['Easter service signup', 'pascoa', 1204, 'Events'],
+    ['Sunday livestream', 'aovivo', 891, 'Ministries'],
+    ['Kids check-in', 'kids', 642, 'Ministries'],
+    ['Conference tickets', 'conf26', 433, 'Events'],
+    ['Small groups map', 'grupos', 287, 'Ministries'],
+    ['Youth retreat', 'retiro', 164, 'Events', 'This address stopped responding'],
+    ['Giving', 'oferta', 156, 'Campaigns'],
+    ['Worship playlist', 'louvor', 131, 'Ministries'],
+    ['Volunteer handbook', 'guia', 98, 'Ministries'],
+    ['Baptism class', 'batismo', 74, 'Events'],
+    ['Welcome card', 'bemvindo', 61, 'Campaigns'],
+    ['Prayer requests', 'oracao', 57, 'Ministries'],
+    ['Christmas cantata', 'natal', 12, 'Events'],
+    ['A very long campaign title that has to wrap instead of being cut off on a phone', 'campanha-de-outono', 0, 'Campaigns'],
+  ].map(([title, slug, clicks, folder, problem]) => ({ title, slug, clicks, folder, problem }));
+
+  let filter = 'All', query = '', selected = null;
+  const FILTERS = ['All', 'Events', 'Campaigns', 'Ministries', 'Needs a look'];
+  const inFilter = (l, f) => f === 'All' || (f === 'Needs a look' ? !!l.problem : l.folder === f);
+  const matches = (l) => !query || `${l.title} ${l.slug}`.toLowerCase().includes(query.toLowerCase());
+  const clicks = (n) => (n === 1 ? '1 click' : `${n.toLocaleString('en-US')} clicks`);
+
+  // Chips update in place: rebuilding them would drop the focus of whoever just pressed one.
+  $('#links-chips').innerHTML = FILTERS.map((f) => `<button type="button" data-filter="${f}"${f === 'Needs a look' ? ' data-tone="danger"' : ''}>${f === 'Needs a look' ? '<span class="pm-flag"></span>' : ''}${f} <span class="pm-count"></span></button>`).join('');
+
+  const renderChips = () => {
+    $$('[data-filter]').forEach((chip) => {
+      const f = chip.dataset.filter;
+      const n = links.filter((l) => inFilter(l, f) && matches(l)).length;
+      chip.setAttribute('aria-pressed', f === filter);
+      chip.querySelector('.pm-count').textContent = n;
+      // Nothing at all: no chip. While someone is typing the row stays put, and a 0 is an answer.
+      chip.hidden = !query && n === 0 && f !== filter;
+    });
+  };
+
+  const renderLinks = () => {
+    const shown = links.filter((l) => inFilter(l, filter) && matches(l));
+    $('#links-sub').textContent = `${links.length} links · ${links.filter((l) => l.problem).length} to look at`;
+    renderChips();
+
+    const box = $('#links-rows');
+    if (!shown.length) {
+      box.innerHTML = (query || filter !== 'All')
+        ? `<div class="pm-empty"><span class="pm-empty__icon">${icon('search')}</span><h2 class="pm-empty__title">nothing here with that name.</h2><p>It may be in another folder, or under its short address.</p><button class="pm-btn pm-btn--soft" type="button" data-action="reset">Search everything</button></div>`
+        : `<div class="pm-empty"><span class="pm-empty__icon">${icon('link')}</span><h2 class="pm-empty__title">nothing here yet.</h2><p>When you create your first link, it shows up here.</p><button class="pm-btn" type="button" data-pm-open="new-link" data-action="new">Create link</button></div>`;
+    } else {
+      box.innerHTML = `<div class="pm-rows pm-rows--columns">${shown.map((l) => {
+        const sub = l.problem
+          ? `<span class="pm-row__sub pm-row__sub--danger" id="row-${esc(l.slug)}-sub">${l.problem}</span>`
+          : `<span class="pm-row__sub" id="row-${esc(l.slug)}-sub">/${esc(l.slug)} · ${clicks(l.clicks)}</span>`;
+        if (selected) {
+          return `<label class="pm-row"><input class="pm-check" type="checkbox" data-pick="${esc(l.slug)}" aria-labelledby="row-${esc(l.slug)}-title" aria-describedby="row-${esc(l.slug)}-sub"${selected.has(l.slug) ? ' checked' : ''}><span class="pm-row__text"><span class="pm-row__title" id="row-${esc(l.slug)}-title">${esc(l.title)}</span>${sub}</span></label>`;
+        }
+        const trailing = l.problem
+          ? `<a class="pm-btn pm-btn--outline pm-btn--sm" href="#link">Fix</a>`
+          : `<button class="pm-btn pm-btn--soft pm-btn--sm" type="button" data-pm-copy="https://links.poiemaorlando.com/${esc(l.slug)}" data-pm-copied="Copied ✓" data-pm-copy-failed="Couldn't copy" aria-label="Copy ${esc(l.title)}">Copy</button>`;
+        return `<div class="pm-row"><span class="pm-row__text"><a class="pm-row__title pm-row__link" href="#link">${esc(l.title)}</a>${sub}</span>${trailing}</div>`;
+      }).join('')}</div>`;
+    }
+
+    const on = !!selected;
+    $('#links-select').setAttribute('aria-pressed', on);
+    $('#links-bar').hidden = !on;
+    $('#links-fab').hidden = on;
+    $('#links-select-all').hidden = !on || !shown.length;
+    if (on) {
+      const count = shown.filter((l) => selected.has(l.slug)).length;
+      $('#links-bar-text').textContent = selected.size ? `${selected.size} selected` : 'Choose the links';
+      $('#links-bar-go').disabled = !selected.size;
+      $('#links-all').checked = count === shown.length;
+      $('#links-all').indeterminate = count > 0 && count < shown.length;
+    }
+  };
+
+  $('#links-q').addEventListener('input', (e) => { query = e.target.value; renderLinks(); });
+
+  // --- create and edit share one panel, and Cancel means nothing happened
+  const form = $('#new-link-form');
+  const panel = $('#new-link');
+  let editing = null;
+  const openForm = (link) => {
+    editing = link;
+    $('#new-link-title').textContent = link ? 'Edit link' : 'Create link';
+    $('#new-link-save').textContent = link ? 'Save changes' : 'Create link';
+    form.elements.dest.value = link ? `https://example.com/${link.slug}` : '';
+    form.elements.title.value = link?.title ?? '';
+    form.elements.slug.value = link?.slug ?? '';
+    if (link) form.elements.folder.value = link.folder;
+  };
+  const clearError = () => {
+    form.elements.title.removeAttribute('aria-invalid');
+    form.elements.title.removeAttribute('aria-describedby');
+    $('#new-link-error').hidden = true;
+  };
+  form.elements.title.addEventListener('input', clearError);
+  panel.addEventListener('close', () => { form.reset(); clearError(); });
+  $('#new-link-save').addEventListener('click', () => {
+    const title = form.elements.title;
+    if (!title.value.trim()) {
+      title.setAttribute('aria-invalid', 'true');
+      // Only while it shows: aria-describedby still reads an element that is hidden.
+      title.setAttribute('aria-describedby', 'new-link-error');
+      $('#new-link-error').hidden = false;
+      title.focus();
+      return;
+    }
+    const slug = form.elements.slug.value.trim() || title.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    if (editing) {
+      Object.assign(editing, { title: title.value.trim(), slug, folder: form.elements.folder.value });
+      panel.close();
+      renderLinks();
+      renderLink();
+      Poiema.toast('Saved ✓');
+      return;
+    }
+    const created = { title: title.value.trim(), slug, clicks: 0, folder: form.elements.folder.value };
+    links.unshift(created);
+    panel.close();
+    if (location.hash !== '#links' && location.hash) location.hash = 'links';
+    renderLinks();
+    Poiema.toast('Link created ✓', { action: { label: 'Undo', onClick: () => { links.splice(links.indexOf(created), 1); renderLinks(); } } });
+  });
+
+  document.addEventListener('click', (e) => {
+    const chip = e.target.closest('[data-filter]');
+    if (chip) { filter = chip.dataset.filter; renderLinks(); }
+    const act = e.target.closest('[data-action]')?.dataset.action;
+    if (act === 'new') openForm(null);
+    if (act === 'edit') openForm(links[0]);
+    if (act === 'select') { selected = selected ? null : new Set(); renderLinks(); }
+    if (act === 'unselect') { selected = null; renderLinks(); $('#links-select').focus(); }
+    if (act === 'reset') { const q = $('#links-q'); q.value = ''; query = ''; filter = 'All'; renderLinks(); q.focus(); }
+    const period = e.target.closest('[aria-label="Period"] > button, [aria-label="Ministries"] > button');
+    if (period) [...period.parentElement.children].forEach((b) => b.setAttribute('aria-pressed', b === period));
+    const day = e.target.closest('.pm-datestrip > a');
+    if (day) [...day.parentElement.children].forEach((a) => (a === day ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    const step = e.target.closest('[data-step]');
+    if (step) { const o = $('#step-value'); o.textContent = Math.max(0, Number(o.textContent) + Number(step.dataset.step)); }
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('[data-pick]')) {
+      const slug = e.target.dataset.pick;
+      e.target.checked ? selected.add(slug) : selected.delete(slug);
+      renderLinks();
+      $(`[data-pick="${slug}"]`)?.focus();
+    }
+    if (e.target.id === 'links-all') {
+      links.filter((l) => inFilter(l, filter) && matches(l)).forEach((l) => (e.target.checked ? selected.add(l.slug) : selected.delete(l.slug)));
+      renderLinks();
+      $('#links-all').focus();
+    }
+    if (e.target.name === 'theme') document.documentElement.dataset.theme = e.target.value;
+  });
+  $('#links-bar-go').addEventListener('click', () => {
+    const n = selected.size; selected = null; renderLinks();
+    $('#links-select').focus();
+    Poiema.toast(`${n} moved ✓`, { action: { label: 'Undo', onClick: () => Poiema.toast('Moved back ✓') } });
+  });
+
+  // --- schedule
+  const SUNDAYS = [
+    { id: 'sun-01', date: 'Sunday, Nov 1', past: true, groups: [['2 to 5 years', [['Ana Souza', 'Lead'], ['Bruno Lima', 'Helper']]], ['6 to 10 years', [['Carla Mendes', 'Lead']]]] },
+    { id: 'sun-08', date: 'Sunday, Nov 8', groups: [['2 to 5 years', [['Diego Prado', 'Lead'], ['Elisa Rocha', 'Helper']]], ['6 to 10 years', [['Felipe Nunes', 'Lead'], ['Gabriela Dias', 'Helper · on vacation', 'away']]]] },
+    { id: 'sun-15', date: 'Sunday, Nov 15', open: 2, groups: [['2 to 5 years', [['Hugo Alves', 'Lead'], [null, 'Helper'], [null, 'Check-in']]], ['6 to 10 years', [['Isabela Reis', 'Lead']]]] },
+    { id: 'sun-22', date: 'Sunday, Nov 22', groups: [['2 to 5 years', [['João Pedro Martins de Albuquerque e Silva', 'Lead'], ['Laura Campos', 'Helper']]], ['6 to 10 years', [['Marcos Teixeira', 'Lead']]]] },
+    { id: 'sun-29', date: 'Sunday, Nov 29', open: 1, noLead: true, groups: [['2 to 5 years', [['Nina Barros', 'Lead']]], ['6 to 10 years', [[null, 'Lead']]]] },
+  ];
+  const sundayCard = (s) => {
+    const people = s.groups.flatMap(([, rows]) => rows).filter(([n]) => n).length;
+    const badge = s.past ? '<span class="pm-badge">Past</span>'
+      : s.open ? `<span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>${s.open} open ${s.open === 1 ? 'seat' : 'seats'}</span>`
+      : `<span class="pm-badge">${people} people</span>`;
+    const notice = s.noLead ? `<section class="pm-notice pm-notice--danger" style="margin-block:10px"><div><h3>6 to 10 years has no lead</h3></div><button class="pm-btn pm-btn--soft pm-btn--sm" type="button" data-pm-open="picker">Choose</button></section>` : '';
+    const rows = s.groups.map(([label, list]) => `<p class="pm-rows__section">${label}</p>` + list.map(([name, role, away]) => (name
+      ? `<div class="pm-row"><span class="pm-row__text"><button class="pm-row__title pm-row__link" type="button" data-person="${esc(name)}" data-where="Kids · ${s.date}">${esc(name)}</button><span class="pm-row__sub">${role}</span></span>${away ? '<span class="pm-badge pm-badge--danger">Vacation</span>' : ''}</div>`
+      : `<div class="pm-row pm-row--danger"><span class="pm-row__text"><span class="pm-row__title">Open seat</span><span class="pm-row__sub">${role}</span></span><button class="pm-btn pm-btn--outline pm-btn--sm" type="button" data-pm-open="picker" aria-label="Choose someone for ${role}, ${s.date}">Choose</button></div>`)).join('')).join('');
+    return `<div class="pm-rows${s.past ? ' pm-faded' : ''}" id="${s.id}" style="scroll-margin-top:16px"><div class="pm-rows__head"><h2>${s.date}</h2>${badge}</div>${notice}${rows}<button class="pm-row pm-row--add" type="button" data-pm-open="picker">Add person</button></div>`;
+  };
+  $('#sundays').innerHTML = SUNDAYS.filter((s) => !s.past).map(sundayCard).join('');
+  $('#past-sundays').innerHTML = SUNDAYS.filter((s) => s.past).map((s) => `<details class="pm-disclosure"><summary>Past · ${s.date}</summary>${sundayCard(s)}</details>`).join('');
+
+  const sheet = $('#person');
+  document.addEventListener('click', (e) => {
+    const who = e.target.closest('[data-person]');
+    if (who) {
+      $('#person-name').textContent = who.dataset.person;
+      $('#person-where').textContent = who.dataset.where;
+      $('#person-confirm-name').textContent = who.dataset.person;
+      $('#person-actions').hidden = false;
+      $('#person-confirm').hidden = true;
+      sheet.showModal();
+    }
+    if (e.target.closest('[data-sheet-pick]')) $('#picker').showModal();
+    if (e.target.closest('[data-pick-person]')) Poiema.toast('Seat filled ✓', { action: { label: 'Undo', onClick: () => Poiema.toast('Seat open again ✓') } });
+  });
+  $('#person-remove').addEventListener('click', () => { $('#person-actions').hidden = true; $('#person-confirm').hidden = false; $('#person-cancel').focus(); });
+  $('#person-cancel').addEventListener('click', () => { $('#person-actions').hidden = false; $('#person-confirm').hidden = true; $('#person-remove').focus(); });
+  $('#person-remove-go').addEventListener('click', () => {
+    sheet.close();
+    Poiema.toast('Removed ✓', { action: { label: 'Undo', onClick: () => Poiema.toast('Back on the schedule ✓') } });
+  });
+  $('#approve').addEventListener('click', (e) => {
+    const notice = e.target.closest('.pm-notice');
+    notice.classList.remove('pm-notice--draft');
+    notice.innerHTML = '<div><h2 tabindex="-1">Kids approved ✓</h2><p>Approved by you just now. The teams see it once every ministry has approved.</p></div>';
+    notice.querySelector('h2').focus();
+    $('#month-state').textContent = 'Draft · 7 of 9';
+  });
+
+  // --- one link
+  const renderLink = () => {
+    $('#link-title').textContent = links[0].title;
+    $('#link-sub').textContent = `links.poiemaorlando.com/${links[0].slug} · ${clicks(links[0].clicks)}`;
+  };
+  renderLink();
+  let seed = 7;
+  const next = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  let qr = '';
+  const finder = (x, y) => (x < 7 && y < 7) || (x > 13 && y < 7) || (x < 7 && y > 13);
+  const ring = (x, y, ox, oy) => { const dx = x - ox, dy = y - oy; const m = Math.max(Math.abs(dx - 3), Math.abs(dy - 3)); return m === 3 || m <= 1; };
+  for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) {
+    const on = finder(x, y) ? (x < 7 && y < 7 ? ring(x, y, 0, 0) : x > 13 && y < 7 ? ring(x, y, 14, 0) : ring(x, y, 0, 14)) : next() > .52;
+    if (on) qr += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  }
+  $$('.qr').forEach((svg) => { svg.innerHTML = `<g style="fill:var(--pm-gray-1000)">${qr}</g>`; });
+
+  // --- analytics
+  let v = 7;
+  const short = (i) => new Date(Date.UTC(2026, 9, 5 + i)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  const days = Array.from({ length: 30 }, (_, i) => { v = (v * 9301 + 49297) % 233280; return Math.round(14 + (v / 233280) * 90 + (i % 7 === 0 ? 62 : 0)); });
+  days[12] = 0; // a day with nothing still has a column to hover
+  const peak = Math.max(...days);
+  $('#bars').innerHTML = days.map((n, i) => `<span style="--v:${(n / peak).toFixed(3)}" data-value="${clicks(n)}" data-label="${short(i)}"></span>`).join('');
+  $('#bars-peak').textContent = `Most: ${clicks(peak)} · ${short(days.indexOf(peak))}`;
+  $('#bars-table').innerHTML = `<caption>Clicks per day</caption><tbody>${days.map((n, i) => `<tr><th scope="row">${short(i)}</th><td>${n}</td></tr>`).join('')}</tbody>`;
+
+  renderLinks();
+  show();
+});
+</script>
+</body>
+</html>

@@ -44,7 +44,7 @@ function init() {
 
 All UI and user-facing copy in this project follows the Poiema design system.
 Before creating or changing anything visual (markup, styles, motion) or any copy, follow
-\`${rel}/AGENTS.md\`. Full docs: \`${rel}/docs/\` (start with components.md and voice.md).
+\`${rel}/AGENTS.md\`. Full docs: \`${rel}/docs/\` (an app, portal or admin starts with app.md; otherwise components.md and voice.md).
 Skills: \`poiema-design\` (build UI), \`poiema-voice\` (write copy), \`poiema-review\` (audit).`;
 
   const out = [];

@@ -354,15 +354,19 @@ npx poiema-ui init   // teach your AI</pre>
         <h2 class="pm-h2">tell us who you are.</h2>
         <form class="pm-stack pm-stack--lg" onsubmit="event.preventDefault(); Poiema.toast('Saved ✓')">
           <div class="pm-grid pm-grid--2">
-            <label class="pm-field"><span class="pm-label">Name</span><input class="pm-input" placeholder="Your name" autocomplete="name"></label>
-            <label class="pm-field"><span class="pm-label">Team</span><select class="pm-select"><option>Design</option><option>Product</option><option>Ministry</option></select></label>
+            <div class="pm-field"><label class="pm-label" for="contact-name">Name</label><input class="pm-input" id="contact-name" placeholder="Your name" autocomplete="name"></div>
+            <div class="pm-field"><label class="pm-label" for="contact-team">Team</label><select class="pm-select" id="contact-team"><option>Design</option><option>Product</option><option>Ministry</option></select></div>
           </div>
-          <label class="pm-field">
-            <span class="pm-label">Email</span>
-            <input class="pm-input" type="email" value="ana@" aria-invalid="true" aria-describedby="email-error">
-            <span class="pm-error" id="email-error">Enter a valid email.</span>
-          </label>
-          <label class="pm-field"><span class="pm-label">Message</span><textarea class="pm-textarea" placeholder="One or two sentences are enough."></textarea><span class="pm-hint">We read every message.</span></label>
+          <div class="pm-field">
+            <label class="pm-label" for="contact-email">Email</label>
+            <input class="pm-input" id="contact-email" type="email" value="ana@" aria-invalid="true" aria-describedby="contact-email-error">
+            <span class="pm-error" id="contact-email-error">Enter a valid email.</span>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label" for="contact-message">Message</label>
+            <textarea class="pm-textarea" id="contact-message" placeholder="One or two sentences are enough." aria-describedby="contact-message-hint"></textarea>
+            <span class="pm-hint" id="contact-message-hint">We read every message.</span>
+          </div>
           <div class="pm-cluster" style="--pm-gap:24px">
             <label class="pm-choice"><input class="pm-check" type="checkbox" checked> Keep me posted</label>
             <label class="pm-choice"><input class="pm-radio" type="radio" name="f" checked> Monthly</label>
@@ -423,6 +427,53 @@ npx poiema-ui init   // teach your AI</pre>
     </div>
   </div>
 
+  <!-- APP REGISTER -->
+  <section id="app" class="pm-section pm-container" data-pm-reveal>
+    <header class="pm-section-head">
+      <span class="pm-ring">—</span>
+      <h2 class="pm-h1">same room. <span class="pm-muted">working volume.</span></h2>
+      <p>Tools people come back to use one class, <code>pm-app</code>, and a few components of their own.</p>
+    </header>
+    <div class="pm-stack pm-stack--lg">
+      <div class="pm-cluster">
+        <a class="pm-btn" href="app.html">Open the app demo</a>
+        <a class="pm-btn pm-btn--soft" href="../docs/app.md">Read the guide</a>
+      </div>
+      <!-- These sit inside their own .pm-app, at the sizes an app uses. -->
+      <div class="pm-app pm-grid" style="--pm-min:320px; align-items:start">
+        <div class="pm-stack pm-stack--sm">
+          <div class="pm-pillnav" role="group" aria-label="Filter">
+            <button type="button" aria-pressed="true">All <span class="pm-count">167</span></button>
+            <button type="button" aria-pressed="false">No seat <span class="pm-count">26</span></button>
+            <button type="button" aria-pressed="false" data-tone="danger"><span class="pm-flag"></span>On vacation <span class="pm-count">6</span></button>
+          </div>
+          <label class="pm-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="search" placeholder="Search by name" aria-label="Search people">
+          </label>
+          <div class="pm-rows">
+            <div class="pm-rows__head"><h3>Sunday, Nov 8</h3><span class="pm-badge pm-badge--danger">1 open seat</span></div>
+            <p class="pm-rows__section">2 to 5 years</p>
+            <a class="pm-row" href="#app"><span class="pm-row__text"><span class="pm-row__title">Ana Souza</span><span class="pm-row__sub">Lead</span></span></a>
+            <div class="pm-row pm-row--danger"><span class="pm-row__text"><span class="pm-row__title">Open seat</span><span class="pm-row__sub">Check-in</span></span><button class="pm-btn pm-btn--outline pm-btn--sm" type="button">Choose</button></div>
+            <button class="pm-row pm-row--add" type="button">Add person</button>
+          </div>
+        </div>
+        <div class="pm-stack pm-stack--sm">
+          <nav class="pm-datestrip" aria-label="Sundays">
+            <a class="pm-datetile pm-faded" href="#app"><small>Sun</small><b>01</b></a>
+            <a class="pm-datetile" href="#app" aria-current="true"><small>Sun</small><b>08</b></a>
+            <a class="pm-datetile" href="#app"><small>Sun</small><b>15</b><span class="pm-flag"></span><span class="pm-sr-only">has open seats</span></a>
+          </nav>
+          <section class="pm-notice pm-notice--draft"><div><h3>November draft</h3><p>The teams see it once every ministry has approved.</p></div><button class="pm-btn" type="button">Approve</button></section>
+          <div class="pm-cluster"><span class="pm-badge">3 people</span><span class="pm-badge pm-badge--solid">Band 1</span><span class="pm-badge pm-badge--outline">Published</span><span class="pm-badge pm-badge--dashed">Draft</span></div>
+          <div class="pm-segmented" role="radiogroup" aria-label="Redirect"><label><input type="radio" name="demo-redirect" checked><span>Temporary</span></label><label><input type="radio" name="demo-redirect"><span>Permanent</span></label></div>
+          <div class="pm-empty"><h3 class="pm-empty__title">nothing here yet.</h3><p>When you create your first link, it shows up here.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 07 TICKET -->
   <section id="b7" class="pm-section pm-container" data-pm-reveal>
     <header class="pm-section-head">
@@ -445,7 +496,7 @@ npx poiema-ui init   // teach your AI</pre>
     </div>
     <div class="pm-cluster pm-cluster--between" style="margin-top:22px">
       <p class="pm-body"><strong>Note:</strong> encourage people to save their seat early.</p>
-      <button class="pm-btn" data-pm-copy-target="#b7 .pm-ticket">Copy details</button>
+      <button class="pm-btn" data-pm-copy data-pm-copy-target="#b7 .pm-ticket">Copy details</button>
     </div>
   </section>
 

@@ -45,12 +45,27 @@ export declare function copy(node: HTMLElement, options?: CopyOptions): Behavior
 export declare function countdown(node: Element, options?: { to?: string | null }): BehaviorHandle;
 export declare function opener(node: Element, options?: { target?: string | null }): BehaviorHandle;
 export declare function dialog(node: HTMLDialogElement): BehaviorHandle;
+/** Clears the search field beside the button (or `target`) and fires an input event. */
+export declare function clear(node: Element, options?: { target?: string | null }): BehaviorHandle;
+/** Places the popover named by the button's `popovertarget` under the button. */
+export declare function menu(node: Element, options?: { gap?: number }): BehaviorHandle;
+/** Closes a .pm-menu popover or a .pm-fabmenu dialog when one of its .pm-menu__item is chosen. */
+export declare function popmenu(node: HTMLElement): BehaviorHandle;
+/** Reads out a .pm-bars bar on hover, touch or arrow keys. Changes nothing until then. */
+export declare function bars(node: HTMLElement): BehaviorHandle;
 
 /** Whole days from `now` until `date`, never negative. */
 export declare function daysUntil(date: string | number | Date, now?: Date): number;
 
+export interface ToastOptions {
+  /** Milliseconds on screen. Default 2200, or 6000 with an action. */
+  duration?: number;
+  /** A button inside the toast, usually "Undo". */
+  action?: { label: string; onClick?: () => void };
+}
+
 /** Show a glass pill message at the bottom of the screen. */
-export declare function toast(message: string, options?: { duration?: number }): void;
+export declare function toast(message: string, options?: ToastOptions): void;
 
 /** data-pm-* attribute → behavior map used by init(). */
 export declare const behaviors: Record<string, (node: any, options?: any) => BehaviorHandle>;

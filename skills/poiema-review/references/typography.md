@@ -26,8 +26,22 @@ Pick one:
 | `.pm-eyebrow` | 12px | 700 | +0.14em | 1.4 | UPPERCASE labels above titles |
 | `.pm-tag` | 11px | 700 | +0.10em | 1.2 | Outlined pill label |
 
+### In an app
+`.pm-app` re-points the same classes, so a page title stays `.pm-h1`. Tracking relaxes too: -0.05em is right at 88px and crushes a word at 26px.
+
+| Class or element | Size | Weight | Use |
+|---|---|---|---|
+| `.pm-h1` | 26→34px | 800 | The page title, once per screen |
+| `.pm-h2` | 20→24px | 800 | A section of a screen (`Campaigns`: data, keeps its case) or a dialog's question (`delete this link?`: display) |
+| `.pm-h3` | 18px | 700 | A rail heading |
+| `.pm-h4`, `.pm-rows__head` | 16px | 800 | A card's title |
+| `.pm-row__title` | 16px, 1.25 | 500 | One thing in a list. Wraps, never cut |
+| `.pm-row__sub`, `.pm-pagehead__sub` | 14px | 400–500 | The line under it. 14px is the floor for reading |
+| body, fields on touch | 16px | 400–500 | Fields stay at 16px on touch, or iOS zooms; 14px only with a mouse |
+| `.pm-eyebrow`, `.pm-badge`, tab labels | 11–12px | 700 | Labels, not reading |
+
 ## Rules
-1. **Display text is lowercase and ends with a period.** Write it lowercase in the source, or use `.pm-lower` for CMS content.
+1. **Display text is lowercase and ends with a period.** Write it lowercase in the source, or use `.pm-lower` for CMS content. In an app what counts is the role, not the class: the page title, an empty state's title and a dialog's question are display; everything else is data and keeps its case.
 2. **The echo:** wrap one phrase of a display line in `.pm-muted`, usually the middle beat of a triad or the last words of a quote: `a mensagem sempre foi maior do que <span class="pm-muted">o mensageiro.</span>`
 3. **Negative tracking grows with size.** Body is 0, titles -0.035em, headlines -0.05em, numerals -0.07em. Never track body text.
 4. **Uppercase only for small labels**, always tracked +0.10 to +0.14em, always bold.

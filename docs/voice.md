@@ -68,7 +68,7 @@ The closing line is the only place an exclamation mark may appear.
 | Empty state title | `nada por aqui ainda.` | `nothing here yet.` |
 | Empty state body | `Quando você criar o primeiro projeto, ele aparece aqui.` | `When you create your first project, it shows up here.` |
 | Primary action | `Criar projeto` | `Create project` |
-| Destructive confirm | `Excluir projeto?` + `Isso não pode ser desfeito.` | `Delete project?` + `This can't be undone.` |
+| Destructive confirm | `excluir projeto?` + `Isso não pode ser desfeito.` | `delete project?` + `This can't be undone.` |
 | Success toast | `Projeto criado ✓` | `Project created ✓` |
 | Error (form) | `Informe um e-mail válido.` | `Enter a valid email.` |
 | Error (system) | `Algo não funcionou. Tente de novo em instantes.` | `Something didn't work. Try again in a moment.` |
@@ -77,13 +77,29 @@ The closing line is the only place an exclamation mark may appear.
 | Key-message callout label (on request) | `Mensagem que precisa ficar clara` | `The one thing to remember` |
 | Onboarding step | `00 · comece por aqui.` | `00 · start here.` |
 
+### In an app
+The voice stays; it just talks less. No lead paragraphs, triads or couplets on a working screen.
+
+| Situation | pt-BR | en |
+|---|---|---|
+| Page title | `pessoas.` | `people.` |
+| Line under it: facts, not a pitch | `167 pessoas · 6 de férias` | `167 people · 6 on vacation` |
+| A title that is a name: data, keeps its case, no period | `Ana Souza` | `Ana Souza` |
+| Card header | `Domingo, 8 nov` | `Sunday, Nov 8` |
+| Count in a badge | `3 pessoas` | `3 people` |
+| A problem names the thing | `2 vagas` | `2 open seats` |
+| The fix on the row | `Escolher` | `Choose` |
+| Reversible action: do it, then offer | `Removido ✓` + `Desfazer` | `Removed ✓` + `Undo` |
+| Irreversible: say what changes | `excluir este link?` + `Os QR codes impressos param de funcionar.` | `delete this link?` + `Printed QR codes stop working.` |
+| No results | `Ninguém com esse nome.` | `Nobody with that name.` |
+
 ## Punctuation & casing rules
-- Display headlines: lowercase, period at the end (or `?`).
+- Display headlines: lowercase, period at the end (or `?`). In an app that means the page title, empty-state titles and dialog questions; everything else on the screen is data and keeps its case.
 - Eyebrows, tags and alert titles: UPPERCASE in CSS (`text-transform`), so write them in sentence case in the source.
 - Buttons: Sentence case, no period.
 - Body: sentence case, periods, `—` for asides, `…` for ellipsis.
 - One `<strong>` per paragraph at most. It marks the phrase that must not be missed.
-- No emoji. The only symbols are `·`, `✓`, `○`, `↗` and `—`.
+- No emoji. The only symbols in copy are `·`, `✓`, `○`, `↗` and `—`. Chrome draws its own: `›` on a row, `+` on an add row, and icons for close and back.
 
 ## Self-check before shipping copy
 1. Does every display headline end with `.` or `?` and stay lowercase?

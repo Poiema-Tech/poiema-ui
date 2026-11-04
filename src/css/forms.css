@@ -14,22 +14,24 @@
     appearance: none;
     display: block;
     width: 100%;
-    min-height: 52px;
+    min-height: var(--pm-field-h);
     margin: 0;
-    padding: 0 22px;
+    padding: 0 var(--pm-field-pad);
     border: 0;
-    border-radius: var(--pm-radius-pill);
+    border-radius: var(--pm-field-radius);
     background-color: var(--pm-surface);
     color: var(--pm-ink);
-    font: var(--pm-weight-medium) var(--pm-text-md)/1.4 var(--pm-font);
+    font: var(--pm-weight-medium) var(--pm-field-text)/1.4 var(--pm-font);
     box-shadow: inset 0 0 0 1.5px var(--pm-line);
     transition: box-shadow var(--pm-dur-fast);
   }
   .pm-input::placeholder,
   .pm-textarea::placeholder { color: var(--pm-muted); opacity: 1; }
-  .pm-input:hover,
-  .pm-select:hover,
-  .pm-textarea:hover { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pm-ink) 40%, transparent); }
+  @media (hover: hover) {
+    .pm-input:hover,
+    .pm-select:hover,
+    .pm-textarea:hover { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pm-ink) 40%, transparent); }
+  }
   .pm-input:focus-visible,
   .pm-select:focus-visible,
   .pm-textarea:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--pm-ink); }
@@ -42,17 +44,17 @@
 
   .pm-textarea {
     min-height: 128px;
-    padding: 16px 22px;
+    padding: 16px var(--pm-field-pad);
     border-radius: var(--pm-radius-md);
     line-height: var(--pm-leading-snug);
     resize: vertical;
   }
 
   .pm-select {
-    padding-right: 52px;
+    padding-right: calc(var(--pm-field-pad) + 30px);
     background-image: var(--pm-icon-chevron);
     background-repeat: no-repeat;
-    background-position: right 20px center;
+    background-position: right calc(var(--pm-field-pad) - 2px) center;
     background-size: 18px;
     cursor: pointer;
   }
@@ -71,6 +73,8 @@
     color: var(--pm-ink);
     cursor: pointer;
   }
+  /* The whole row is the target, so on touch the row is what gets the 44px. */
+  @media (pointer: coarse) { .pm-choice { min-height: 44px; } }
 
   .pm-check,
   .pm-radio,

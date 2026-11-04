@@ -6,6 +6,7 @@
 
 ![The showcase hero: the stacked "poiema / w◆rk" lockup with a clay gem, chips and lead on the gray canvas](screenshots/hero-light.png)
 
+- **Two registers.** The gallery for pages people read once, and `.pm-app` for tools people come back to: sidebar and tab bar, one card with a row per thing, sheets and panels, no motion on content. Same room, working volume. See [docs/app.md](docs/app.md).
 - **Framework-agnostic.** It's plain CSS (`pm-*` classes + `--pm-*` tokens), so it works with Next.js, SvelteKit, Vue, Astro, Rails, Django or a static page.
 - **Small JS, optional.** Behaviors for scroll reveal, tilt, material swap, copy feedback, dialogs and toasts. They are SSR-safe and typed, with zero dependencies.
 - **Tailwind v4 ready.** One import maps the tokens to `bg-canvas text-ink-2 rounded-card text-h1 animate-float`…
@@ -85,6 +86,7 @@ To cut a release, run the **Release** workflow (Actions → Release → Run work
 | | |
 |---|---|
 | **Conversation style** | lowercase headlines ending in a period · triads (`from christ. in us. to the world.`) · "not X — Y" reframes · a "message that must be clear" callout, on request · freedom vs. boundaries (✓ / ○) · calm alerts · verb-first buttons, "Copied ✓" → [docs/voice.md](docs/voice.md) |
+| **Apps** | a second register learned from Poiema's rota app: navigation that stays put, one row per thing, fixes where the problem is, overlays by purpose → [docs/app.md](docs/app.md) |
 | **Tone & mood** | quiet gray gallery, sincere and communal, editorial poster type, tactile objects, reverent but contemporary → [docs/principles.md](docs/principles.md) |
 | **Colors** | grayscale chrome (`#e2e2e2` canvas, `#f7f7f7` paper, `#2b2b2b` ink) + five sampled materials: clay, plaster, grass, iron, diamond → [docs/color.md](docs/color.md) |
 | **Animations** | rise-and-settle reveal (900ms, `cubic-bezier(.2,.8,.2,1)`), 7s float, pointer tilt, material cross-fade, 40s marquee, -2px lift → [docs/motion.md](docs/motion.md) |
@@ -92,7 +94,17 @@ To cut a release, run the **Release** workflow (Actions → Release → Run work
 
 ## Showcase
 
-Every image below is a screenshot of [`demo/index.html`](demo/index.html), a kitchen-sink page built only from this package. Open it locally with `npm run demo`, then visit http://localhost:4173/demo/. The live page adds the motion: scroll reveals, floating gems, tilt and the material swap.
+Every image below is a screenshot of [`demo/index.html`](demo/index.html) or [`demo/app.html`](demo/app.html), built only from this package. Open them locally with `npm run demo`, then visit http://localhost:4173/demo/ or http://localhost:4173/demo/app.html. The live page adds the motion: scroll reveals, floating gems, tilt and the material swap.
+
+**Apps.** One class, `pm-app`, turns the volume down, and the app components do the rest. [`demo/app.html`](demo/app.html) is a working app: filters that count, rows you can act on, panels, sheets and undo. The guide is [docs/app.md](docs/app.md).
+
+![A desktop app screen: sidebar, "your links." title, filter chips with counts and two columns of rows](screenshots/app-desktop.png)
+
+<p>
+  <img src="screenshots/app-phone-list.png" alt="The same list on a phone, with a floating tab bar and an action circle" width="32%">
+  <img src="screenshots/app-phone-month.png" alt="A month on a phone: date strip, a draft notice and a Sunday card" width="32%">
+  <img src="screenshots/app-phone-panel.png" alt="A form in a full-screen panel on a phone" width="32%">
+</p>
 
 **Dark theme.** One attribute, `data-theme="dark"`, flips every token. Solid buttons and callouts invert on their own.
 

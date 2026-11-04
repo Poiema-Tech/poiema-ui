@@ -20,6 +20,7 @@ Every token is a CSS custom property. Use semantic colors (`--pm-ink`, `--pm-can
 | `--pm-muted` | `#7d7d7d` | `#8d8d8d` | The 'echo' gray inside display text (em nós.). Large text only. |
 | `--pm-line` | `rgba(43, 43, 43, .14)` | `rgba(255, 255, 255, .12)` | Hairlines, outlined cards, input borders. |
 | `--pm-line-strong` | `#2b2b2b` | `#555555` | Outlined alerts, tags, checkbox borders. |
+| `--pm-divider` | `rgba(43, 43, 43, .08)` | `rgba(255, 255, 255, .07)` | Hairline between rows inside a card. Lighter than line, so a long list stays quiet. |
 | `--pm-perforation` | `#bdbdbd` | `#4a4a4a` | Dashed ticket perforation. |
 | `--pm-on-ink` | `#f7f7f7` | `#2b2b2b` | Text on an ink fill (solid buttons, callouts). |
 | `--pm-on-ink-2` | `#b9b9b9` | `#555555` | Secondary text on an ink fill. |
@@ -32,6 +33,7 @@ Every token is a CSS custom property. Use semantic colors (`--pm-ink`, `--pm-can
 | `--pm-scrim` | `rgba(20, 20, 20, .38)` | `rgba(0, 0, 0, .6)` | Dialog backdrop. |
 | `--pm-pillar` | `.92` | `.07` | Strength (alpha) of the white light-pillars on the hero sides. |
 | `--pm-danger` | `#903b14` | `#d47b4d` | Errors and destructive actions. Clay — warm, never alarm-red. |
+| `--pm-danger-soft` | `#f4e5dc` | `#3a2418` | Pale clay wash behind danger text: problem badges, destructive buttons in apps, problem notices. |
 | `--pm-success` | `#3f5a08` | `#8aa83a` | Confirmations. Grass. |
 | `--pm-icon-check` | *(svg)* | *(svg)* | Checkbox tick (on-ink colored). |
 | `--pm-icon-chevron` | *(svg)* | *(svg)* | Select chevron (ink colored). |
@@ -103,6 +105,7 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-text-h1` | `clamp(40px, 7vw, 88px)` |  |
 | `--pm-text-display` | `clamp(56px, 12vw, 160px)` |  |
 | `--pm-text-numeral` | `clamp(76px, 13vw, 168px)` |  |
+| `--pm-text-stat` | `clamp(48px, 6vw, 72px)` | The value of a .pm-stat. |
 | `--pm-text-hero` | `clamp(92px, 22vw, 290px)` | Only for the stacked hero lockup. |
 
 ## Weight
@@ -128,6 +131,7 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-tracking-heading` | `-.05em` |  |
 | `--pm-tracking-display` | `-.055em` |  |
 | `--pm-tracking-numeral` | `-.07em` |  |
+| `--pm-tracking-stat` | `-.06em` |  |
 
 ## Leading
 
@@ -181,7 +185,24 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-section` | `clamp(64px, 9vw, 120px)` | Vertical rhythm between sections. |
 | `--pm-card-pad` | `clamp(28px, 5.5vw, 72px)` |  |
 | `--pm-card-pad-sm` | `clamp(24px, 4vw, 48px)` |  |
-| `--pm-sticky-top` | `58px` | Height of .pm-topbar; offset for sticky elements below it. |
+| `--pm-sticky-top` | `58px` | Height of .pm-topbar; offset for sticky elements below it. Taller on touch: see Touch. |
+| `--pm-btn-h` | `48px` | Height of .pm-btn. The app register lowers every control size below. |
+| `--pm-btn-h-sm` | `36px` |  |
+| `--pm-btn-h-lg` | `56px` |  |
+| `--pm-btn-pad` | `14px 26px` |  |
+| `--pm-btn-pad-sm` | `9px 16px` |  |
+| `--pm-btn-pad-lg` | `18px 32px` |  |
+| `--pm-btn-text` | `15px` |  |
+| `--pm-btn-text-lg` | `17px` |  |
+| `--pm-field-h` | `52px` | Height of inputs and selects. |
+| `--pm-field-pad` | `22px` |  |
+| `--pm-field-radius` | `999px` | Pill on sites. In apps fields are soft rectangles, so a field never reads as a button. |
+| `--pm-field-text` | `16px` | Never under 16px on touch: iOS zooms the page into smaller fields. |
+| `--pm-chip-h` | `0px` | Minimum height of a .pm-pillnav pill. |
+| `--pm-alert-pad` | `20px 24px` |  |
+| `--pm-dialog-w` | `560px` |  |
+| `--pm-tabbar-h` | `58px` | Height of the phone tab bar in an app. |
+| `--pm-sidebar-w` | `248px` | Width of the desktop sidebar in an app. |
 
 ## Shadow
 
@@ -190,6 +211,8 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-shadow-xs` | `0 1px 2px rgba(0, 0, 0, .05)` |  |
 | `--pm-shadow-lift` | `0 18px 40px -16px rgba(0, 0, 0, .35)` |  |
 | `--pm-shadow-lift-hover` | `0 24px 50px -16px rgba(0, 0, 0, .45)` |  |
+| `--pm-shadow-card` | `0 1px 2px rgba(0, 0, 0, .04), 0 6px 18px rgba(0, 0, 0, .05)` | Soft lift for paper in an app: cards, rows, search, soft buttons. |
+| `--pm-shadow-pop` | `0 18px 40px rgba(0, 0, 0, .2)` | Things above the page in an app: sheets, panels, menus, the tab bar. |
 | `--pm-shadow-float` | `0 40px 90px -40px rgba(0, 0, 0, .5)` | Big soft shadow under frames and tickets. |
 | `--pm-shadow-object` | `0 30px 34px rgba(0, 0, 0, .22)` | Use inside filter: drop-shadow() for cut-out objects. |
 
@@ -214,11 +237,78 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-cycle-interval` | `1800ms` | Read by the JS cycle behavior. |
 | `--pm-blur` | `14px` |  |
 
+## App register
+
+The app register: same room, working volume. `.pm-app` or `.pm-shell` applies `tokens` to its subtree, and a fine pointer adds `fine`. Every key names an existing token (the build fails otherwise), so components change with the register and need no second version.
+
+| Variable | App | Mouse | Note |
+|---|---|---|---|
+| `--pm-card` | `var(--pm-surface)` |  | Flat paper: a gradient drifts into the canvas along a long list. |
+| `--pm-text-base` | `16px` |  |  |
+| `--pm-text-lead` | `16px` |  |  |
+| `--pm-text-h4` | `16px` |  |  |
+| `--pm-text-h3` | `18px` |  |  |
+| `--pm-text-h2` | `clamp(20px, 1.8vw, 24px)` |  |  |
+| `--pm-text-h1` | `clamp(26px, 2.6vw, 34px)` |  | The page title. A screen starts working under it, not a scroll later. |
+| `--pm-text-display` | `clamp(34px, 4vw, 48px)` |  |  |
+| `--pm-text-numeral` | `clamp(40px, 4.5vw, 56px)` |  |  |
+| `--pm-text-stat` | `clamp(26px, 2.6vw, 34px)` |  |  |
+| `--pm-tracking-title` | `-.02em` |  |  |
+| `--pm-tracking-heading` | `-.03em` |  |  |
+| `--pm-tracking-display` | `-.04em` |  |  |
+| `--pm-tracking-numeral` | `-.045em` |  |  |
+| `--pm-tracking-stat` | `-.035em` |  |  |
+| `--pm-leading-numeral` | `.95` |  |  |
+| `--pm-leading-display` | `1.05` |  |  |
+| `--pm-leading-heading` | `1.1` |  |  |
+| `--pm-leading-title` | `1.2` |  |  |
+| `--pm-leading-statement` | `1.25` |  |  |
+| `--pm-leading-body` | `1.5` |  |  |
+| `--pm-radius-xl` | `24px` |  | Cards, sheets, panels. 40px would clip rows that run close to the edge. |
+| `--pm-radius-lg` | `20px` |  |  |
+| `--pm-radius-md` | `16px` |  |  |
+| `--pm-radius-sm` | `12px` |  |  |
+| `--pm-gutter` | `clamp(14px, 3vw, 24px)` |  |  |
+| `--pm-section` | `24px` |  |  |
+| `--pm-card-pad` | `clamp(16px, 2vw, 24px)` |  |  |
+| `--pm-card-pad-sm` | `16px` |  |  |
+| `--pm-sticky-top` | `58px` |  | The site's default again, so `touch` never reaches an app. |
+| `--pm-btn-h` | `44px` | `40px` | Touch first: 44px targets. |
+| `--pm-btn-h-sm` | `44px` | `32px` |  |
+| `--pm-btn-h-lg` | `48px` | `44px` |  |
+| `--pm-btn-pad` | `0 18px` | `0 16px` |  |
+| `--pm-btn-pad-sm` | `0 14px` | `0 12px` |  |
+| `--pm-btn-pad-lg` | `0 22px` |  |  |
+| `--pm-btn-text-lg` | `16px` |  |  |
+| `--pm-field-h` | `44px` | `40px` |  |
+| `--pm-field-pad` | `14px` |  |  |
+| `--pm-field-radius` | `var(--pm-radius-sm)` |  |  |
+| `--pm-chip-h` | `44px` | `36px` |  |
+| `--pm-alert-pad` | `12px 14px` |  |  |
+| `--pm-dialog-w` | `448px` |  |  |
+| `--pm-lift` | `0px` |  | Nothing lifts on hover: a tool is touched all day. |
+| `--pm-lift-lg` | `0px` |  |  |
+| `--pm-dur-base` | `200ms` |  | Overlays open quickly. |
+| `--pm-btn-text` | | `14px` |  |
+| `--pm-field-text` | | `14px` |  |
+
+## Touch
+
+Sites on a touch screen. A coarse pointer re-points these tokens at `:root`, so small targets reach 44px and the offsets they push follow. With a mouse nothing changes. Every key names an existing token and is also set in `app.tokens` (the build fails otherwise), so an app keeps its own sizes.
+
+| Variable | Touch | Note |
+|---|---|---|
+| `--pm-btn-h-sm` | `44px` | `.pm-btn--sm` and its round icon button. |
+| `--pm-chip-h` | `44px` | A `.pm-pillnav` pill. |
+| `--pm-sticky-top` | `68px` | A `.pm-topbar` holding 44px targets: 44 plus 12px of padding above and below. |
+
 ## Breakpoints
 
 Documentation only — CSS custom properties cannot be used in media queries.
 
-| Name | Value |
-|---|---|
-| md | `max-width: 900px` |
-| sm | `max-width: 560px` |
+| Name | Value | Note |
+|---|---|---|
+| md | `900px` |  |
+| sm | `560px` |  |
+| app-rail | `1280px` | App: a side rail joins the main column. |
+| app-columns | `1100px` | App: long lists flow into two columns (three from 1600px). |

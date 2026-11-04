@@ -12,6 +12,16 @@ You are building UI with the **Poiema design system** (`poiema-ui`). It is **pro
 ## The essence
 A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Soft 40px cards and pills. **No hue in the interface**: color lives only in tactile objects (clay, plaster, grass, iron, diamond). The voice is **sincere and communal** ("we", "our family"), and it gets to the point. Motion **rises and settles**; objects float.
 
+## Decide first: site or app?
+Everything else depends on this, and the wrong answer can't be fixed with polish.
+
+- **A site** is read once: landing page, event page, institutional page, guide. Use the gallery register, which is the default and what most of this file describes.
+- **An app** is used again and again: admin, portal, dashboard, internal tool, anything behind a login. Put `class="pm-app"` on `<html>` and **read `docs/app.md` before writing a screen.** Same room, working volume.
+
+One product can be both: a public page in the gallery and `/admin` as an app.
+
+**An app screen is never** a hero, a section head with a lead paragraph, or a stack of cards. It is `.pm-shell` (sidebar + tab bar) → `.pm-pagehead` (title + one line of state) → search and filter chips with counts → one `.pm-rows` card with a row per thing. On a list screen on a 390×844 phone, the first row starts within about 200px of the top. Creating or editing opens a `.pm-panel` over the list. A problem is fixed on its own row. Navigation never scrolls away.
+
 ## Setup (once per app)
 - CSS: `import 'poiema-ui/css'` (or a self-hosted copy of `dist/poiema.min.css`). Tailwind v4: see `docs/frameworks.md`.
 - Font: Inter Tight 400–900 (`poiema-ui/fonts.css`, `next/font` with `variable: '--pm-font-sans'`, or `@fontsource-variable/inter-tight`).
@@ -21,12 +31,12 @@ A **quiet gray gallery**. Huge, tight, **lowercase** type does the shouting. Sof
 1. **Use the `pm-*` classes and `--pm-*` tokens.** Don't invent colors, radii, shadows or fonts. If something is missing, compose it from tokens.
 2. **Grayscale chrome only.** Backgrounds: `--pm-canvas` (page), `.pm-card`, `--pm-surface` (paper). Text: `--pm-ink`, `--pm-ink-2`, `--pm-label`, `--pm-muted`. Material colors (`--pm-clay`, `--pm-grass`…) are for objects, illustrations and data only, never buttons, links or backgrounds. Errors use `--pm-danger`, confirmations `--pm-success`.
 3. **Never use pure white pages.** The page is `#e2e2e2`; cards are paper.
-4. **Display headlines are lowercase and end with a period** (questions end with `?`): `<h2 class="pm-h1">your projects.</h2>`. Eyebrows, tags and alert titles are small, bold, UPPERCASE via CSS.
+4. **Display headlines are lowercase and end with a period** (questions end with `?`): `<h2 class="pm-h1">your projects.</h2>`. Eyebrows, tags and alert titles are small, bold, UPPERCASE via CSS. In an app display means three roles: the page title, an empty state's title and a dialog's question. The rest is data and keeps its case, and a title that is a name stays a name (`Ana Souza`).
 5. **One echo per display line:** wrap one phrase in `.pm-muted` (the gray middle beat): `plan. <span class="pm-muted">focus.</span> finish.`
-6. **Soft geometry:** cards 40px (`.pm-card`), callouts 28px, alerts and tiles 24px, buttons/chips/inputs pill. Numbers in rings (`.pm-ring`), bullets are diamonds (`.pm-list`).
+6. **Soft geometry:** cards 40px (`.pm-card`), callouts 28px, alerts and tiles 24px, buttons/chips/inputs pill. Numbers in rings (`.pm-ring`), bullets are diamonds (`.pm-list`). `.pm-app` steps these down to 24/20/16/12 with fields at 12px, on its own: never hard-code a radius. In an app, rings are for steps only and counts go in badges.
 7. **Key-message callouts only on request.** The reference page briefed leaders, so every section closed with a `.pm-callout` labeled "The message that must be clear" / "Mensagem que precisa ficar clara". Poiema products mostly speak to consumers: don't add that callout unless the user asks for it.
-8. **Rhythm by inversion:** alternate `.pm-card` and `.pm-card[data-theme="dark"]`; use ink boxes (`.pm-inverse`) and the marquee band for punctuation, not color.
-9. **Motion:** `data-pm-reveal` on sections/cards, `.pm-float` + `data-pm-tilt` on objects only, curve `--pm-ease`. No bounce, no spin, no parallax. Reduced motion is handled; keep it that way.
+8. **Rhythm by inversion:** alternate `.pm-card` and `.pm-card[data-theme="dark"]`; use ink boxes (`.pm-inverse`) and the marquee band for punctuation, not color. Sites only: in an app the ink tab bar is the inversion, and black means chosen or primary.
+9. **Motion:** `data-pm-reveal` on sections/cards, `.pm-float` + `data-pm-tilt` on objects only, curve `--pm-ease`. No bounce, no spin, no parallax. Reduced motion is handled; keep it that way. In an app, nothing moves on the way in: data is there the moment the screen is.
 10. **Copy:** verb-first buttons (`Create project`), past-participle feedback (`Saved ✓`), calm alerts (`Attention` / `Important` + why), "we/our", no hype words, no emoji, at most one `!` (the closing line). Full guide: `docs/voice.md`.
 11. **Accessibility:** keep semantic HTML, labels on fields, `aria-invalid` for errors, `aria-current`/`aria-selected` for active pills, alt text on objects (`alt=""` if decorative), visible focus (already styled).
 
@@ -45,7 +55,7 @@ buttons     .pm-btn | --soft | --outline | --ghost | --danger | --sm | --lg | --
 chips       .pm-chip | --solid | --outline     .pm-tag (outlined uppercase)
 nav         .pm-pillnav(--sticky) > a|button (+ .pm-ring--sm), active = aria-current / aria-selected / aria-pressed
 data        .pm-stat(__value __label) .pm-numeral .pm-ticket(__main __dates __month __side __row) .pm-table .pm-progress
-forms       .pm-field > .pm-label + .pm-input|.pm-select|.pm-textarea + .pm-hint|.pm-error ; .pm-choice > .pm-check|.pm-radio|.pm-switch
+forms       div.pm-field > label.pm-label[for] + (.pm-input|.pm-select|.pm-textarea)[id][aria-describedby] + (.pm-hint|.pm-error)[id] ; label.pm-choice > .pm-check|.pm-radio|.pm-switch
 overlay     dialog.pm-dialog (+ data-pm-open="id", data-pm-close) ; toast('Saved ✓')
 layout      .pm-container .pm-section .pm-band .pm-stack(--sm|--lg|--xl) .pm-cluster .pm-grid(--2|--3) .pm-split .pm-ruled
 type        .pm-eyebrow .pm-display .pm-h1 .pm-h2 .pm-h3 .pm-h4 .pm-lead .pm-body .pm-small .pm-numeral .pm-prose
@@ -54,18 +64,47 @@ themes      data-theme="light|dark|auto" on any element
 motion [JS] data-pm-reveal(="fade"|"scale") data-pm-stagger data-pm-tilt data-pm-cycle data-pm-copy data-pm-countdown
 ```
 
-Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label --pm-muted --pm-line --pm-danger --pm-success --pm-font --pm-text-h1 --pm-radius-xl --pm-gutter --pm-section --pm-ease --pm-shadow-float`. Full list: `docs/tokens.md`.
+Apps (`html.pm-app`):
+```
+screen      .pm-shell > .pm-sidebar + main.pm-shell__main > .pm-pagehead + content ; then .pm-tabbar + .pm-fab
+sidebar     .pm-sidebar > .pm-sidebar__brand + .pm-sidebar__nav > .pm-sidebar__group > .pm-sidebar__title + a[aria-current] ; .pm-sidebar__user
+tabs        nav.pm-tabbar > a[aria-current]  (2-4, Menu last)
+head        .pm-pagehead(--pin) > .pm-pagehead__line > .pm-pagehead__title(h1.pm-h1 + .pm-pagehead__sub) + .pm-pagehead__actions
+filter      .pm-toolbar > label.pm-search(input + .pm-search__clear[data-pm-clear]) ; .pm-pillnav--bleed > button[aria-pressed] + .pm-count, [data-tone=danger], .pm-flag
+list        .pm-rows(--columns) > .pm-rows__head | .pm-rows__label | .pm-rows__section | .pm-rows__empty | .pm-row
+row         .pm-row(--danger|--off|--add) > .pm-row__text(.pm-row__title + .pm-row__sub(--danger)) + one trailing item ; .pm-row__link stretches over the row
+facts       .pm-badge(--solid|--danger|--outline|--dashed) .pm-count .pm-flag .pm-datetile(--sm) .pm-datestrip .pm-stats .pm-bars[tabindex=0](> span[style=--v][data-value][data-label]) + .pm-bars__axis ; progress.pm-progress as a row's last child
+states      .pm-empty(__icon __title) .pm-notice(--draft|--danger) .pm-disclosure .pm-faded .pm-skeleton
+overlays    dialog.pm-sheet (__title __sub __actions) quick choice ; dialog.pm-panel (__head __title __sub __body __foot) forms ; dialog.pm-dialog (__foot) confirm
+actions     .pm-fab ; dialog.pm-fabmenu > .pm-menu + .pm-fab[data-pm-close] ; [popover].pm-menu[data-pm-menu trigger] > .pm-menu__item(--primary|--danger) > .pm-menu__icon + .pm-menu__label + .pm-menu__hint
+inputs      .pm-segmented > label > input + span ; .pm-stepper > button + output + button
+layout      .pm-workspace > main + .pm-workspace__rail > .pm-todo ; .pm-selectbar ; .pm-gate ; .pm-phone-only .pm-desk-only (900px) .pm-narrow-only .pm-wide-only (1280px)
+feedback    toast('Removed ✓', { action: { label: 'Undo', onClick } })
+```
+
+Key tokens: `--pm-canvas --pm-surface --pm-surface-2 --pm-card --pm-ink --pm-ink-2 --pm-label --pm-muted --pm-line --pm-divider --pm-danger --pm-danger-soft --pm-success --pm-font --pm-text-h1 --pm-radius-xl --pm-gutter --pm-section --pm-ease --pm-shadow-float --pm-shadow-card --pm-shadow-pop`. Full list: `docs/tokens.md`.
 
 ## Before you finish a UI task, check
 - [ ] No hex colors or hues outside tokens; no Tailwind default palette; no pure white page.
 - [ ] Every display headline is lowercase and ends with `.`/`?`; one `.pm-muted` echo at most per line.
 - [ ] No key-message `.pm-callout` unless the user asked for one.
-- [ ] Radii are 40/28/24/pill; numbers in rings; bullets are diamonds.
+- [ ] Radii come from tokens, never hard-coded; bullets are diamonds.
 - [ ] Motion only via the catalogue in `docs/motion.md`.
 - [ ] Copy follows `docs/voice.md` (verb-first buttons, ✓ feedback, no emoji).
 
+Building a site? Also: radii read 40/28/24/pill and numbers sit in rings.
+
+Building an app? Also, seen at 390px and 1440px:
+- [ ] `pm-app` is on `<html>`; navigation is `.pm-sidebar` + `.pm-tabbar`, from one list.
+- [ ] On a list screen the first row of data starts within about 200px of the top on a phone. No hero, no lead paragraph.
+- [ ] Lists are one `.pm-rows` card, not a card per item. Names wrap, never cut.
+- [ ] Filters answer as you type or tap; chips show counts; no submit button.
+- [ ] One filled button per screen; when a list is empty, the empty state holds it. Destructive is the clay wash. Create and edit open a `.pm-panel`.
+- [ ] A problem is written or flagged, and its fix is on its own row.
+- [ ] Loading, empty and error are designed. 44px targets on touch, fields 16px on touch.
+
 ## Docs map
-`docs/principles.md` tone & mood · `docs/voice.md` conversation style · `docs/color.md` · `docs/typography.md` · `docs/layout.md` · `docs/motion.md` · `docs/components.md` (every class with HTML) · `docs/imagery.md` · `docs/frameworks.md` (Next, Svelte, Vue, Astro, Tailwind, plain HTML) · `docs/tokens.md` (generated). Skills: `skills/poiema-design`, `skills/poiema-voice`, `skills/poiema-review`.
+**`docs/app.md` building apps, portals, admins** · `docs/principles.md` tone & mood · `docs/voice.md` conversation style · `docs/color.md` · `docs/typography.md` · `docs/layout.md` · `docs/motion.md` · `docs/components.md` (every class with HTML) · `docs/imagery.md` · `docs/frameworks.md` (Next, Svelte, Vue, Astro, Tailwind, plain HTML) · `docs/tokens.md` (generated). Skills: `skills/poiema-design`, `skills/poiema-voice`, `skills/poiema-review`. Working examples: `demo/index.html` (site), `demo/app.html` (app).
 
 ---
 
@@ -73,7 +112,8 @@ Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label -
 - `src/tokens.json` is the single source for tokens. `src/css/*.css` holds components (each file declares its `@layer`). `src/js/poiema.js` holds behaviors (keep every export a top-level `export function`/`export const`; the auto build strips `export`).
 - `npm run build` regenerates `dist/`, `docs/tokens.md`, the contrast table in `docs/color.md`, `skills/*/references/` and `llms-full.txt`. **Never edit generated files by hand.** Commit `dist/` (GitHub installs use it; there is no public CDN).
 - `npm test` builds and runs `test/`. The build fails if a contrast pair in `src/tokens.json` drops below its threshold.
-- New component: add CSS in the right file, document it in `docs/components.md` (HTML snippet), add it to the cheat-sheet above and to `demo/index.html`.
+- New component: add CSS in the right file, document it in `docs/components.md` (HTML snippet), add it to the cheat-sheet above and to `demo/index.html` (`demo/app.html` for app components).
+- The app register is token-first: `app` in `src/tokens.json` re-points existing tokens, and the build fails on a name that doesn't exist. Reach for a token before a `.pm-app` selector. Nothing in `src/css/app.css` may change a page without `.pm-app`: scope any rule on an existing component with `:is(.pm-app, .pm-shell)`.
 - After visual changes, refresh the README images with `npm run screenshots` (needs Playwright: `npm i --no-save playwright`). `screenshots/` is not shipped in the package.
 - Releases come only from the **Release** workflow (`.github/workflows/release.yml`, run from GitHub Actions): it bumps `package.json` and the plugin manifest, points install snippets at the new `#semver:` range, rebuilds, writes `CHANGELOG.md`, tags `vX.Y.Z` and publishes a GitHub release listing the commits since the last tag. Never bump the version, edit `CHANGELOG.md` or tag by hand. Bump `patch` for docs, skills and fixes, `minor` for new components or tokens, `major` for renamed or removed classes and tokens or rules that make agents rewrite existing screens (while on `0.x`, breaking changes go out as `minor`).
 - Zero runtime dependencies. Keep it that way.
@@ -93,7 +133,7 @@ Key tokens: `--pm-canvas --pm-surface --pm-card --pm-ink --pm-ink-2 --pm-label -
 |---|---|
 | quiet, weighty, calm | loud, busy, "growth-hacky" |
 | tactile and physical (objects, shadows, paper) | flat, glossy, neon, gradient-heavy |
-| editorial and poster-like | dashboard-like, template-like |
+| editorial and poster-like (on a site); calm and direct (in an app) | template-like, a stock admin kit |
 | sincere and pastoral ("we", "our family") | salesy, ironic, jokey |
 | clear and decisive | vague, hedging |
 | contemporary and reverent | churchy-clichéd, or cold-corporate |
@@ -137,8 +177,202 @@ The voice separates **what must be kept** (✓ checks) from **what is up to you*
 | Calm outlined alerts ("Attention", "Important") | Red/yellow alert banners and exclamation icons |
 | Slow reveal on scroll and gentle float | Bouncy springs, parallax overload, auto-playing noise |
 
-## When building something that isn't a church page
-The system is not tied to its source. A dashboard, a store or a tool gets the same treatment: gray room, paper cards, ink actions, one big lowercase title per view, numbered steps in rings, and a single object (product shot, gem, photo) as the only color on screen.
+## Two registers: gallery and app
+The system is not tied to its source, but it doesn't speak at one volume. Everything above describes the **gallery**: pages people read once. A store's front page or an event page belongs there.
+
+Something people come back to and use is an **app**: an admin, a portal, a dashboard, an internal tool. It keeps the gray room, paper, ink, one typeface, lowercase page titles, the voice and no hue in the chrome. It turns the volume down: small titles, one card with a row per thing, navigation that stays put and no motion on content. A huge headline there only pushes the work below the fold. Start with `class="pm-app"` and follow `docs/app.md`.
+
+
+---
+
+# The app register
+
+**Same room, working volume.** Poiema has two registers. The gallery is for things people read once. The app register is for things people come back to and use.
+
+| It's a **site** (the gallery) when… | It's an **app** (`.pm-app`) when… |
+|---|---|
+| people read it once and leave | people return to get a job done |
+| landing page, event page, institutional page, guide | admin, portal, dashboard, internal tool, signed-in area |
+| the headline is the point | the data is the point |
+
+Decide first. One product can hold both: a public page in the gallery and `/admin` as an app.
+
+The register changes volume, never identity. It keeps the gray room, paper, ink, one typeface, lowercase titles, the voice and no hue in the chrome. `demo/app.html` is a working example (in an app: `node_modules/poiema-ui/demo/app.html`): read its markup when a snippet leaves you guessing.
+
+| | Gallery | App |
+|---|---|---|
+| Page title | `.pm-h1` 40–88px | `.pm-h1` 26–34px, same class |
+| Page opens with | hero, section head, lead paragraph | title, one line of state, then the data |
+| Cards | 40px radius, 28–72px padding, paper gradient | 24px radius, 16–24px padding, flat paper |
+| A list | a stack of cards | **one card with a row per thing** (`.pm-rows`) |
+| Navigation | topbar that scrolls away | sidebar on a desk, floating tab bar on a phone |
+| Main action | a big button in the page | header button on a desk, circle above the tab bar on a phone |
+| Forms | a page of their own | a panel over the list they belong to |
+| Fields | 52px pills | 44px on touch, 40px with a mouse, 12px radius |
+| Motion | reveal on scroll, float, tilt | none on content, overlays only |
+| Hover | lift | quiet tint |
+| Numbers | rings, huge numerals | counts in badges; rings only for steps |
+
+## Turn it on
+
+```html
+<html lang="pt-BR" class="pm-app" data-theme="light">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+```
+`.pm-app` re-points the tokens, so `.pm-btn`, `.pm-card`, `.pm-h1`, `.pm-input`, `.pm-dialog` and the rest follow with no other change. Put it on `<html>` so dialogs, popovers and toasts inherit it. An app inside a larger site can put it on a layout wrapper instead; `.pm-shell` applies it on its own. `viewport-fit=cover` is what lets the tab bar clear the phone's home indicator.
+
+Icons are not part of this package. Use [Lucide](https://lucide.dev) (`lucide-react`, or inline SVG), 2px stroke, `currentColor`. The components size them.
+
+## The screen
+
+Every signed-in screen is this. Copy it, then fill it in.
+
+```html
+<div class="pm-shell">
+  <aside class="pm-sidebar">
+    <a class="pm-sidebar__brand" href="/">poiema</a>
+    <nav class="pm-sidebar__nav" aria-label="Main">
+      <div class="pm-sidebar__group">
+        <p class="pm-sidebar__title">Work</p>
+        <a href="/people" aria-current="page"><svg>…</svg>People</a>
+        <a href="/schedule"><svg>…</svg>Schedule <span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>3<span class="pm-sr-only"> to fix</span></span></a>
+      </div>
+    </nav>
+    <div class="pm-sidebar__user">
+      <strong>Marina Duarte</strong> Administrator
+      <div class="pm-cluster"><a href="/profile">My profile</a><button type="button">Sign out</button></div>
+    </div>
+  </aside>
+
+  <main class="pm-shell__main">
+    <header class="pm-pagehead">
+      <div class="pm-pagehead__line">
+        <div class="pm-pagehead__title">
+          <h1 class="pm-h1">people.</h1>
+          <p class="pm-pagehead__sub">167 people · 6 on vacation</p>
+        </div>
+        <div class="pm-pagehead__actions">           <!-- desk only -->
+          <button class="pm-btn pm-btn--soft">Select several</button>
+          <button class="pm-btn">Add person</button>
+        </div>
+      </div>
+      <div class="pm-toolbar"><!-- .pm-search --></div>
+      <div class="pm-pillnav pm-pillnav--bleed" role="group" aria-label="Filter"><!-- chips with counts --></div>
+    </header>
+
+    <div class="pm-rows pm-rows--columns"><!-- .pm-row, one per person --></div>
+  </main>
+</div>
+
+<nav class="pm-tabbar" aria-label="Main">      <!-- phone only -->
+  <a href="/people" aria-current="page"><svg>…</svg>People</a>
+  <a href="/schedule"><svg>…</svg>Schedule</a>
+  <a href="/menu"><svg>…</svg>Menu</a>
+</nav>
+<button class="pm-fab" data-pm-open="actions" aria-label="Actions for this screen"><svg>…</svg></button>   <!-- phone only -->
+```
+
+The sidebar and tab bar show or hide themselves at 900px, and so do `.pm-pagehead__actions` and `.pm-fab`. iPads in portrait get the tab bar: they are wide, but they are touched.
+
+**The test:** on a list screen, on a 390×844 phone, the first row of data starts within about 200px of the top. If it doesn't, something above it is decoration. A screen that first has to say something (a draft to approve, a set of days to jump between) may spend more, as long as it's doing a job.
+
+## The rules
+
+These come from the church's rota app, which leaders use on their phones and the admin at a desk. Each one exists because something went wrong without it.
+
+1. **Understood in two seconds.** Title, then one line that says what is happening: `167 people · 6 on vacation`. Not a sentence about what the screen is for.
+2. **Navigation stays put.** Two to four tabs on a phone, Menu always last, and everything else inside Menu. On a desk, a sidebar in named groups. Build both from one list, so they can't drift apart.
+3. **Screen actions have one home.** On a desk they are header buttons, and rarely used ones wait in a `⋯` menu. On a phone they live in the circle above the tab bar, in the same spot on every screen. Screens with none have no circle. One action: the circle is that action (`+`). Two or more: `⋯` opens them, with the main one last, closest to the thumb.
+4. **One filled button per screen,** for what completes the job. Everything else is `--soft`, `--outline` or `--ghost`. Destructive buttons are a pale clay wash, never filled. When a list is empty, the empty state holds the action and the header stops offering it.
+5. **A list is one card with a row per thing.** Not a card per thing. Rows are 44px or taller, with a title, an optional line under it, and a chevron or one trailing item.
+6. **Names are never cut.** They wrap. A truncated name is a different person. Full names, no initials, no avatars unless there are real photos.
+7. **Fix it where you see it.** A problem carries its own button: an open seat says `Choose`, right there. Never send someone to a menu or another screen to fix what they are looking at.
+8. **Filtering answers immediately.** No submit button, no apply button. Chips show their count before you tap (`On vacation 6`), so a tap is never a guess. Counts follow the search. Hide a chip that has nothing at all, unless it's the active one; while someone is typing, keep the row still and let a 0 be the answer. Three big selects are a filter that nobody uses; a chip row and one search box are not. A second kind of filter goes behind one button that opens a sheet, and fills with ink (`aria-pressed="true"`) while it's on. If the whole list is small enough to send (hundreds of rows), filter in the browser and keep the URL in step; otherwise debounce a server query.
+9. **The overlay fits the job.** See the table below. Creating or editing something keeps you on the list you came from.
+10. **Clay means a problem, and is never alone.** Nothing else in the chrome has a hue. A problem is always written (`2 open seats`) or marked with `.pm-flag`, the one sharp shape in the system, so it reads without its color.
+11. **No surprises on big actions.** Say exactly what will change before it happens. What can be reversed gets a toast with Undo, not a confirmation. What can't gets a dialog, with focus on Cancel.
+12. **Wide screens show more, not longer.** `.pm-rows--columns` flows rows into two columns, then three. A rail (`.pm-workspace`) holds the to-do list. A row never stretches across 1400px. Only a short notice or a form stays narrow (`.pm-measure`).
+13. **Nothing animates on the way in.** Data is there the moment the screen is. `data-pm-reveal` and `data-pm-stagger` do nothing inside `.pm-app`, on purpose. Only overlays move, and quickly.
+14. **Every state is designed.** Loading looks like the screen it stands in for. Empty says what will be here and offers the button that starts it. Errors say what happened and offer to try again.
+15. **Thumbs and mice both.** 44px targets on touch, compact with a mouse. Fields stay at 16px or more on touch, or iOS zooms the page.
+
+## Which overlay
+
+| Doing | Use | Phone | Desk |
+|---|---|---|---|
+| Tapped a name; a short choice | `.pm-sheet` | rises from the bottom | centered, 420px |
+| Create or edit; pick from a long list | `.pm-panel` | full screen, back arrow | panel on the right, list still visible. Cancel means nothing happened: reset the form on the dialog's `close` event |
+| Confirm something irreversible | `.pm-dialog` | centered | centered |
+| Actions for this screen | `.pm-fab` + `dialog.pm-fabmenu` | blurs the screen | header buttons |
+| A few more actions | `.pm-menu[popover]` + `data-pm-menu` | not needed, use the circle | under the `⋯` button |
+
+A form earns its own page only when it is the whole job, like settings. Otherwise, use a panel. A field with a button beside it is `.pm-toolbar` > `.pm-input` + `.pm-btn`; `.pm-input-group` is for the gallery's pill fields.
+
+## Which screen
+
+| Screen | Build it from |
+|---|---|
+| A list of things | `.pm-pagehead` + `.pm-search` + `.pm-pillnav` chips + `.pm-rows.pm-rows--columns` |
+| One thing | `.pm-pagehead` with a back button; its name is the title. `.pm-workspace` if it has a side column. Under 1280px the rail falls below everything, so if its content matters sooner, mark the rail `.pm-wide-only` and offer the same thing as a `.pm-narrow-only` row that opens a sheet |
+| A month or a set of days | `.pm-datestrip`, one `.pm-rows` per day in a `.pm-grid`, `.pm-workspace__rail` with `.pm-todo` |
+| Something awaiting approval | `.pm-notice.pm-notice--draft` above the data, `.pm-badge--dashed` beside the title |
+| Numbers | `.pm-stats`, `.pm-bars` + `.pm-bars__axis` (every bar reads out its value and date, on hover and on touch), `.pm-row` with a `<progress class="pm-progress">` as its last child |
+| Settings | `.pm-stack.pm-measure` of `.pm-card` and `.pm-rows` with switches and steppers |
+| Everything that isn't a tab | A Menu screen: `.pm-rows` with an icon first and a line under each title. Language and sign out live here on a phone, and in `.pm-sidebar__user` on a desk, where Menu's other rows are already in the sidebar |
+| Selecting many | Rows become `label.pm-row` with `.pm-check`; `.pm-selectbar` holds what to do |
+| Sign in, not found, error | `.pm-gate` with one card, no navigation |
+| Tables | `.pm-table` in a `.pm-card`, from 900px up. Under 900px, list the same data as rows |
+
+## Copy in an app
+
+The voice doesn't change. Where it lands does. **Three things are display, lowercase with a period or question mark:** the page title (`people.`), an empty state's title (`nothing here yet.`) and a dialog's question (`delete this link?`).
+
+**Everything else is data, which keeps its case and takes no period,** whatever class it uses: a section of a screen (`Campaigns`), card headers (`Sunday, Nov 8`), rows, badges, panel titles (`Create link`).
+- **A title that is a name stays a name:** `Easter service signup`, `Ana Souza`. Never `ana souza.`
+- **No lead paragraph.** The sub-line states facts: `Kids · 4 Sundays · 3 open seats`.
+- Rings are for steps. Counts go in a `.pm-badge` or `.pm-count`.
+
+## Building it in React
+
+Keep the classes; only the wiring is yours. Three things pay for themselves:
+
+- **One nav list** (`{ key, href, label, icon, group }`) that renders both the sidebar and the tab bar, with the tabs chosen per role.
+- **One action list per screen** (`{ id, label, hint, icon, primary, more, danger, onSelect }`), mapped to header buttons and to `.pm-menu__item`. The screen declares its actions once.
+- **`init()` once at the root.** It wires `<dialog>`s, popover menus and `data-pm-clear` as they mount, however the route changes.
+
+Native `<dialog>` gives you focus trapping, Esc and the top layer with no library, and `popover` gives a small menu Esc, a tap away and the top layer. Call `el.showModal()`, or use `data-pm-open`.
+
+**Hydration.** `init()` adds nothing to the page: no children, no attributes. So a server-rendered screen still matches when React hydrates it, and what a behavior reads has to be in your markup, like the chart's `tabindex`. Rely on `data-pm-reveal` only on sites: it does write an attribute.
+
+**Hidden routes.** With Next's `cacheComponents` (and anything using React's `<Activity>`) a route you left stays mounted under `display: none`. A modal left open there keeps the next page inert and locked against scrolling, so close it when the route hides, and give popovers ids that are unique per screen (`useId`):
+```tsx
+function AppDialog(props: ComponentProps<'dialog'>) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useLayoutEffect(() => { const el = ref.current; return () => el?.close(); }, []);
+  return <dialog ref={ref} {...props} />;
+}
+```
+A `[data-pm-open]` button finds the dialog on the visible screen by itself. In the DOM the old route's headings still exist, so scope test selectors with `:visible`.
+
+To put a `<form>` around a panel's head, body and foot, give the form `style="display:contents"` so the panel's layout still applies. A menu closes when an item is chosen, so an item that copies should confirm with `toast('Copied ✓')`: `data-pm-copy`'s label swap would disappear with the menu.
+
+## What not to do
+
+These are what the gallery's habits look like when they land in a tool:
+
+- An 88px title and a lead paragraph above the data. The first row starts 700px down.
+- A card per item, each with a shadow and a hover lift: five items per screen.
+- `data-pm-stagger` on a list. The rows are invisible until JavaScript runs.
+- Navigation that scrolls away with the page, and sign out at the bottom of a long list.
+- A search box with a Search button, plus two labeled selects, before any result.
+- A new page for every form, losing the list behind it.
+- `.pm-h2` in a dialog at 58px. With `.pm-app` on, it is a sensible size. Without it, it isn't.
+
+## Known limits
+
+- **The circle floats over content.** On a phone it can sit on top of a trailing button at rest. Scrolling moves the row out from under it, and the main column's bottom padding lets the last row clear it.
+- **Toasts live under an open overlay.** While a sheet, panel or dialog is open the rest of the page is inert, so close it first, then call `toast()`. An Undo offered behind a modal can't be pressed.
+- **Icons are yours.** The package ships none. `aria-hidden` on every decorative one, and a visible label on anything but the universal ones: close, back, search, menu, more, add.
 
 
 ---
@@ -213,7 +447,7 @@ The closing line is the only place an exclamation mark may appear.
 | Empty state title | `nada por aqui ainda.` | `nothing here yet.` |
 | Empty state body | `Quando você criar o primeiro projeto, ele aparece aqui.` | `When you create your first project, it shows up here.` |
 | Primary action | `Criar projeto` | `Create project` |
-| Destructive confirm | `Excluir projeto?` + `Isso não pode ser desfeito.` | `Delete project?` + `This can't be undone.` |
+| Destructive confirm | `excluir projeto?` + `Isso não pode ser desfeito.` | `delete project?` + `This can't be undone.` |
 | Success toast | `Projeto criado ✓` | `Project created ✓` |
 | Error (form) | `Informe um e-mail válido.` | `Enter a valid email.` |
 | Error (system) | `Algo não funcionou. Tente de novo em instantes.` | `Something didn't work. Try again in a moment.` |
@@ -222,13 +456,29 @@ The closing line is the only place an exclamation mark may appear.
 | Key-message callout label (on request) | `Mensagem que precisa ficar clara` | `The one thing to remember` |
 | Onboarding step | `00 · comece por aqui.` | `00 · start here.` |
 
+### In an app
+The voice stays; it just talks less. No lead paragraphs, triads or couplets on a working screen.
+
+| Situation | pt-BR | en |
+|---|---|---|
+| Page title | `pessoas.` | `people.` |
+| Line under it: facts, not a pitch | `167 pessoas · 6 de férias` | `167 people · 6 on vacation` |
+| A title that is a name: data, keeps its case, no period | `Ana Souza` | `Ana Souza` |
+| Card header | `Domingo, 8 nov` | `Sunday, Nov 8` |
+| Count in a badge | `3 pessoas` | `3 people` |
+| A problem names the thing | `2 vagas` | `2 open seats` |
+| The fix on the row | `Escolher` | `Choose` |
+| Reversible action: do it, then offer | `Removido ✓` + `Desfazer` | `Removed ✓` + `Undo` |
+| Irreversible: say what changes | `excluir este link?` + `Os QR codes impressos param de funcionar.` | `delete this link?` + `Printed QR codes stop working.` |
+| No results | `Ninguém com esse nome.` | `Nobody with that name.` |
+
 ## Punctuation & casing rules
-- Display headlines: lowercase, period at the end (or `?`).
+- Display headlines: lowercase, period at the end (or `?`). In an app that means the page title, empty-state titles and dialog questions; everything else on the screen is data and keeps its case.
 - Eyebrows, tags and alert titles: UPPERCASE in CSS (`text-transform`), so write them in sentence case in the source.
 - Buttons: Sentence case, no period.
 - Body: sentence case, periods, `—` for asides, `…` for ellipsis.
 - One `<strong>` per paragraph at most. It marks the phrase that must not be missed.
-- No emoji. The only symbols are `·`, `✓`, `○`, `↗` and `—`.
+- No emoji. The only symbols in copy are `·`, `✓`, `○`, `↗` and `—`. Chrome draws its own: `›` on a row, `+` on an add row, and icons for close and back.
 
 ## Self-check before shipping copy
 1. Does every display headline end with `.` or `?` and stay lowercase?
@@ -258,6 +508,7 @@ The closing line is the only place an exclamation mark may appear.
 | Small labels | `--pm-label` | `#646464` | `#9a9a9a` |
 | Echo gray (large text only) | `--pm-muted` | `#7d7d7d` | `#8d8d8d` |
 | Hairlines | `--pm-line` | `rgba(43,43,43,.14)` | `rgba(255,255,255,.12)` |
+| Between rows | `--pm-divider` | `rgba(43,43,43,.08)` | `rgba(255,255,255,.07)` |
 
 Pure white `#fff` appears only as the 1px top highlight on cards (`--pm-card-edge`). Pages are never white.
 
@@ -278,8 +529,12 @@ The order matters. It tells a story of **formation** (clay → diamond), so when
 
 ### Semantic states
 - `--pm-danger` (clay): errors and destructive actions. It's a warm earth tone, never alarm red. Pair it with text such as "Couldn't save", never color alone.
+- `--pm-danger-soft` (a pale clay wash): behind danger text, on problem badges, destructive buttons in apps and problem notices.
 - `--pm-success` (grass): confirmations.
 - No "warning" or "info" hue. Use a neutral `.pm-alert` with an uppercase title.
+
+### In an app
+Cards are flat `--pm-surface`, because a gradient drifts into the canvas along a long list. **Black is emphasis: what's chosen, what's primary, a date, a fact worth a second look. Clay means a problem, and nothing else.** No green "active", no colored status chips: a state is a word, a check, or a dashed outline for "not final yet". A problem is always written or marked with `.pm-flag`, the clay diamond, so it survives without its color.
 
 ## Themes & inversion
 
@@ -312,6 +567,7 @@ The build checks these pairs in both themes and fails if one regresses. `muted` 
 | `on-ink-muted` | `ink` | 4.27 | 3.84 | 3 (large text) |
 | `danger` | `canvas` | 5.75 | 5.81 | 4.5 (AA) |
 | `danger` | `surface` | 6.95 | 4.86 | 4.5 (AA) |
+| `danger` | `danger-soft` | 6.06 | 4.66 | 4.5 (AA) |
 | `success` | `canvas` | 6.05 | 6.67 | 4.5 (AA) |
 | `success` | `surface` | 7.32 | 5.58 | 4.5 (AA) |
 <!-- contrast:end -->
@@ -345,8 +601,22 @@ Pick one:
 | `.pm-eyebrow` | 12px | 700 | +0.14em | 1.4 | UPPERCASE labels above titles |
 | `.pm-tag` | 11px | 700 | +0.10em | 1.2 | Outlined pill label |
 
+### In an app
+`.pm-app` re-points the same classes, so a page title stays `.pm-h1`. Tracking relaxes too: -0.05em is right at 88px and crushes a word at 26px.
+
+| Class or element | Size | Weight | Use |
+|---|---|---|---|
+| `.pm-h1` | 26→34px | 800 | The page title, once per screen |
+| `.pm-h2` | 20→24px | 800 | A section of a screen (`Campaigns`: data, keeps its case) or a dialog's question (`delete this link?`: display) |
+| `.pm-h3` | 18px | 700 | A rail heading |
+| `.pm-h4`, `.pm-rows__head` | 16px | 800 | A card's title |
+| `.pm-row__title` | 16px, 1.25 | 500 | One thing in a list. Wraps, never cut |
+| `.pm-row__sub`, `.pm-pagehead__sub` | 14px | 400–500 | The line under it. 14px is the floor for reading |
+| body, fields on touch | 16px | 400–500 | Fields stay at 16px on touch, or iOS zooms; 14px only with a mouse |
+| `.pm-eyebrow`, `.pm-badge`, tab labels | 11–12px | 700 | Labels, not reading |
+
 ## Rules
-1. **Display text is lowercase and ends with a period.** Write it lowercase in the source, or use `.pm-lower` for CMS content.
+1. **Display text is lowercase and ends with a period.** Write it lowercase in the source, or use `.pm-lower` for CMS content. In an app what counts is the role, not the class: the page title, an empty state's title and a dialog's question are display; everything else is data and keeps its case.
 2. **The echo:** wrap one phrase of a display line in `.pm-muted`, usually the middle beat of a triad or the last words of a quote: `a mensagem sempre foi maior do que <span class="pm-muted">o mensageiro.</span>`
 3. **Negative tracking grows with size.** Body is 0, titles -0.035em, headlines -0.05em, numerals -0.07em. Never track body text.
 4. **Uppercase only for small labels**, always tracked +0.10 to +0.14em, always bold.
@@ -361,11 +631,14 @@ Pick one:
 # Layout, surfaces & spacing
 
 ## Grid & rhythm
+> Everything here is the gallery register, for pages. Apps have their own sizes and anatomy: see `docs/app.md`.
+
 - **Container:** `.pm-container`, 1180px max with a fluid gutter of `clamp(16px, 4vw, 48px)`.
 - **Sections:** `.pm-section` adds half of `clamp(64px, 9vw, 120px)` above and below, so sections stack with one full gap.
 - **Cards** pad `clamp(28px, 5.5vw, 72px)`, which is generous. Content never touches a card's edge.
 - **Gaps between cards** are small (16–20px). Cards read as a stack of plates, not a grid of tiles.
 - **Breakpoints:** 900px (columns collapse) and 560px (type and padding shrink).
+- **Touch:** on a coarse pointer, small targets reach 44px: `.pm-btn--sm`, `.pm-pillnav` pills, `.pm-topbar__nav` links, `.pm-choice` rows and the button in `.pm-input-group`. To hold them, the topbar and `--pm-sticky-top` go from 58px to 68px, and everything offset by that token follows. With a mouse nothing changes. The values are under Touch in `docs/tokens.md`.
 
 ## Space scale
 4 · 8 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 · 72 · 96 · 120 (`--pm-space-1` … `--pm-space-30`). Typical values: 8 between chips, 12–16 between list items and tiles, 28 between a title and its body, 36 under a section head.
@@ -380,6 +653,8 @@ Pick one:
 | `--pm-radius-sm` | 14 | Inner screens, skeletons |
 | `--pm-radius-xs` | 7 | Checkboxes |
 | `--pm-radius-pill` | 999 | Buttons, chips, tags, inputs, nav pills |
+
+Inside `.pm-app` the scale steps down to 24 / 20 / 16 / 12, and fields use 12 so they never read as buttons.
 
 ## Elevation
 Depth comes from **light, not borders**:
@@ -413,7 +688,7 @@ band          EYEBROW · centered statement · five materials floating · motto
 footer        dark, centered, small
 ```
 
-Use what you need. An app screen is usually: topbar → `.pm-section-head` (ring + lowercase title + lead) → cards.
+Use what you need. This anatomy is for pages people read. **An app screen doesn't follow it:** no hero, no section heads, no lead paragraphs, no stack of cards. It is `.pm-shell` → `.pm-pagehead` → one `.pm-rows` card (`docs/app.md`).
 
 
 ---
@@ -460,6 +735,16 @@ Use what you need. An app screen is usually: topbar → `.pm-section-head` (ring
 5. **Respect `prefers-reduced-motion`.** Already handled: reveals show instantly, loops stop, tilt is disabled. If you write new motion, add it to the reduced-motion block.
 6. Hover effects only on `(hover: hover)` devices when they rely on the pointer (tilt).
 
+## In an app
+**Nothing moves on the way in.** Data is there the moment the screen is. Inside `.pm-app` the reveal and stagger attributes are switched off, hover doesn't lift, and smooth scrolling is off (it animates a router's jump to the top). Only overlays move, and quickly:
+
+| Motion | How | Values |
+|---|---|---|
+| **Sheet** | `.pm-sheet` | slides up from the bottom, 200ms settle |
+| **Panel** | `.pm-panel` | fades in from 32px to the right, 200ms settle |
+| **Menu** | `.pm-menu[popover]`, `.pm-fabmenu` | rises 8px + fade, 200ms settle |
+| **Row hover** | chevron | darkens and moves 2px right |
+
 ## Without JS
 All CSS motion (float, marquee, lift, nudge, scroll cue, dialog/toast transitions) works without JavaScript. JS-driven content (`data-pm-reveal`) is hidden only when scripting is enabled, and a CSS failsafe reveals it after 2.5s if `init()` never runs.
 
@@ -471,7 +756,9 @@ All CSS motion (float, marquee, lift, nudge, scroll cue, dialog/toast transition
 Plain HTML + `pm-*` classes. They work in any framework: rename `class` → `className` in JSX. Behaviors marked **[JS]** need `init()` from `poiema-ui` (or the auto script). Everything else is CSS only.
 
 ## Contents
-Typography · Ring · Lockup · Chips & tags · Buttons · Cards · Feature · Section head · Callout · Alert · Lists · Pill nav · Topbar · Hero · Marquee · Object & frame · Stat · Ticket · Table · Forms · Dialog · Toast · Progress, spinner, skeleton · Footer · Layout helpers · Utilities
+Typography · Ring · Lockup · Chips & tags · Buttons · Cards · Feature · Section head · Callout · Alert · Lists · Pill nav · Topbar · Hero · Marquee · Object & frame · Stat · Ticket · Table · Forms · Dialog · Toast · Progress, spinner, skeleton · Footer · Layout helpers · Utilities · **App:** Shell · Page head · Search · Rows · Badge, count, flag · Dates · Notice · Empty state · Segmented & stepper · Screen actions · Sheet · Panel · Select mode · Workspace & to-do · Numbers · Gate · Loading
+
+**Building an app, portal or admin?** Read `docs/app.md` first, then the App section at the end of this page.
 
 ---
 
@@ -542,10 +829,12 @@ Solid buttons use ink, so they are dark on light surfaces and paper on dark card
 <!-- add pm-btn--soft for a paper rich CTA on a light page -->
 
 <!-- [JS] copy with feedback -->
-<button class="pm-btn" data-pm-copy="Text to copy" data-pm-copied="Copied ✓">Copy details</button>
-<button class="pm-btn" data-pm-copy-target="#details">Copy details</button>
+<button class="pm-btn" data-pm-copy="Text to copy" data-pm-copied="Copied ✓" data-pm-copy-failed="Couldn't copy">Copy details</button>
+<button class="pm-btn" data-pm-copy data-pm-copy-target="#details">Copy details</button>
 ```
+The labels default to English: set `data-pm-copied` and `data-pm-copy-failed` in any other language. Screen readers hear the same text without the ✓, success or failure, through a hidden live region added on the first press, inside the open dialog when the button is in one.
 `.pm-play` is a round paper play button (for media covers).
+`.pm-btn--sm` is 36px tall with a mouse and 44px on touch, and `.pm-btn--icon.pm-btn--sm` stays round at both sizes.
 
 ## Cards
 ```html
@@ -629,7 +918,7 @@ Items are ink-2; `<strong>` inside them is ink.
   <button role="tab" aria-selected="false">Drafts</button>
 </div>
 ```
-Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill). Hover is a quiet line tint, so only the active pill looks selected. Inside a `.pm-card` or `.pm-dialog`, resting pills get a `--pm-line` hairline so they stay visible on the paper fill; on the canvas they stay plain.
+Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fill). Hover is a quiet line tint, so only the active pill looks selected. Inside a `.pm-card` or `.pm-dialog`, resting pills get a `--pm-line` hairline so they stay visible on the paper fill; on the canvas they stay plain. Pills are 44px tall on touch.
 
 ## Topbar
 ```html
@@ -639,7 +928,7 @@ Active = `aria-current`, `aria-selected="true"` or `aria-pressed="true"` (ink fi
   <span class="pm-tag">Internal · Team</span>
 </header>
 ```
-Sticky, 80% canvas glass with a 14px blur. Its height is `--pm-sticky-top` (58px), and sticky children offset by it.
+Sticky, 80% canvas glass with a 14px blur. Its height is `--pm-sticky-top`, and sticky children offset by it: 58px with a mouse, 68px on touch, where its links and small buttons are 44px.
 
 ## Hero
 ```html
@@ -712,27 +1001,29 @@ The notches use `--pm-notch` (default `--pm-canvas`). Set it to the ticket's rea
 
 ## Forms
 ```html
-<label class="pm-field">
-  <span class="pm-label">Email</span>
-  <input class="pm-input" type="email" placeholder="you@example.com">
-  <span class="pm-hint">We only use it for the confirmation.</span>
-</label>
-<label class="pm-field">
-  <span class="pm-label">Team</span>
-  <select class="pm-select"><option>Design</option></select>
-</label>
-<label class="pm-field">
-  <span class="pm-label">Message</span>
-  <textarea class="pm-textarea" aria-invalid="true"></textarea>
-  <span class="pm-error">Write at least one sentence.</span>
-</label>
-<div class="pm-input-group"><input class="pm-input" placeholder="Search"><button class="pm-btn">Search</button></div>
+<div class="pm-field">
+  <label class="pm-label" for="email">Email</label>
+  <input class="pm-input" id="email" type="email" aria-describedby="email-hint">
+  <span class="pm-hint" id="email-hint">We only use it for the confirmation.</span>
+</div>
+<div class="pm-field">
+  <label class="pm-label" for="team">Team</label>
+  <select class="pm-select" id="team"><option>Design</option></select>
+</div>
+<div class="pm-field">
+  <label class="pm-label" for="message">Message</label>
+  <textarea class="pm-textarea" id="message" aria-invalid="true" aria-describedby="message-error"></textarea>
+  <span class="pm-error" id="message-error">Write at least one sentence.</span>
+</div>
+<div class="pm-input-group"><input class="pm-input" placeholder="Search" aria-label="Search"><button class="pm-btn">Search</button></div>
 
 <label class="pm-choice"><input class="pm-check" type="checkbox" checked> Keep me posted</label>
 <label class="pm-choice"><input class="pm-radio" type="radio" name="r" checked> Monthly</label>
 <label class="pm-choice"><input class="pm-switch" type="checkbox" role="switch"> Dark mode</label>
 ```
-Invalid state: `aria-invalid="true"` (clay border). Focus: 2px ink ring. The checked radio is the brand ring.
+A label names its field, and everything inside a `<label>` becomes part of that name. So a hint or error sits outside the label, tied to the field by `aria-describedby`: a screen reader says "Email", then the hint as its description. In React, `useId` gives the ids. Two exceptions: `.pm-choice` wraps its input, because there the label is the name, and a `.pm-segmented` has no single field to name, so its caption stays a `<span class="pm-label" id="…">` with `aria-labelledby` on the group.
+
+Invalid state: `aria-invalid="true"` (clay border) and `aria-describedby` pointing at the `.pm-error`. If the error comes and goes, point at it only while it shows and back at the hint when it clears, or remove the attribute if there is no hint: `aria-describedby` still reads an element that is `hidden`. Focus: 2px ink ring. The checked radio is the brand ring. The button in `.pm-input-group` is 40px tall with a mouse and 44px on touch.
 
 ## Dialog
 Native `<dialog>`. [JS] `data-pm-open="id"` opens it, a backdrop click closes it, and `[data-pm-close]` or `<form method="dialog">` closes it.
@@ -751,8 +1042,9 @@ Native `<dialog>`. [JS] `data-pm-open="id"` opens it, a backdrop click closes it
 ```js
 import { toast } from 'poiema-ui';
 toast('Project created ✓');
+toast('Removed ✓', { action: { label: 'Undo', onClick: restore } });
 ```
-Toasts stack at the bottom center, as wide as the message up to the page gutters. One line reads as a pill; a longer message wraps into balanced, centered lines in a 24px box. Keep it to one or two short lines.
+Toasts stack at the bottom center, as wide as the message up to the page gutters. One line reads as a pill; a longer message wraps into balanced, centered lines in a 24px box. Keep it to one or two short lines. With an `action` the toast stays for 6 seconds instead of 2.2: prefer Undo to asking first. In an app on a phone, toasts clear the tab bar and the action circle. Close any open dialog first: a modal makes the rest of the page inert, toasts included.
 
 ## Progress, spinner, skeleton
 ```html
@@ -786,6 +1078,8 @@ Override any gap with `style="--pm-gap: 24px"`.
 ## Utilities
 `.pm-ink .pm-ink-2 .pm-muted .pm-danger .pm-success .pm-lower .pm-upper .pm-nums .pm-balance .pm-center .pm-measure .pm-sr-only .pm-lift .pm-inverse`
 
+In an app: `.pm-faded` (a past day: dim until hovered or focused), `.pm-phone-only`, `.pm-desk-only` (either side of 900px, where the navigation switches), `.pm-narrow-only`, `.pm-wide-only` (either side of 1280px, where a rail appears).
+
 ## Behaviors [JS]
 
 | Attribute | Behavior | Action function |
@@ -794,10 +1088,361 @@ Override any gap with `style="--pm-gap: 24px"`.
 | `data-pm-stagger` | children reveal 80ms apart | `stagger(el, opts)` |
 | `data-pm-tilt` | first child tilts toward the pointer | `tilt(el, {max, scale})` |
 | `data-pm-cycle="1800"` | children cross-fade in turn | `cycle(el, {interval})` |
-| `data-pm-copy="text"` / `data-pm-copy-target="#id"` | copy + "Copied ✓" | `copy(el, opts)` |
+| `data-pm-copy="text"` / `data-pm-copy data-pm-copy-target="#id"` | copy + "Copied ✓" | `copy(el, opts)` |
 | `data-pm-countdown="ISO date"` | writes days left | `countdown(el)` / `daysUntil(date)` |
 | `data-pm-open="dialogId"` | opens a `<dialog>` | `opener(el)` |
-| `dialog.pm-dialog` | backdrop click + `[data-pm-close]` | `dialog(el)` |
+| `dialog.pm-dialog`, `.pm-sheet`, `.pm-panel`, `.pm-fabmenu` | backdrop click + `[data-pm-close]`; a sheet drags down to close and rises above the phone keyboard | `dialog(el)` |
+| `data-pm-clear` | empties the search field beside it and fires `input` (React sees it) | `clear(el)` |
+| `data-pm-menu` on a `popovertarget` button | places the popover under the button | `menu(el)` |
+| `.pm-menu[popover]`, `dialog.pm-fabmenu` | closes when an item is chosen, returning focus to the button | `popmenu(el)` |
+| `.pm-bars` | reads out a bar on hover, touch or arrow keys | `bars(el)` |
+
+---
+
+# App
+
+Put `class="pm-app"` on `<html>` first: it sets the sizes every component below expects. The rules for when to use each one are in `docs/app.md`.
+
+## Shell
+Sidebar from 900px up, tab bar below it. Each hides itself, so render both.
+```html
+<div class="pm-shell">
+  <aside class="pm-sidebar">
+    <a class="pm-sidebar__brand" href="/">poiema</a>
+    <nav class="pm-sidebar__nav" aria-label="Main">
+      <div class="pm-sidebar__group">
+        <p class="pm-sidebar__title">Work</p>
+        <a href="/people" aria-current="page"><svg aria-hidden="true">…</svg>People</a>
+        <a href="/schedule"><svg aria-hidden="true">…</svg>Schedule <span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>3<span class="pm-sr-only"> to fix</span></span></a>
+      </div>
+    </nav>
+    <div class="pm-sidebar__user">
+      <strong>Marina Duarte</strong> Administrator
+      <div class="pm-cluster"><a href="/profile">My profile</a><button type="button">Sign out</button></div>
+    </div>
+  </aside>
+  <main class="pm-shell__main">…</main>
+</div>
+<nav class="pm-tabbar" aria-label="Main">
+  <a href="/people" aria-current="page"><svg aria-hidden="true">…</svg>People</a>
+  <a href="/menu"><svg aria-hidden="true">…</svg>Menu</a>
+</nav>
+```
+Two to four tabs, Menu last. Render the tab bar outside `.pm-shell__main`. The main column's bottom padding already clears it.
+
+## Page head
+```html
+<header class="pm-pagehead">
+  <div class="pm-pagehead__line">
+    <a class="pm-btn pm-btn--soft pm-btn--icon" href="/people" aria-label="Back"><svg aria-hidden="true">…</svg></a>   <!-- detail screens -->
+    <div class="pm-pagehead__title">
+      <h1 class="pm-h1">people.</h1>
+      <p class="pm-pagehead__sub">167 people · 6 on vacation</p>
+    </div>
+    <span class="pm-badge pm-badge--dashed">Draft</span>                  <!-- optional state -->
+    <div class="pm-pagehead__actions">                                    <!-- hidden on phones -->
+      <button class="pm-btn pm-btn--soft">Select several</button>
+      <button class="pm-btn">Add person</button>
+    </div>
+  </div>
+  <div class="pm-toolbar">…search, filter button…</div>
+  <div class="pm-pillnav pm-pillnav--bleed" role="group" aria-label="Filter">
+    <button type="button" aria-pressed="true">All <span class="pm-count">167</span></button>
+    <button type="button" aria-pressed="false">No seat <span class="pm-count">26</span></button>
+    <button type="button" aria-pressed="false" data-tone="danger"><span class="pm-flag"></span>On vacation <span class="pm-count">6</span></button>
+  </div>
+</header>
+```
+`.pm-pagehead--pin` keeps only the title line on screen while a long page scrolls on a phone. `--bleed` lets the chips run edge to edge on phones. A button with `aria-pressed="true"` fills with ink: use it for a filter button with active filters.
+
+## Search
+No submit button: filter as the person types. The clear button hides itself while the field is empty, which it can only tell from the `placeholder`, so keep one.
+```html
+<label class="pm-search">
+  <svg aria-hidden="true">…</svg>
+  <input type="search" placeholder="Search by name" aria-label="Search people">
+  <button class="pm-search__clear" type="button" data-pm-clear aria-label="Clear search"><svg aria-hidden="true">…</svg></button>
+</label>
+```
+
+## Rows
+One card, one row per thing. `.pm-rows--columns` flows five or more into two columns from 1100px and three from 1600px.
+```html
+<div class="pm-rows pm-rows--columns">
+  <!-- the whole row is a link, with a chevron for free -->
+  <a class="pm-row" href="/people/1">
+    <span class="pm-row__text">
+      <span class="pm-row__title">Ana Souza</span>
+      <span class="pm-row__sub">married to João Souza</span>
+    </span>
+  </a>
+
+  <!-- the row opens the link and a button still works: a trailing item replaces the chevron -->
+  <div class="pm-row">
+    <span class="pm-row__text">
+      <a class="pm-row__title pm-row__link" href="/links/1">Easter signup</a>
+      <span class="pm-row__sub">/pascoa · 1,204 clicks</span>
+    </span>
+    <button class="pm-btn pm-btn--soft pm-btn--sm" data-pm-copy="…" data-pm-copied="Copied ✓">Copy</button>
+  </div>
+
+  <!-- a problem, fixed right here -->
+  <div class="pm-row pm-row--danger">
+    <span class="pm-row__text">
+      <span class="pm-row__title">Open seat</span>
+      <span class="pm-row__sub">Check-in</span>
+    </span>
+    <button class="pm-btn pm-btn--outline pm-btn--sm">Choose</button>
+  </div>
+
+  <div class="pm-row pm-row--off"><span class="pm-row__text"><span class="pm-row__title">Bruno Lima</span><span class="pm-row__sub pm-row__sub--danger">On vacation that Sunday</span></span></div>
+
+  <!-- a checkbox in front: the whole row toggles it -->
+  <label class="pm-row"><input class="pm-check" type="checkbox"><span class="pm-row__text"><span class="pm-row__title">Carla Mendes</span></span></label>
+
+  <!-- a switch or stepper behind -->
+  <label class="pm-row"><span class="pm-row__text"><span class="pm-row__title" id="couples-title">Couples serve together</span><span class="pm-row__sub" id="couples-sub">They land on the same Sunday</span></span><input class="pm-switch" type="checkbox" role="switch" aria-labelledby="couples-title" aria-describedby="couples-sub"></label>
+
+  <!-- last row: one more of what the card lists -->
+  <button class="pm-row pm-row--add" type="button">Add person</button>
+</div>
+```
+With a header and sections, as on a Sunday card:
+```html
+<div class="pm-rows">
+  <div class="pm-rows__head"><h2>Sunday, Nov 8</h2><span class="pm-badge">4 people</span></div>
+  <p class="pm-rows__label">Now</p>            <!-- small uppercase caption -->
+  <p class="pm-rows__section">2 to 5 years</p> <!-- bold heading over the names under it -->
+  <a class="pm-row" href="…">…</a>
+</div>
+<div class="pm-rows"><p class="pm-rows__empty">Nobody with that name.</p></div>
+```
+When a `label.pm-row` has a sub-line, point the control's `aria-labelledby` at the title and `aria-describedby` at the sub, as in the switch above: the whole row stays the target, and the sub-line doesn't become part of the name.
+
+A row's first `<svg>` is a 22px icon (the Menu screen), and the chevron stays. Any other trailing item replaces the chevron. A `<progress>` as a row's last child spans the whole row, so every bar compares:
+```html
+<a class="pm-row" href="/menu/folders"><svg aria-hidden="true">…</svg><span class="pm-row__text"><span class="pm-row__title">Folders</span><span class="pm-row__sub">how links are sorted</span></span></a>
+
+<div class="pm-row">
+  <span class="pm-row__text"><span class="pm-row__title">WhatsApp</span></span>
+  <span class="pm-badge">698</span>
+  <progress class="pm-progress" value="58" max="100" aria-label="58 percent"></progress>
+</div>
+```
+`<details class="pm-disclosure">` folds what is out of the way:
+```html
+<details class="pm-disclosure">
+  <summary>Past · 3</summary>
+  <div class="pm-rows pm-faded">…</div>
+</details>
+```
+
+## Badge, count, flag
+```html
+<span class="pm-badge">3 people</span>
+<span class="pm-badge pm-badge--danger"><span class="pm-flag"></span>2 open seats</span>
+<span class="pm-badge pm-badge--solid">Band 1</span>
+<span class="pm-badge pm-badge--outline"><svg aria-hidden="true">…</svg>Published</span>
+<span class="pm-badge pm-badge--dashed">Draft</span>
+<span class="pm-count">26</span>                                    <!-- inside a chip or button -->
+<span class="pm-flag"></span><span class="pm-sr-only">has a problem</span>   <!-- the clay diamond -->
+```
+A problem is always written or flagged: never color alone, and always with text for screen readers.
+
+## Dates
+```html
+<span class="pm-datetile"><small>Sun</small><b>08</b></span>
+<span class="pm-datetile pm-datetile--sm"><small>Sun</small><b>08</b><span class="pm-flag"></span></span>
+
+<nav class="pm-datestrip" aria-label="Sundays">
+  <a class="pm-datetile pm-faded" href="#d1"><small>Sun</small><b>01</b></a>
+  <a class="pm-datetile" href="#d8" aria-current="true"><small>Sun</small><b>08</b></a>
+  <a class="pm-datetile" href="#d15"><small>Sun</small><b>15</b><span class="pm-flag"></span><span class="pm-sr-only">has open seats</span></a>
+</nav>
+```
+
+## Notice
+What this screen needs from you, and the button that does it. `--draft` is dashed: not final yet. `--danger` is the clay wash.
+```html
+<section class="pm-notice pm-notice--draft">
+  <div>
+    <h2>November draft: review and approve</h2>
+    <p>The teams see it once every ministry has approved.</p>
+  </div>
+  <button class="pm-btn">Approve Kids</button>
+</section>
+<section class="pm-notice pm-notice--danger"><div><h2>This Sunday has no band</h2></div><button class="pm-btn pm-btn--soft">Choose</button></section>
+```
+Use `.pm-alert` for a calm note with nothing to press.
+
+## Empty state
+```html
+<div class="pm-empty">
+  <span class="pm-empty__icon"><svg aria-hidden="true">…</svg></span>
+  <h2 class="pm-empty__title">nothing here yet.</h2>
+  <p>When you create your first link, it shows up here.</p>
+  <button class="pm-btn">Create link</button>
+</div>
+```
+
+## Segmented & stepper
+```html
+<div class="pm-segmented" role="radiogroup" aria-label="Redirect">
+  <label><input type="radio" name="r" checked><span>Temporary</span></label>
+  <label><input type="radio" name="r"><span>Permanent</span></label>
+</div>
+
+<span class="pm-stepper" role="group" aria-label="People per service">
+  <button type="button" aria-label="Fewer">−</button>
+  <output aria-live="polite">4</output>
+  <button type="button" aria-label="More">+</button>
+</span>
+```
+
+## Screen actions
+On a phone, the circle above the tab bar. With one action it does that action directly:
+```html
+<button class="pm-fab" type="button" aria-label="Add person" data-pm-open="new-person"><svg aria-hidden="true">…</svg></button>
+```
+With two or more it opens them, in a modal `<dialog>` so focus stays with the actions. A tap on the blur closes it, and the main action goes last, closest to the thumb:
+```html
+<button class="pm-fab" type="button" data-pm-open="actions" aria-label="Actions for this screen"><svg aria-hidden="true">…</svg></button>
+<dialog class="pm-fabmenu" id="actions" aria-label="Actions for this screen">
+  <div class="pm-menu">
+    <button class="pm-menu__item" type="button">
+      <span class="pm-menu__icon"><svg aria-hidden="true">…</svg></span>
+      <span><span class="pm-menu__label">Select several</span><span class="pm-menu__hint">to move them at once</span></span>
+    </button>
+    <button class="pm-menu__item pm-menu__item--primary" type="button" data-pm-open="new-person">
+      <span class="pm-menu__icon"><svg aria-hidden="true">…</svg></span>
+      <span class="pm-menu__label">Add person</span>
+    </button>
+  </div>
+  <button class="pm-fab" type="button" data-pm-close aria-label="Close actions"><svg aria-hidden="true">…</svg></button>
+</dialog>
+```
+On a desk, the same actions are header buttons, and the rarely used ones wait in a `⋯` menu:
+```html
+<button class="pm-btn pm-btn--soft pm-btn--icon" type="button" popovertarget="more" data-pm-menu aria-label="More actions"><svg aria-hidden="true">…</svg></button>
+<div class="pm-menu" id="more" popover>
+  <button class="pm-menu__item" type="button"><svg aria-hidden="true">…</svg><span><span class="pm-menu__label">Archive</span><span class="pm-menu__hint">the address keeps working</span></span></button>
+  <button class="pm-menu__item pm-menu__item--danger" type="button"><svg aria-hidden="true">…</svg><span class="pm-menu__label">Delete link</span></button>
+</div>
+```
+
+## Sheet
+Tapped a name, short choice. Rises from the bottom on a phone, centered at 420px on a desk. With `init()`, its top can be dragged down to close it, and it rises above the phone's keyboard.
+```html
+<dialog class="pm-sheet" id="person" aria-labelledby="person-name">
+  <h2 class="pm-sheet__title" id="person-name">Diego Prado</h2>
+  <p class="pm-sheet__sub">Kids · Sunday, Nov 8</p>
+  <div class="pm-sheet__actions">
+    <button class="pm-btn">Swap</button>
+    <button class="pm-btn pm-btn--soft">See person</button>
+    <button class="pm-btn pm-btn--ghost pm-btn--block pm-danger">Remove from schedule</button>
+  </div>
+</dialog>
+```
+
+## Panel
+Create, edit, pick from a long list. Full screen on a phone, a right-hand panel on a desk.
+```html
+<dialog class="pm-panel" id="new-person" aria-labelledby="new-person-title">
+  <div class="pm-panel__head">
+    <button class="pm-btn pm-btn--soft pm-btn--icon" type="button" data-pm-close aria-label="Back"><svg aria-hidden="true">…</svg></button>
+    <div>
+      <h2 class="pm-panel__title" id="new-person-title">Add person</h2>
+      <p class="pm-panel__sub">Kids</p>
+    </div>
+  </div>
+  <div class="pm-panel__body">…fields…</div>
+  <div class="pm-panel__foot">
+    <button class="pm-btn pm-btn--soft" type="button" data-pm-close>Cancel</button>
+    <button class="pm-btn">Save</button>
+  </div>
+</dialog>
+```
+For confirmations, use `.pm-dialog` with `.pm-dialog__foot` and `autofocus` on Cancel:
+```html
+<dialog class="pm-dialog" id="confirm" aria-labelledby="confirm-title">
+  <h2 class="pm-h2" id="confirm-title">delete this link?</h2>
+  <p class="pm-body">Printed QR codes stop working. This can't be undone.</p>
+  <div class="pm-dialog__foot">
+    <button class="pm-btn pm-btn--soft" data-pm-close autofocus>Cancel</button>
+    <button class="pm-btn pm-btn--danger">Delete link</button>
+  </div>
+</dialog>
+```
+
+## Select mode
+Rows turn into `label.pm-row` with a `.pm-check`, the circle goes away, and this bar holds what to do. It floats above the tab bar on a phone and sticks under the list on a desk.
+```html
+<div class="pm-selectbar">
+  <button class="pm-btn pm-btn--ghost pm-btn--icon" type="button" aria-label="Stop selecting"><svg aria-hidden="true">…</svg></button>
+  <p aria-live="polite">2 selected</p>
+  <button class="pm-btn">Move to folder</button>
+</div>
+```
+
+## Workspace & to-do
+The main column plus a 288px rail from 1280px up. Below that, the rail follows the main column, at the very end of the page. If what's in it matters sooner, add `.pm-wide-only` to the rail and offer the same thing in a `.pm-narrow-only` row that opens a sheet.
+```html
+<div class="pm-workspace">
+  <div class="pm-stack">…</div>
+  <aside class="pm-workspace__rail">
+    <div class="pm-todo">
+      <span class="pm-datetile"><small>Sun</small><b>15</b></span>
+      <h3>Kids · 2 open seats</h3>
+      <p>2 to 5 years · Helper, Check-in</p>
+      <button class="pm-btn pm-btn--outline pm-btn--sm">Fill</button>
+    </div>
+  </aside>
+</div>
+```
+
+## Numbers
+```html
+<div class="pm-card pm-card--compact pm-stats">
+  <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">3,482</strong><span class="pm-stat__label">Clicks</span></div>
+  <div class="pm-stat pm-stat--stacked"><strong class="pm-stat__value pm-nums">604</strong><span class="pm-stat__label">QR scans</span></div>
+</div>
+
+<div class="pm-cluster pm-cluster--between">
+  <h2 class="pm-h4">Clicks per day</h2>
+  <p class="pm-small pm-nums">Most: 104 clicks · Oct 6</p>
+</div>
+<div class="pm-bars" role="img" aria-label="Clicks per day over the last 30 days" tabindex="0">
+  <span style="--v:.4" data-value="42 clicks" data-label="Oct 5"></span>
+  <span style="--v:1" data-value="104 clicks" data-label="Oct 6"></span>
+  <span style="--v:0" data-value="0 clicks" data-label="Oct 7"></span>
+</div>
+<div class="pm-bars__axis" aria-hidden="true"><span>Oct 5</span><span>Oct 7</span></div>
+<table class="pm-sr-only">…the same numbers…</table>
+```
+`--v` runs from 0 to 1, relative to the tallest bar. With `init()`, a bar reads out its `data-value` and `data-label`: on hover, under a finger as it slides or taps, and with the arrow keys once the chart has focus. The whole column answers, not just the painted part, and a day with nothing still has a column.
+
+Say the highest value in the line above the chart, as here: it gives the chart a scale on screens that can't hover. Write the labels in the product's language, and leave out `title`: a native tooltip would appear over the readout.
+
+## Gate
+A screen with one job and no navigation: sign in, not found, a fatal error.
+```html
+<main class="pm-gate">
+  <div class="pm-card pm-card--compact pm-stack">
+    <h1 class="pm-h1">sign in.</h1>
+    …
+  </div>
+</main>
+```
+
+## Loading
+A skeleton shaped like the screen it stands in for, and one message for screen readers:
+```html
+<p class="pm-sr-only" role="status">Loading…</p>
+<div class="pm-rows" aria-hidden="true">
+  <div class="pm-row"><span class="pm-row__text"><span class="pm-skeleton" style="width:50%; height:16px"></span></span></div>
+  <div class="pm-row"><span class="pm-row__text"><span class="pm-skeleton" style="width:66%; height:16px"></span></span></div>
+</div>
+```
 
 
 ---
@@ -888,6 +1533,8 @@ export function PoiemaBehaviors() {
 ```
 Per element instead: `useEffect(() => { const h = tilt(ref.current!); return h.destroy; }, [])`.
 Use `daysUntil()` in render rather than `data-pm-countdown` (React owns the text node). Toasts: `import { toast } from 'poiema-ui'`.
+
+**An app, portal or admin?** Add `pm-app` to the same `<html>` and follow `docs/app.md`: `<html lang="pt-BR" className={`${font.variable} pm-app`} data-theme="light">`, with `viewportFit: 'cover'` in the `viewport` export. It also turns smooth scrolling off, so the router's jump to the top doesn't animate.
 
 ## SvelteKit / Svelte
 ```svelte
@@ -995,6 +1642,7 @@ Every token is a CSS custom property. Use semantic colors (`--pm-ink`, `--pm-can
 | `--pm-muted` | `#7d7d7d` | `#8d8d8d` | The 'echo' gray inside display text (em nós.). Large text only. |
 | `--pm-line` | `rgba(43, 43, 43, .14)` | `rgba(255, 255, 255, .12)` | Hairlines, outlined cards, input borders. |
 | `--pm-line-strong` | `#2b2b2b` | `#555555` | Outlined alerts, tags, checkbox borders. |
+| `--pm-divider` | `rgba(43, 43, 43, .08)` | `rgba(255, 255, 255, .07)` | Hairline between rows inside a card. Lighter than line, so a long list stays quiet. |
 | `--pm-perforation` | `#bdbdbd` | `#4a4a4a` | Dashed ticket perforation. |
 | `--pm-on-ink` | `#f7f7f7` | `#2b2b2b` | Text on an ink fill (solid buttons, callouts). |
 | `--pm-on-ink-2` | `#b9b9b9` | `#555555` | Secondary text on an ink fill. |
@@ -1007,6 +1655,7 @@ Every token is a CSS custom property. Use semantic colors (`--pm-ink`, `--pm-can
 | `--pm-scrim` | `rgba(20, 20, 20, .38)` | `rgba(0, 0, 0, .6)` | Dialog backdrop. |
 | `--pm-pillar` | `.92` | `.07` | Strength (alpha) of the white light-pillars on the hero sides. |
 | `--pm-danger` | `#903b14` | `#d47b4d` | Errors and destructive actions. Clay — warm, never alarm-red. |
+| `--pm-danger-soft` | `#f4e5dc` | `#3a2418` | Pale clay wash behind danger text: problem badges, destructive buttons in apps, problem notices. |
 | `--pm-success` | `#3f5a08` | `#8aa83a` | Confirmations. Grass. |
 | `--pm-icon-check` | *(svg)* | *(svg)* | Checkbox tick (on-ink colored). |
 | `--pm-icon-chevron` | *(svg)* | *(svg)* | Select chevron (ink colored). |
@@ -1078,6 +1727,7 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-text-h1` | `clamp(40px, 7vw, 88px)` |  |
 | `--pm-text-display` | `clamp(56px, 12vw, 160px)` |  |
 | `--pm-text-numeral` | `clamp(76px, 13vw, 168px)` |  |
+| `--pm-text-stat` | `clamp(48px, 6vw, 72px)` | The value of a .pm-stat. |
 | `--pm-text-hero` | `clamp(92px, 22vw, 290px)` | Only for the stacked hero lockup. |
 
 ## Weight
@@ -1103,6 +1753,7 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-tracking-heading` | `-.05em` |  |
 | `--pm-tracking-display` | `-.055em` |  |
 | `--pm-tracking-numeral` | `-.07em` |  |
+| `--pm-tracking-stat` | `-.06em` |  |
 
 ## Leading
 
@@ -1156,7 +1807,24 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-section` | `clamp(64px, 9vw, 120px)` | Vertical rhythm between sections. |
 | `--pm-card-pad` | `clamp(28px, 5.5vw, 72px)` |  |
 | `--pm-card-pad-sm` | `clamp(24px, 4vw, 48px)` |  |
-| `--pm-sticky-top` | `58px` | Height of .pm-topbar; offset for sticky elements below it. |
+| `--pm-sticky-top` | `58px` | Height of .pm-topbar; offset for sticky elements below it. Taller on touch: see Touch. |
+| `--pm-btn-h` | `48px` | Height of .pm-btn. The app register lowers every control size below. |
+| `--pm-btn-h-sm` | `36px` |  |
+| `--pm-btn-h-lg` | `56px` |  |
+| `--pm-btn-pad` | `14px 26px` |  |
+| `--pm-btn-pad-sm` | `9px 16px` |  |
+| `--pm-btn-pad-lg` | `18px 32px` |  |
+| `--pm-btn-text` | `15px` |  |
+| `--pm-btn-text-lg` | `17px` |  |
+| `--pm-field-h` | `52px` | Height of inputs and selects. |
+| `--pm-field-pad` | `22px` |  |
+| `--pm-field-radius` | `999px` | Pill on sites. In apps fields are soft rectangles, so a field never reads as a button. |
+| `--pm-field-text` | `16px` | Never under 16px on touch: iOS zooms the page into smaller fields. |
+| `--pm-chip-h` | `0px` | Minimum height of a .pm-pillnav pill. |
+| `--pm-alert-pad` | `20px 24px` |  |
+| `--pm-dialog-w` | `560px` |  |
+| `--pm-tabbar-h` | `58px` | Height of the phone tab bar in an app. |
+| `--pm-sidebar-w` | `248px` | Width of the desktop sidebar in an app. |
 
 ## Shadow
 
@@ -1165,6 +1833,8 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-shadow-xs` | `0 1px 2px rgba(0, 0, 0, .05)` |  |
 | `--pm-shadow-lift` | `0 18px 40px -16px rgba(0, 0, 0, .35)` |  |
 | `--pm-shadow-lift-hover` | `0 24px 50px -16px rgba(0, 0, 0, .45)` |  |
+| `--pm-shadow-card` | `0 1px 2px rgba(0, 0, 0, .04), 0 6px 18px rgba(0, 0, 0, .05)` | Soft lift for paper in an app: cards, rows, search, soft buttons. |
+| `--pm-shadow-pop` | `0 18px 40px rgba(0, 0, 0, .2)` | Things above the page in an app: sheets, panels, menus, the tab bar. |
 | `--pm-shadow-float` | `0 40px 90px -40px rgba(0, 0, 0, .5)` | Big soft shadow under frames and tickets. |
 | `--pm-shadow-object` | `0 30px 34px rgba(0, 0, 0, .22)` | Use inside filter: drop-shadow() for cut-out objects. |
 
@@ -1189,11 +1859,78 @@ Font sizes. Display sizes are fluid clamps.
 | `--pm-cycle-interval` | `1800ms` | Read by the JS cycle behavior. |
 | `--pm-blur` | `14px` |  |
 
+## App register
+
+The app register: same room, working volume. `.pm-app` or `.pm-shell` applies `tokens` to its subtree, and a fine pointer adds `fine`. Every key names an existing token (the build fails otherwise), so components change with the register and need no second version.
+
+| Variable | App | Mouse | Note |
+|---|---|---|---|
+| `--pm-card` | `var(--pm-surface)` |  | Flat paper: a gradient drifts into the canvas along a long list. |
+| `--pm-text-base` | `16px` |  |  |
+| `--pm-text-lead` | `16px` |  |  |
+| `--pm-text-h4` | `16px` |  |  |
+| `--pm-text-h3` | `18px` |  |  |
+| `--pm-text-h2` | `clamp(20px, 1.8vw, 24px)` |  |  |
+| `--pm-text-h1` | `clamp(26px, 2.6vw, 34px)` |  | The page title. A screen starts working under it, not a scroll later. |
+| `--pm-text-display` | `clamp(34px, 4vw, 48px)` |  |  |
+| `--pm-text-numeral` | `clamp(40px, 4.5vw, 56px)` |  |  |
+| `--pm-text-stat` | `clamp(26px, 2.6vw, 34px)` |  |  |
+| `--pm-tracking-title` | `-.02em` |  |  |
+| `--pm-tracking-heading` | `-.03em` |  |  |
+| `--pm-tracking-display` | `-.04em` |  |  |
+| `--pm-tracking-numeral` | `-.045em` |  |  |
+| `--pm-tracking-stat` | `-.035em` |  |  |
+| `--pm-leading-numeral` | `.95` |  |  |
+| `--pm-leading-display` | `1.05` |  |  |
+| `--pm-leading-heading` | `1.1` |  |  |
+| `--pm-leading-title` | `1.2` |  |  |
+| `--pm-leading-statement` | `1.25` |  |  |
+| `--pm-leading-body` | `1.5` |  |  |
+| `--pm-radius-xl` | `24px` |  | Cards, sheets, panels. 40px would clip rows that run close to the edge. |
+| `--pm-radius-lg` | `20px` |  |  |
+| `--pm-radius-md` | `16px` |  |  |
+| `--pm-radius-sm` | `12px` |  |  |
+| `--pm-gutter` | `clamp(14px, 3vw, 24px)` |  |  |
+| `--pm-section` | `24px` |  |  |
+| `--pm-card-pad` | `clamp(16px, 2vw, 24px)` |  |  |
+| `--pm-card-pad-sm` | `16px` |  |  |
+| `--pm-sticky-top` | `58px` |  | The site's default again, so `touch` never reaches an app. |
+| `--pm-btn-h` | `44px` | `40px` | Touch first: 44px targets. |
+| `--pm-btn-h-sm` | `44px` | `32px` |  |
+| `--pm-btn-h-lg` | `48px` | `44px` |  |
+| `--pm-btn-pad` | `0 18px` | `0 16px` |  |
+| `--pm-btn-pad-sm` | `0 14px` | `0 12px` |  |
+| `--pm-btn-pad-lg` | `0 22px` |  |  |
+| `--pm-btn-text-lg` | `16px` |  |  |
+| `--pm-field-h` | `44px` | `40px` |  |
+| `--pm-field-pad` | `14px` |  |  |
+| `--pm-field-radius` | `var(--pm-radius-sm)` |  |  |
+| `--pm-chip-h` | `44px` | `36px` |  |
+| `--pm-alert-pad` | `12px 14px` |  |  |
+| `--pm-dialog-w` | `448px` |  |  |
+| `--pm-lift` | `0px` |  | Nothing lifts on hover: a tool is touched all day. |
+| `--pm-lift-lg` | `0px` |  |  |
+| `--pm-dur-base` | `200ms` |  | Overlays open quickly. |
+| `--pm-btn-text` | | `14px` |  |
+| `--pm-field-text` | | `14px` |  |
+
+## Touch
+
+Sites on a touch screen. A coarse pointer re-points these tokens at `:root`, so small targets reach 44px and the offsets they push follow. With a mouse nothing changes. Every key names an existing token and is also set in `app.tokens` (the build fails otherwise), so an app keeps its own sizes.
+
+| Variable | Touch | Note |
+|---|---|---|
+| `--pm-btn-h-sm` | `44px` | `.pm-btn--sm` and its round icon button. |
+| `--pm-chip-h` | `44px` | A `.pm-pillnav` pill. |
+| `--pm-sticky-top` | `68px` | A `.pm-topbar` holding 44px targets: 44 plus 12px of padding above and below. |
+
 ## Breakpoints
 
 Documentation only — CSS custom properties cannot be used in media queries.
 
-| Name | Value |
-|---|---|
-| md | `max-width: 900px` |
-| sm | `max-width: 560px` |
+| Name | Value | Note |
+|---|---|---|
+| md | `900px` |  |
+| sm | `560px` |  |
+| app-rail | `1280px` | App: a side rail joins the main column. |
+| app-columns | `1100px` | App: long lists flow into two columns (three from 1600px). |

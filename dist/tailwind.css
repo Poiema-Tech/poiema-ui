@@ -32,6 +32,7 @@
   --color-muted: var(--pm-muted);
   --color-line: var(--pm-line);
   --color-line-strong: var(--pm-line-strong);
+  --color-divider: var(--pm-divider);
   --color-perforation: var(--pm-perforation);
   --color-on-ink: var(--pm-on-ink);
   --color-on-ink-2: var(--pm-on-ink-2);
@@ -39,6 +40,7 @@
   --color-on-ink-muted: var(--pm-on-ink-muted);
   --color-on-ink-line: var(--pm-on-ink-line);
   --color-danger: var(--pm-danger);
+  --color-danger-soft: var(--pm-danger-soft);
   --color-success: var(--pm-success);
   --color-gray-0: var(--pm-gray-0);
   --color-gray-50: var(--pm-gray-50);
@@ -121,6 +123,8 @@
   --radius-tile: var(--pm-radius-md);
   --radius-frame: var(--pm-radius-sm);
 
+  --shadow-card: var(--pm-shadow-card);
+  --shadow-pop: var(--pm-shadow-pop);
   --shadow-lift: var(--pm-shadow-lift);
   --shadow-float: var(--pm-shadow-float);
   --drop-shadow-object: var(--pm-shadow-object);

@@ -51,6 +51,7 @@ export declare const tokens: {
       "muted": string;
       "line": string;
       "line-strong": string;
+      "divider": string;
       "perforation": string;
       "on-ink": string;
       "on-ink-2": string;
@@ -63,6 +64,7 @@ export declare const tokens: {
       "scrim": string;
       "pillar": string;
       "danger": string;
+      "danger-soft": string;
       "success": string;
       "icon-check": string;
       "icon-chevron": string;
@@ -80,6 +82,7 @@ export declare const tokens: {
       "muted": string;
       "line": string;
       "line-strong": string;
+      "divider": string;
       "perforation": string;
       "on-ink": string;
       "on-ink-2": string;
@@ -92,6 +95,7 @@ export declare const tokens: {
       "scrim": string;
       "pillar": string;
       "danger": string;
+      "danger-soft": string;
       "success": string;
       "icon-check": string;
       "icon-chevron": string;
@@ -115,6 +119,7 @@ export declare const tokens: {
     "h1": string;
     "display": string;
     "numeral": string;
+    "stat": string;
     "hero": string;
   };
   "weight": {
@@ -134,6 +139,7 @@ export declare const tokens: {
     "heading": string;
     "display": string;
     "numeral": string;
+    "stat": string;
   };
   "leading": {
     "numeral": string;
@@ -176,11 +182,30 @@ export declare const tokens: {
     "card-pad": string;
     "card-pad-sm": string;
     "sticky-top": string;
+    "btn-h": string;
+    "btn-h-sm": string;
+    "btn-h-lg": string;
+    "btn-pad": string;
+    "btn-pad-sm": string;
+    "btn-pad-lg": string;
+    "btn-text": string;
+    "btn-text-lg": string;
+    "field-h": string;
+    "field-pad": string;
+    "field-radius": string;
+    "field-text": string;
+    "chip-h": string;
+    "alert-pad": string;
+    "dialog-w": string;
+    "tabbar-h": string;
+    "sidebar-w": string;
   };
   "shadow": {
     "xs": string;
     "lift": string;
     "lift-hover": string;
+    "card": string;
+    "pop": string;
     "float": string;
     "object": string;
   };
@@ -205,6 +230,74 @@ export declare const tokens: {
   "breakpoint": {
     "md": string;
     "sm": string;
+    "app-rail": string;
+    "app-columns": string;
+  };
+  "touch": {
+    "btn-h-sm": string;
+    "chip-h": string;
+    "sticky-top": string;
+  };
+  "app": {
+    "tokens": {
+      "card": string;
+      "text-base": string;
+      "text-lead": string;
+      "text-h4": string;
+      "text-h3": string;
+      "text-h2": string;
+      "text-h1": string;
+      "text-display": string;
+      "text-numeral": string;
+      "text-stat": string;
+      "tracking-title": string;
+      "tracking-heading": string;
+      "tracking-display": string;
+      "tracking-numeral": string;
+      "tracking-stat": string;
+      "leading-numeral": string;
+      "leading-display": string;
+      "leading-heading": string;
+      "leading-title": string;
+      "leading-statement": string;
+      "leading-body": string;
+      "radius-xl": string;
+      "radius-lg": string;
+      "radius-md": string;
+      "radius-sm": string;
+      "gutter": string;
+      "section": string;
+      "card-pad": string;
+      "card-pad-sm": string;
+      "sticky-top": string;
+      "btn-h": string;
+      "btn-h-sm": string;
+      "btn-h-lg": string;
+      "btn-pad": string;
+      "btn-pad-sm": string;
+      "btn-pad-lg": string;
+      "btn-text-lg": string;
+      "field-h": string;
+      "field-pad": string;
+      "field-radius": string;
+      "chip-h": string;
+      "alert-pad": string;
+      "dialog-w": string;
+      "lift": string;
+      "lift-lg": string;
+      "dur-base": string;
+    };
+    "fine": {
+      "btn-h": string;
+      "btn-h-sm": string;
+      "btn-h-lg": string;
+      "btn-pad": string;
+      "btn-pad-sm": string;
+      "btn-text": string;
+      "field-h": string;
+      "field-text": string;
+      "chip-h": string;
+    };
   };
 };
 export declare const cssVar: (name: string) => string;
