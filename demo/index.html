@@ -354,15 +354,19 @@ npx poiema-ui init   // teach your AI</pre>
         <h2 class="pm-h2">tell us who you are.</h2>
         <form class="pm-stack pm-stack--lg" onsubmit="event.preventDefault(); Poiema.toast('Saved ✓')">
           <div class="pm-grid pm-grid--2">
-            <label class="pm-field"><span class="pm-label">Name</span><input class="pm-input" placeholder="Your name" autocomplete="name"></label>
-            <label class="pm-field"><span class="pm-label">Team</span><select class="pm-select"><option>Design</option><option>Product</option><option>Ministry</option></select></label>
+            <div class="pm-field"><label class="pm-label" for="contact-name">Name</label><input class="pm-input" id="contact-name" placeholder="Your name" autocomplete="name"></div>
+            <div class="pm-field"><label class="pm-label" for="contact-team">Team</label><select class="pm-select" id="contact-team"><option>Design</option><option>Product</option><option>Ministry</option></select></div>
           </div>
-          <label class="pm-field">
-            <span class="pm-label">Email</span>
-            <input class="pm-input" type="email" value="ana@" aria-invalid="true" aria-describedby="email-error">
-            <span class="pm-error" id="email-error">Enter a valid email.</span>
-          </label>
-          <label class="pm-field"><span class="pm-label">Message</span><textarea class="pm-textarea" placeholder="One or two sentences are enough."></textarea><span class="pm-hint">We read every message.</span></label>
+          <div class="pm-field">
+            <label class="pm-label" for="contact-email">Email</label>
+            <input class="pm-input" id="contact-email" type="email" value="ana@" aria-invalid="true" aria-describedby="contact-email-error">
+            <span class="pm-error" id="contact-email-error">Enter a valid email.</span>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label" for="contact-message">Message</label>
+            <textarea class="pm-textarea" id="contact-message" placeholder="One or two sentences are enough." aria-describedby="contact-message-hint"></textarea>
+            <span class="pm-hint" id="contact-message-hint">We read every message.</span>
+          </div>
           <div class="pm-cluster" style="--pm-gap:24px">
             <label class="pm-choice"><input class="pm-check" type="checkbox" checked> Keep me posted</label>
             <label class="pm-choice"><input class="pm-radio" type="radio" name="f" checked> Monthly</label>

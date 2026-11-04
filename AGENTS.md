@@ -48,7 +48,7 @@ buttons     .pm-btn | --soft | --outline | --ghost | --danger | --sm | --lg | --
 chips       .pm-chip | --solid | --outline     .pm-tag (outlined uppercase)
 nav         .pm-pillnav(--sticky) > a|button (+ .pm-ring--sm), active = aria-current / aria-selected / aria-pressed
 data        .pm-stat(__value __label) .pm-numeral .pm-ticket(__main __dates __month __side __row) .pm-table .pm-progress
-forms       .pm-field > .pm-label + .pm-input|.pm-select|.pm-textarea + .pm-hint|.pm-error ; .pm-choice > .pm-check|.pm-radio|.pm-switch
+forms       div.pm-field > label.pm-label[for] + (.pm-input|.pm-select|.pm-textarea)[id][aria-describedby] + (.pm-hint|.pm-error)[id] ; label.pm-choice > .pm-check|.pm-radio|.pm-switch
 overlay     dialog.pm-dialog (+ data-pm-open="id", data-pm-close) ; toast('Saved ✓')
 layout      .pm-container .pm-section .pm-band .pm-stack(--sm|--lg|--xl) .pm-cluster .pm-grid(--2|--3) .pm-split .pm-ruled
 type        .pm-eyebrow .pm-display .pm-h1 .pm-h2 .pm-h3 .pm-h4 .pm-lead .pm-body .pm-small .pm-numeral .pm-prose

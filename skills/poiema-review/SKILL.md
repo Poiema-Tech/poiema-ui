@@ -70,6 +70,7 @@ Audit UI against the Poiema system and report **specific, located fixes**. Read 
 
 **Accessibility**
 - [ ] Labels for every field; `aria-invalid` and an error message for errors.
+- [ ] A hint or error sits outside the `<label>` and is tied to its field by `aria-describedby`. A `label.pm-row` with a sub-line points `aria-labelledby` at the title and `aria-describedby` at the sub.
 - [ ] Visible focus (don't remove outlines); `aria-current`/`aria-selected` on active pills.
 - [ ] Alt text on meaningful objects, `alt=""` + `aria-hidden` on decorative ones; marquee duplicate `aria-hidden`.
 - [ ] Contrast: never put `--pm-muted` on small text.

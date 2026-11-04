@@ -204,6 +204,14 @@ test('the build rejects a touch key that is no token, or that an app would inher
   }
 });
 
+test('a row label with a sub-line keeps the sub-line out of the name', () => {
+  for (const file of ['docs/components.md', 'demo/app.html']) {
+    for (const [row] of read(file).matchAll(/<label class="pm-row">[\s\S]*?<\/label>/g)) {
+      if (row.includes('pm-row__sub')) assert.match(row, /aria-labelledby=[\s\S]*aria-describedby=/, `${file}: ${row.slice(0, 80)}`);
+    }
+  }
+});
+
 test('nothing in app.css can change a page without the app scope', () => {
   const strip = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '');
   const classes = (css) => new Set([...css.matchAll(/\.pm-[\w-]+/g)].map((m) => m[0]));
@@ -244,6 +252,30 @@ test('every class documented in components.md exists in the CSS', () => {
   const documented = new Set([...read('docs/components.md').matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)).filter((c) => c.startsWith('pm-')));
   const missing = [...documented].filter((c) => !css.includes(`.${c}`));
   assert.deepEqual(missing, []);
+});
+
+test('a hint or error sits outside the label and is tied to its field by id', () => {
+  for (const file of ['docs/components.md', 'docs/app.md', 'demo/index.html', 'demo/app.html']) {
+    const source = read(file);
+    assert.doesNotMatch(source, /<label\b[^>]*\bpm-field\b/, `${file}: a label around a whole field makes its hint part of the field's name`);
+    // `<label>` in prose is the word, not a tag: read as markup it would run on to the next </label>.
+    for (const [label] of source.matchAll(/<label\b(?!>`)[\s\S]*?<\/label>/g)) {
+      assert.doesNotMatch(label, /\bpm-(hint|error)\b/, `${file}: ${label}`);
+    }
+    const ids = new Set([...source.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
+    const described = [...source.matchAll(/\baria-describedby="([^"]+)"/g)].flatMap((match) => match[1].split(/\s+/));
+    for (const id of [...source.matchAll(/\bfor="([^"]+)"/g)].map((match) => match[1]).concat(described)) {
+      assert.ok(ids.has(id), `${file}: nothing has id "${id}"`);
+    }
+    for (const [, id] of source.matchAll(/<[^>]*\bpm-error\b[^>]*\bid="([^"]+)"[^>]*\shidden\b/g)) {
+      assert.ok(!described.includes(id), `${file}: a hidden error that aria-describedby names can still be read: "${id}"`);
+    }
+  }
+  const panel = read('demo/app.html');
+  assert.match(panel, /setAttribute\('aria-describedby', 'new-link-error'\)/, 'the panel points at its error while it shows');
+  assert.match(panel, /removeAttribute\('aria-describedby'\)/, 'and stops when it clears');
+  assert.match(read('AGENTS.md'), /^forms +div\.pm-field > label\.pm-label\[for/m);
+  assert.match(read('skills/poiema-review/SKILL.md'), /outside the `<label>`.*`aria-describedby`/);
 });
 
 test('skills have valid frontmatter (name = folder, description <= 1024 chars)', () => {

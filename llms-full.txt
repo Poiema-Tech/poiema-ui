@@ -55,7 +55,7 @@ buttons     .pm-btn | --soft | --outline | --ghost | --danger | --sm | --lg | --
 chips       .pm-chip | --solid | --outline     .pm-tag (outlined uppercase)
 nav         .pm-pillnav(--sticky) > a|button (+ .pm-ring--sm), active = aria-current / aria-selected / aria-pressed
 data        .pm-stat(__value __label) .pm-numeral .pm-ticket(__main __dates __month __side __row) .pm-table .pm-progress
-forms       .pm-field > .pm-label + .pm-input|.pm-select|.pm-textarea + .pm-hint|.pm-error ; .pm-choice > .pm-check|.pm-radio|.pm-switch
+forms       div.pm-field > label.pm-label[for] + (.pm-input|.pm-select|.pm-textarea)[id][aria-describedby] + (.pm-hint|.pm-error)[id] ; label.pm-choice > .pm-check|.pm-radio|.pm-switch
 overlay     dialog.pm-dialog (+ data-pm-open="id", data-pm-close) ; toast('Saved ✓')
 layout      .pm-container .pm-section .pm-band .pm-stack(--sm|--lg|--xl) .pm-cluster .pm-grid(--2|--3) .pm-split .pm-ruled
 type        .pm-eyebrow .pm-display .pm-h1 .pm-h2 .pm-h3 .pm-h4 .pm-lead .pm-body .pm-small .pm-numeral .pm-prose
@@ -1001,27 +1001,29 @@ The notches use `--pm-notch` (default `--pm-canvas`). Set it to the ticket's rea
 
 ## Forms
 ```html
-<label class="pm-field">
-  <span class="pm-label">Email</span>
-  <input class="pm-input" type="email" placeholder="you@example.com">
-  <span class="pm-hint">We only use it for the confirmation.</span>
-</label>
-<label class="pm-field">
-  <span class="pm-label">Team</span>
-  <select class="pm-select"><option>Design</option></select>
-</label>
-<label class="pm-field">
-  <span class="pm-label">Message</span>
-  <textarea class="pm-textarea" aria-invalid="true"></textarea>
-  <span class="pm-error">Write at least one sentence.</span>
-</label>
-<div class="pm-input-group"><input class="pm-input" placeholder="Search"><button class="pm-btn">Search</button></div>
+<div class="pm-field">
+  <label class="pm-label" for="email">Email</label>
+  <input class="pm-input" id="email" type="email" aria-describedby="email-hint">
+  <span class="pm-hint" id="email-hint">We only use it for the confirmation.</span>
+</div>
+<div class="pm-field">
+  <label class="pm-label" for="team">Team</label>
+  <select class="pm-select" id="team"><option>Design</option></select>
+</div>
+<div class="pm-field">
+  <label class="pm-label" for="message">Message</label>
+  <textarea class="pm-textarea" id="message" aria-invalid="true" aria-describedby="message-error"></textarea>
+  <span class="pm-error" id="message-error">Write at least one sentence.</span>
+</div>
+<div class="pm-input-group"><input class="pm-input" placeholder="Search" aria-label="Search"><button class="pm-btn">Search</button></div>
 
 <label class="pm-choice"><input class="pm-check" type="checkbox" checked> Keep me posted</label>
 <label class="pm-choice"><input class="pm-radio" type="radio" name="r" checked> Monthly</label>
 <label class="pm-choice"><input class="pm-switch" type="checkbox" role="switch"> Dark mode</label>
 ```
-Invalid state: `aria-invalid="true"` (clay border). Focus: 2px ink ring. The checked radio is the brand ring. The button in `.pm-input-group` is 40px tall with a mouse and 44px on touch.
+A label names its field, and everything inside a `<label>` becomes part of that name. So a hint or error sits outside the label, tied to the field by `aria-describedby`: a screen reader says "Email", then the hint as its description. In React, `useId` gives the ids. Two exceptions: `.pm-choice` wraps its input, because there the label is the name, and a `.pm-segmented` has no single field to name, so its caption stays a `<span class="pm-label" id="…">` with `aria-labelledby` on the group.
+
+Invalid state: `aria-invalid="true"` (clay border) and `aria-describedby` pointing at the `.pm-error`. If the error comes and goes, point at it only while it shows and back at the hint when it clears, or remove the attribute if there is no hint: `aria-describedby` still reads an element that is `hidden`. Focus: 2px ink ring. The checked radio is the brand ring. The button in `.pm-input-group` is 40px tall with a mouse and 44px on touch.
 
 ## Dialog
 Native `<dialog>`. [JS] `data-pm-open="id"` opens it, a backdrop click closes it, and `[data-pm-close]` or `<form method="dialog">` closes it.
@@ -1199,7 +1201,7 @@ One card, one row per thing. `.pm-rows--columns` flows five or more into two col
   <label class="pm-row"><input class="pm-check" type="checkbox"><span class="pm-row__text"><span class="pm-row__title">Carla Mendes</span></span></label>
 
   <!-- a switch or stepper behind -->
-  <label class="pm-row"><span class="pm-row__text"><span class="pm-row__title">Couples serve together</span></span><input class="pm-switch" type="checkbox" role="switch"></label>
+  <label class="pm-row"><span class="pm-row__text"><span class="pm-row__title" id="couples-title">Couples serve together</span><span class="pm-row__sub" id="couples-sub">They land on the same Sunday</span></span><input class="pm-switch" type="checkbox" role="switch" aria-labelledby="couples-title" aria-describedby="couples-sub"></label>
 
   <!-- last row: one more of what the card lists -->
   <button class="pm-row pm-row--add" type="button">Add person</button>
@@ -1215,6 +1217,8 @@ With a header and sections, as on a Sunday card:
 </div>
 <div class="pm-rows"><p class="pm-rows__empty">Nobody with that name.</p></div>
 ```
+When a `label.pm-row` has a sub-line, point the control's `aria-labelledby` at the title and `aria-describedby` at the sub, as in the switch above: the whole row stays the target, and the sub-line doesn't become part of the name.
+
 A row's first `<svg>` is a 22px icon (the Menu screen), and the chevron stays. Any other trailing item replaces the chevron. A `<progress>` as a row's last child spans the whole row, so every bar compares:
 ```html
 <a class="pm-row" href="/menu/folders"><svg aria-hidden="true">…</svg><span class="pm-row__text"><span class="pm-row__title">Folders</span><span class="pm-row__sub">how links are sorted</span></span></a>

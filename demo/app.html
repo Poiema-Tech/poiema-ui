@@ -343,15 +343,15 @@
       </header>
       <form class="pm-stack pm-measure" onsubmit="event.preventDefault(); Poiema.toast('Saved ✓')">
         <div class="pm-card pm-card--compact pm-stack">
-          <label class="pm-field">
-            <span class="pm-label">Name</span>
-            <input class="pm-input" value="Marina Duarte" autocomplete="off">
-          </label>
-          <label class="pm-field">
-            <span class="pm-label">Email</span>
-            <input class="pm-input" type="email" value="marina@example.com" aria-invalid="false" autocomplete="off">
-            <span class="pm-hint">We only use it to send you the month's schedule.</span>
-          </label>
+          <div class="pm-field">
+            <label class="pm-label" for="settings-name">Name</label>
+            <input class="pm-input" id="settings-name" value="Marina Duarte" autocomplete="off">
+          </div>
+          <div class="pm-field">
+            <label class="pm-label" for="settings-email">Email</label>
+            <input class="pm-input" id="settings-email" type="email" value="marina@example.com" aria-invalid="false" aria-describedby="settings-email-hint" autocomplete="off">
+            <span class="pm-hint" id="settings-email-hint">We only use it to send you the month's schedule.</span>
+          </div>
           <div class="pm-field">
             <span class="pm-label" id="theme-label">Appearance</span>
             <div class="pm-segmented" role="radiogroup" aria-labelledby="theme-label">
@@ -371,8 +371,8 @@
             </span>
           </div>
           <label class="pm-row">
-            <span class="pm-row__text"><span class="pm-row__title">Couples serve together</span><span class="pm-row__sub">They always land on the same Sunday</span></span>
-            <input class="pm-switch" type="checkbox" role="switch" checked>
+            <span class="pm-row__text"><span class="pm-row__title" id="couples-title">Couples serve together</span><span class="pm-row__sub" id="couples-sub">They always land on the same Sunday</span></span>
+            <input class="pm-switch" type="checkbox" role="switch" aria-labelledby="couples-title" aria-describedby="couples-sub" checked>
           </label>
           <label class="pm-row">
             <span class="pm-row__text"><span class="pm-row__title">Once a month</span></span>
@@ -412,8 +412,8 @@
       <div class="pm-gate">
         <form class="pm-card pm-card--compact pm-stack" onsubmit="event.preventDefault(); location.hash = 'links'">
           <h1 class="pm-h1">sign in.</h1>
-          <label class="pm-field"><span class="pm-label">Email</span><input class="pm-input" type="email" value="marina@example.com" autocomplete="off"></label>
-          <label class="pm-field"><span class="pm-label">Password</span><input class="pm-input" type="password" value="made-up" autocomplete="off"></label>
+          <div class="pm-field"><label class="pm-label" for="signin-email">Email</label><input class="pm-input" id="signin-email" type="email" value="marina@example.com" autocomplete="off"></div>
+          <div class="pm-field"><label class="pm-label" for="signin-password">Password</label><input class="pm-input" id="signin-password" type="password" value="made-up" autocomplete="off"></div>
           <button class="pm-btn pm-btn--block" type="submit">Sign in</button>
         </form>
       </div>
@@ -440,25 +440,25 @@
       </div>
     </div>
     <div class="pm-panel__body">
-      <label class="pm-field">
-        <span class="pm-label">Destination</span>
-        <input class="pm-input" name="dest" type="url" inputmode="url" placeholder="https://" autocomplete="off">
-        <span class="pm-hint">Where people land. You can change it any time, even after printing.</span>
-      </label>
-      <label class="pm-field">
-        <span class="pm-label">Title</span>
-        <input class="pm-input" name="title" autocomplete="off">
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-dest">Destination</label>
+        <input class="pm-input" id="new-link-dest" name="dest" type="url" inputmode="url" placeholder="https://" autocomplete="off" aria-describedby="new-link-dest-hint">
+        <span class="pm-hint" id="new-link-dest-hint">Where people land. You can change it any time, even after printing.</span>
+      </div>
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-title-input">Title</label>
+        <input class="pm-input" id="new-link-title-input" name="title" autocomplete="off">
         <span class="pm-error" id="new-link-error" hidden>Give it a name so we can find it later.</span>
-      </label>
-      <label class="pm-field">
-        <span class="pm-label">Short address</span>
-        <input class="pm-input" name="slug" placeholder="links.poiemaorlando.com/…" autocomplete="off" autocapitalize="none" spellcheck="false">
-        <span class="pm-hint">Leave it empty and we pick one.</span>
-      </label>
-      <label class="pm-field">
-        <span class="pm-label">Folder</span>
-        <select class="pm-select" name="folder"><option>Events</option><option>Campaigns</option><option>Ministries</option></select>
-      </label>
+      </div>
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-slug">Short address</label>
+        <input class="pm-input" id="new-link-slug" name="slug" placeholder="links.poiemaorlando.com/…" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="new-link-slug-hint">
+        <span class="pm-hint" id="new-link-slug-hint">Leave it empty and we pick one.</span>
+      </div>
+      <div class="pm-field">
+        <label class="pm-label" for="new-link-folder">Folder</label>
+        <select class="pm-select" id="new-link-folder" name="folder"><option>Events</option><option>Campaigns</option><option>Ministries</option></select>
+      </div>
       <div class="pm-field">
         <span class="pm-label" id="redirect-label">Redirect</span>
         <div class="pm-segmented" role="radiogroup" aria-labelledby="redirect-label">
@@ -604,10 +604,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       box.innerHTML = `<div class="pm-rows pm-rows--columns">${shown.map((l) => {
         const sub = l.problem
-          ? `<span class="pm-row__sub pm-row__sub--danger">${l.problem}</span>`
-          : `<span class="pm-row__sub">/${esc(l.slug)} · ${clicks(l.clicks)}</span>`;
+          ? `<span class="pm-row__sub pm-row__sub--danger" id="row-${esc(l.slug)}-sub">${l.problem}</span>`
+          : `<span class="pm-row__sub" id="row-${esc(l.slug)}-sub">/${esc(l.slug)} · ${clicks(l.clicks)}</span>`;
         if (selected) {
-          return `<label class="pm-row"><input class="pm-check" type="checkbox" data-pick="${esc(l.slug)}"${selected.has(l.slug) ? ' checked' : ''}><span class="pm-row__text"><span class="pm-row__title">${esc(l.title)}</span>${sub}</span></label>`;
+          return `<label class="pm-row"><input class="pm-check" type="checkbox" data-pick="${esc(l.slug)}" aria-labelledby="row-${esc(l.slug)}-title" aria-describedby="row-${esc(l.slug)}-sub"${selected.has(l.slug) ? ' checked' : ''}><span class="pm-row__text"><span class="pm-row__title" id="row-${esc(l.slug)}-title">${esc(l.title)}</span>${sub}</span></label>`;
         }
         const trailing = l.problem
           ? `<a class="pm-btn pm-btn--outline pm-btn--sm" href="#link">Fix</a>`
@@ -647,6 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const clearError = () => {
     form.elements.title.removeAttribute('aria-invalid');
+    form.elements.title.removeAttribute('aria-describedby');
     $('#new-link-error').hidden = true;
   };
   form.elements.title.addEventListener('input', clearError);
@@ -655,6 +656,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = form.elements.title;
     if (!title.value.trim()) {
       title.setAttribute('aria-invalid', 'true');
+      // Only while it shows: aria-describedby still reads an element that is hidden.
+      title.setAttribute('aria-describedby', 'new-link-error');
       $('#new-link-error').hidden = false;
       title.focus();
       return;
